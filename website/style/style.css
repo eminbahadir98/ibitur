@@ -1,0 +1,53 @@
+h1 {
+  text-align: center;
+}
+
+.content {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.home-content {
+  text-align: center;
+}
+
+.home-title {
+  margin-top: 5%;
+  margin-bottom: 10%;
+  text-align: center;
+}
+
+.header {
+  padding-top: 2%;
+  font-size: larger;
+}
+
+.header-right {
+  float: right;
+}
+
+.footer {
+  margin-top: 30%;
+  margin-bottom: 5%;
+  font-size: larger;
+}
+
+.footer-right {
+  float: right;
+}
+
+.login-div {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 5%;
+  width: 30%;
+  height: 30%;
+}
+
+.input-field {
+  float: right;
+}
+
+.id-label {
+  margin-right: 1%;
+}
