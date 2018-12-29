@@ -14,10 +14,10 @@
    <body class="content">
         <?php
             if ($logged_in) {
-                echo get_header(true, "Bahadir");
-            } else {
-                echo get_header(false, "");
-            }
+                echo get_header($current_fullname);
+             } else {
+                echo get_header(null);
+             }
         ?>
         
         <h1> My Account - Name </h1>

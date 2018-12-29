@@ -15,9 +15,9 @@
       
       <?php
          if ($logged_in) {
-            echo get_header(true, "Bahadir");
+            echo get_header($current_fullname);
          } else {
-            echo get_header(false, "");
+            echo get_header(null);
          }
       ?>
 

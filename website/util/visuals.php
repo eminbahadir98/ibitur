@@ -1,10 +1,10 @@
 <?php
 
   // TODO : Add a $current_page parameter to show current page as not clickable.
-  function get_header($logged_in, $username) {
-    if ($logged_in) {
+  function get_header($username) {
+    if ($username != null) {
       $profile_bar =
-        "Logged in as <b>$username</b> |
+        "Welcome <b>$username</b> |
         <a href = 'my_account.php'>My Account</a> |
         <a href = 'logout.php'>Logout</a> |";
     } else {
