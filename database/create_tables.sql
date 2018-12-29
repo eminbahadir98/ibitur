@@ -18,7 +18,7 @@ CREATE TABLE StaffAccount (
 
 CREATE TABLE Country (
     ID INTEGER PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(10) NOT NULL
+    name VARCHAR(80) NOT NULL
 );
 
 CREATE TABLE CustomerAccount (

@@ -16,7 +16,7 @@
             if ($logged_in) {
                 echo get_header($current_fullname);
              } else {
-                echo get_header(null);
+                header("location: login.php");
              }
         ?>
         

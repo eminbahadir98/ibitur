@@ -40,14 +40,29 @@ h1 {
   margin-right: auto;
   margin-left: auto;
   margin-top: 5%;
-  width: 30%;
+  width: 40%;
   height: 30%;
 }
 
 .input-field {
   float: right;
+  width: 60% !important;
+  vertical-align: middle;
+}
+
+.submit-button {
+  float: right;
 }
 
 .id-label {
   margin-right: 1%;
+}
+
+.register-div {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 5%;
+  margin-bottom: 70%;
+  width: 50%;
+  height: 30%;
 }

@@ -3,6 +3,10 @@ USE ibitur_db;
 
 INSERT INTO Country(name) VALUES("Turkey");
 INSERT INTO Country(name) VALUES("England");
+INSERT INTO Country(name) VALUES("Sweden");
+INSERT INTO Country(name) VALUES("Germany");
+INSERT INTO Country(name) VALUES("United States");
+INSERT INTO Country(name) VALUES("Japan");
 
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
     VALUES("bahadir", "bahadir@example.com", "123", "Emin", "Bahadir", "Tuluce");

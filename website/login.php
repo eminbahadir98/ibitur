@@ -1,7 +1,6 @@
 <?php
-   include("util/configurations.php");
    include("util/visuals.php");
-   session_start();
+   include("util/session.php");
    
    $error = "";
    
@@ -53,28 +52,17 @@
       <link rel="stylesheet" href="style/style.css"/>
       <link rel="stylesheet" href="lib/bootstrap.min.css"/>
 
-      <script type="text/javascript">
-         function checkEmpty() {
-            var username = document.forms["login-form"]["username"].value;
-            var password = document.forms["login-form"]["password"].value;
-            if (username == "" || username == null) {
-               alert("Please enter your username.");
-               return false;
-            }
-            if (password == "" || password == null) {
-               alert("Please enter your password.");
-               return false;
-            }
-            return true;
-         }
-      </script>
-
    </head>
    
    <body class = "content">
 
       <?php
-         echo get_header(false, "");
+         if ($logged_in) {
+            header("location: index.php");
+         } else {
+            echo get_header(null);
+         }
+
          if ($is_staff_login) {
             echo '<h1 class="home-title">IBITUR Staff Login</h1>';
          } else {
@@ -83,17 +71,17 @@
       ?>
       
       <div class="login-div">
-         <form name="login-form" action="" onsubmit="return checkEmpty()" method="post">
+         <form name="login-form" action="" method="post">
             <label>Username:</label>
-            <input class="input-field" type="text" name="username"/> <br><br>
+            <input required maxlength="50" class="form-control input-field" type="text" name="username"/> <br><br>
             <label>Password:</label>
-            <input class="input-field" type="password" name="password"/> <br><br>
-            <input class="input-field btn" type="submit" value="Login"/>
+            <input required maxlength="50" class="form-control input-field" type="password" name="password"/> <br><br>
+            <input class="submit-button btn" type="submit" value="Login"/>
          </form>
-         <div><?php echo $error; ?></div>
+         <div id="error-div"><?php echo $error; ?></div>
 
          <?php
-            if (! $is_staff_login) {
+            if (!$is_staff_login) {
                echo '<br><a href="login.php?staff=true">Login as staff member</a>';
             }
          ?>
