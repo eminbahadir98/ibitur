@@ -17,6 +17,15 @@ h1 {
   text-align: center;
 }
 
+.home-search {
+  display: inline !important;
+  width: 30% !important;
+}
+
+.register-msg {
+  background-color: beige;
+}
+
 .header {
   padding-top: 2%;
   font-size: larger;

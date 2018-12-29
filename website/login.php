@@ -2,7 +2,7 @@
    include("util/visuals.php");
    include("util/session.php");
    
-   $error = "";
+   $error = null;
    
    $is_staff_login = false;
    if (isset($_GET['staff'])) {
@@ -23,7 +23,8 @@
       if ($login_succeed) {
          $result_row = $login_result->fetch_assoc();
          $account_table = $is_staff_login ? "StaffAccount" : "CustomerAccount";
-         $check_query = 'SELECT ID FROM ' . $account_table . ' WHERE ID = ' . $result_row["ID"];
+         $check_query = "SELECT ID FROM $account_table WHERE ID=" . $result_row["ID"];
+         echo $check_query;
          $check_result = mysqli_query($db, $check_query);
          $check_succeed = (mysqli_num_rows($check_result) == 1);
       }
@@ -78,9 +79,16 @@
             <input required maxlength="50" class="form-control input-field" type="password" name="password"/> <br><br>
             <input class="submit-button btn" type="submit" value="Login"/>
          </form>
-         <div id="error-div"><?php echo $error; ?></div>
+         <br><br>
 
          <?php
+            if ($error != null) {
+               echo 
+               "<div class='alert alert-warning' role='alert'>
+                  $error
+               </div>";
+            }
+         
             if (!$is_staff_login) {
                echo '<br><a href="login.php?staff=true">Login as staff member</a>';
             }

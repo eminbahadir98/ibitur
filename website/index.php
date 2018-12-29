@@ -21,10 +21,21 @@
          }
       ?>
 
-      <h1 class="home-title">IBITUR - Tour Reservation System</h1>
+      
+      <?php
+         if (isset($_GET['registered']) && $logged_in) {
+            echo
+            "<div class='alert alert-success' role='alert'>
+               You have successfully registered.
+            </div>";
+         }
+      ?>
+
+      <h1 class="home-title">IBITUR - Tour Reservation</h1>
+      
       <div class="home-content">
          <h2>Where do you want to travel?</h2>
-         <input type="text" name="username"/>
+         <input class="form-control home-search" type="text" name="username"/>
          <input class=" btn" type="submit" value="Search"/>
       </div>
 
