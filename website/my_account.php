@@ -230,7 +230,7 @@
                     <option>Other</option>
                     </select> <br><br>
                     
-                    <input class='btn submit-button' type='submit' name ='profile-submit' value='Save Changes'/><br><br>
+                    <input class='btn right' type='submit' name ='profile-submit' value='Save Changes'/><br><br>
                 </div>
 
                 </form>
@@ -289,7 +289,7 @@
                     <option>Other</option>
                     </select> <br><br>
                     
-                    <input class='btn submit-button' type='submit' name ='dependent-add-submit' value='Add Dependent'/><br><br>
+                    <input class='btn right' type='submit' name ='dependent-add-submit' value='Add Dependent'/><br><br>
                 </div>
             </div>
 

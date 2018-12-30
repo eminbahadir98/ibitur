@@ -189,7 +189,7 @@
         <input required class="form-control input-field" type="number" name="national_id"/> <br><br>
         
         <hr>
-        <input class="submit-button btn" type="submit" value="Register"/>
+        <input class="right btn" type="submit" value="Register"/>
       </form>
       <br><br>
 
