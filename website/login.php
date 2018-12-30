@@ -29,7 +29,6 @@
       $check_succeed = (mysqli_num_rows($check_result) == 1);
     }
 
-<<<<<<< HEAD
       if ($check_succeed) {
          $_SESSION['session_username'] = $result_row["username"];
          $_SESSION['session_fullname'] = $result_row["first_name"]
@@ -44,21 +43,6 @@
       } else if (!$check_succeed) {
          $error = "This is not a " . ($is_staff_login ? "staff" : "customer") . " account.";
       }
-=======
-    if ($check_succeed) {
-      $_SESSION['session_username'] = $result_row["username"];
-      $_SESSION['session_fullname'] = $result_row["first_name"]
-          . " " . $result_row["middle_name"]
-          . " " . $result_row["last_name"];
-      header("location: index.php");
-    }
-    
-    if (!$login_succeed) {
-      $error = "Username and password did not matched.";
-    } else if (!$check_succeed) {
-      $error = "This is not a " . ($is_staff_login ? "staff" : "customer") . " account.";
-    }
->>>>>>> d15e7880c2efa7576c6084118912f4e1665faec8
 
   }
 ?>
