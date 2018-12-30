@@ -75,3 +75,11 @@ h1 {
   width: 50%;
   height: 30%;
 }
+
+.inner-content {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 5%;
+  width: 70%;
+  height: 30%;
+}
