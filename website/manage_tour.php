@@ -162,7 +162,7 @@
         $paid_checked = $has_paid ? "checked" : "";
         return "
           <tr>
-            <td><a href='customer_profile?id=$customer_id'>$customer_fullname</a></td>
+            <td><a href='customer_profile.php?id=$customer_id'>$customer_fullname</a></td>
             <td>$traveler_count</td>
             <td class='paid-checkbox'><input class='form-check-input' type='checkbox'
               $paid_checked disabled></td>

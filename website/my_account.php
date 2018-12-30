@@ -166,27 +166,34 @@
         <div class="dependent-settings">
             <h2> Dependent Travelers </h2>
             <hr>
-            <table>
-            <tr>
-                <th> First Name </th>
-                <th> Last Name </th>
-            </tr>
+            
             <?php 
                 $get_dependent_query = "SELECT first_name, middle_name, last_name FROM Dependent
                 WHERE Dependent.customer_ID = $current_id;";
 
                 $get_dependent_result = mysqli_query($db, $get_dependent_query);
-
-                while($row = $get_dependent_result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row['first_name'] . "</td>";
-                    echo "<td>" . $row['last_name'] . "</td>";
-                    echo "</tr>";
+                
+                if($get_dependent_result->num_rows == 0) {
+                    echo "<p>You do not have any dependents yet.</p>";
                 }
+                else {
+                    echo "<table>
+                    <tr>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                    </tr>";
+                    while($row = $get_dependent_result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['first_name'] . "</td>";
+                        echo "<td>" . $row['last_name'] . "</td>";
+                        echo "</tr>";
+                    }
+    
+                    echo "</table>";
+                }
+                
             ?>
 
-            </table>
-            
             <?php echo get_form_btn("Remove Dependent/TODO");?>
 
             <h4> Add New Dependent </h4>
@@ -218,7 +225,7 @@
                 <hr>
                 <p>Currently you have <?php echo $booking_pts ?> booking points</p>
         </div>
-        
+
         <div class="promotion-settings">
             <h2> Promotion Cards </h2>
             <hr>
