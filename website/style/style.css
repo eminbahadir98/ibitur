@@ -2,6 +2,10 @@ h1 {
   text-align: center;
 }
 
+.right {
+  float: right;
+}
+
 .content {
   margin-left: 5%;
   margin-right: 5%;
@@ -31,18 +35,10 @@ h1 {
   font-size: larger;
 }
 
-.header-right {
-  float: right;
-}
-
 .footer {
   margin-top: 30%;
   margin-bottom: 5%;
   font-size: larger;
-}
-
-.footer-right {
-  float: right;
 }
 
 .login-div {
@@ -57,10 +53,6 @@ h1 {
   float: right;
   width: 60% !important;
   vertical-align: middle;
-}
-
-.submit-button {
-  float: right;
 }
 
 .id-label {

@@ -148,7 +148,7 @@
                 <form name='cancel-form' action='' method='post'>
                   <label>Reason for cancellation:</label>
                   <input required class='form-control' type='text' name='cancel_reason'/><br>
-                  <input class='submit-button btn' type='submit' value='Submit Cancellation'/>
+                  <input class='right btn' type='submit' value='Submit Cancellation'/>
                 </form>
               </div>
             ";

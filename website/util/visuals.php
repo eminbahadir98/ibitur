@@ -17,7 +17,7 @@
     "<div class='header'>
       <a href = 'index.php'>Home</a> |
       <a href = 'tours.php'>Tours</a>
-      <span class='header-right'>
+      <span class='right'>
         $profile_bar
       </span>
     </div>
@@ -31,7 +31,7 @@
       IBITUR on Social Media:
       <a href = '#'>Facebook</a>,
       <a href = '#'>Twitter</a>
-      <div class='footer-right'>
+      <div class='right'>
         <a href = '#'>About IBITUR</a> |
         <a href = '#'>Contact us</a>
       </div>
