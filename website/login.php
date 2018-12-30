@@ -78,7 +78,7 @@
         <input required maxlength="50" class="form-control input-field" type="text" name="username"/> <br><br>
         <label>Password:</label>
         <input required maxlength="50" class="form-control input-field" type="password" name="password"/> <br><br>
-        <input class="submit-button btn" type="submit" value="Login"/>
+        <input class="right btn" type="submit" value="Login"/>
       </form>
       <br><br>
 
