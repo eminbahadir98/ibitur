@@ -1,6 +1,19 @@
 USE ibitur_db;
 
 
+-- Dependent Counts
+
+DROP VIEW IF EXISTS DependentCounts;
+
+CREATE VIEW DependentCounts AS (
+    SELECT COUNT(dependent_ID) AS dependent_count, reservation_ID
+    FROM IncludedDependents
+    GROUP BY (reservation_ID)
+);
+
+
+-- Tour Preview
+
 DROP VIEW IF EXISTS TourPreview;
 DROP VIEW IF EXISTS TourInterval;
 DROP VIEW IF EXISTS TourDates;
@@ -11,7 +24,6 @@ DROP VIEW IF EXISTS TourSubDates2;
 DROP VIEW IF EXISTS TourSubDates1;
 DROP VIEW IF EXISTS ReservationCount;
 DROP VIEW IF EXISTS NonCancelledReservation;
-
 
 CREATE VIEW NonCancelledReservation AS
     (SELECT * FROM Reservation WHERE cancel_date IS NULL);
