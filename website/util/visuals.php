@@ -5,8 +5,9 @@
     if ($username != null) {
       $profile_bar =
         "Welcome <b>$username</b> |
+        <a href = 'my_account.php'>My Reservations</a> |
         <a href = 'my_account.php'>My Account</a> |
-        <a href = 'logout.php'>Logout</a> |";
+        <a href = 'logout.php'>Logout</a>";
     } else {
       $profile_bar =
         "<a href = 'register.php'>Register</a> |
@@ -16,7 +17,8 @@
     return 
     "<div class='header'>
       <a href = 'index.php'>Home</a> |
-      <a href = 'tours.php'>Tours</a>
+      <a href = 'tours.php'>Tours</a> |
+      <a href = 'tours.php'>Top Lists</a>
       <span class='right'>
         $profile_bar
       </span>
