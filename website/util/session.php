@@ -7,6 +7,7 @@
       $logged_in = true;
       $current_username = $_SESSION['session_username'];
       $current_fullname = $_SESSION['session_fullname'];
+      $current_id = $_SESSION['session_id'];
    }
    
 ?>

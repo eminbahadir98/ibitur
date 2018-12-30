@@ -34,6 +34,7 @@
          $_SESSION['session_fullname'] = $result_row["first_name"]
                . " " . $result_row["middle_name"]
                . " " . $result_row["last_name"];
+         $_SESSION['session_id'] = $result_row["ID"]; 
          header("location: index.php");
       }
       
