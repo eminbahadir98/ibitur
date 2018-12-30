@@ -11,12 +11,19 @@ INSERT INTO Country(name) VALUES("Japan");
 INSERT INTO City(name, country_ID) VALUES("Ankara", (SELECT ID FROM Country WHERE name="Turkey"));
 INSERT INTO City(name, country_ID) VALUES("Malatya", (SELECT ID FROM Country WHERE name="Turkey"));
 INSERT INTO City(name, country_ID) VALUES("Antalya", (SELECT ID FROM Country WHERE name="Turkey"));
+INSERT INTO City(name, country_ID) VALUES("Stockholm", (SELECT ID FROM Country WHERE name="Sweden"));
+INSERT INTO City(name, country_ID) VALUES("Tokyo", (SELECT ID FROM Country WHERE name="Japan"));
 
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
     VALUES("bahadir", "bahadir@example.com", "123", "Emin", "Bahadir", "Tuluce");
 INSERT INTO CustomerAccount(ID, national_ID, nationality, gender, date_of_birth)
     VALUES(LAST_INSERT_ID(), "12345678912", (SELECT ID FROM Country WHERE name="Turkey"), "Male", "1998-02-18");
 
+INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
+    VALUES("sami", "sami@example.com", "123", "Mahmud", "Sami", "Aydin");
+INSERT INTO CustomerAccount(ID, national_ID, nationality, gender, date_of_birth)
+    VALUES(LAST_INSERT_ID(), "141434141", (SELECT ID FROM Country WHERE name="Turkey"), "Male", "1997-01-01");
+    
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
     VALUES("abdullah", "abdullah@example.com", "123", "Abdullah", NULL, "Talayhan");
 INSERT INTO StaffAccount(ID) VALUES(LAST_INSERT_ID());
@@ -52,4 +59,21 @@ INSERT INTO Dependent(national_ID, customer_ID, gender, date_of_birth, first_nam
 INSERT INTO IncludedDependents(reservation_ID, dependent_ID)
     VALUES((SELECT ID FROM Reservation WHERE customer_ID=(SELECT ID FROM Account WHERE username="bahadir")
         AND tour_ID=(SELECT ID FROM Tour WHERE name="Anatolia Tour")),
-        (SELECT national_ID FROM Dependent WHERE first_name="Bahadir" AND last_name="Child"))
+        (SELECT national_ID FROM Dependent WHERE first_name="Bahadir" AND last_name="Child"));
+
+INSERT INTO Reservation(customer_ID, tour_ID, issue_date, payment_status, cancel_date)
+    VALUES((SELECT ID FROM Account WHERE username="sami"),
+    (SELECT ID FROM Tour WHERE name="Anatolia Tour"), "2018-12-30", "PAID", NULL);
+
+INSERT INTO Tour(name, description, image_path, quota, price, creator_ID, cancelling_deadline)
+    VALUES("Europe Tour", "This is an europe tour...", "europe.png", 3, 495.90,
+    (SELECT ID FROM Account WHERE username="abdullah"), "2019-01-07");
+    
+INSERT INTO Hotel(city_ID, name, address, star_rating)
+    VALUES((SELECT ID FROM City WHERE name="Sweden"), "Vikingen Hotel", "Another street, another road...", 5);
+
+INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date)
+    VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
+    (SELECT ID FROM Hotel WHERE name="Vikingen Hotel"),
+    "2019-01-20", "2019-01-27");
+    
