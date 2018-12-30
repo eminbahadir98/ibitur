@@ -106,7 +106,7 @@ CREATE TABLE TourCancel (
     tour_ID INTEGER,
     cancel_date DATETIME NOT NULL,
     cancel_reason VARCHAR(300),
-    PRIMARY KEY (tour_ID, cancel_date),
+    PRIMARY KEY (tour_ID),
     FOREIGN KEY (tour_ID) REFERENCES Tour(ID)
 );
 

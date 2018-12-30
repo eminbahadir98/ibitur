@@ -176,11 +176,11 @@
           $country_query = "SELECT ID, name FROM Country";
           $country_result = mysqli_query($db, $country_query);
           while ($row = $country_result->fetch_assoc()) {
-           echo '<option value=';
-           echo $row["ID"];
-           echo ">";
-           echo $row["name"];
-           echo '</option>';
+            echo '<option value=';
+            echo $row["ID"];
+            echo ">";
+            echo $row["name"];
+            echo '</option>';
           }
           echo '</select> <br><br>';
         ?>

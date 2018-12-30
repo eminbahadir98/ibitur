@@ -31,10 +31,10 @@
       IBITUR on Social Media:
       <a href = '#'>Facebook</a>,
       <a href = '#'>Twitter</a>
-      <span class='footer-right'>
+      <div class='footer-right'>
         <a href = '#'>About IBITUR</a> |
         <a href = '#'>Contact us</a>
-      </span>
+      </div>
     </div>";
   }
 

@@ -41,3 +41,15 @@ INSERT INTO TravelRoute(vehicle_type, company_name, tour_ID,
         (SELECT ID FROM City WHERE name="Ankara"), (SELECT ID FROM City WHERE name="Antalya"),
         "Ankara Bus Station", "2019-01-10 10:00:00",
         "Antalya Bus Station", "2019-01-10 18:00:00");
+
+INSERT INTO Reservation(customer_ID, tour_ID, issue_date, payment_status, cancel_date)
+    VALUES((SELECT ID FROM Account WHERE username="bahadir"),
+    (SELECT ID FROM Tour WHERE name="Anatolia Tour"), "30-12-2018", "UNPAID", NULL);
+
+INSERT INTO Dependent(national_ID, customer_ID, gender, date_of_birth, first_name, middle_name, last_name)
+    VALUES(123451234, (SELECT ID FROM Account WHERE username="bahadir"), "Male", "19-02-1999", "Bahadir", "Little", "Child");
+    
+INSERT INTO IncludedDependents(reservation_ID, dependent_ID)
+    VALUES((SELECT ID FROM Reservation WHERE customer_ID=(SELECT ID FROM Account WHERE username="bahadir")
+        AND tour_ID=(SELECT ID FROM Tour WHERE name="Anatolia Tour")),
+        (SELECT national_ID FROM Dependent WHERE first_name="Bahadir" AND last_name="Child"))

@@ -24,7 +24,6 @@
       $result_row = $login_result->fetch_assoc();
       $account_table = $is_staff_login ? "StaffAccount" : "CustomerAccount";
       $check_query = "SELECT ID FROM $account_table WHERE ID=" . $result_row["ID"];
-      echo $check_query;
       $check_result = mysqli_query($db, $check_query);
       $check_succeed = (mysqli_num_rows($check_result) == 1);
     }
