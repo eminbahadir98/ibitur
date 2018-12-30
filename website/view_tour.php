@@ -148,7 +148,8 @@
               <input type='hidden' name='id' value='$tour_id'> 
               <input type='submit' class='btn' value='Make Reservation'>
             </form>";
-          if ($current_is_staff) {
+          
+          if ($logged_in && $current_is_staff) {
             $tour_action_button = "
               <form action='manage_tour.php' method='GET'>
                 <input type='hidden' name='id' value='$tour_id'> 

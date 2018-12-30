@@ -19,7 +19,8 @@ INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
 INSERT INTO CustomerAccount(ID, national_ID, nationality, gender, date_of_birth)
     VALUES(LAST_INSERT_ID(), "12345678912", (SELECT ID FROM Country WHERE name="Turkey"), "Male", "1998-02-18");
 
-INSERT INTO CustomerTelephones(customer_ID, telephone_no) VALUES ('1', '0530999999');
+INSERT INTO CustomerTelephones(customer_ID, telephone_no)
+    VALUES ((SELECT ID FROM Account WHERE username="bahadir"), '0530999999');
 
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
     VALUES("sami", "sami@example.com", "123", "Mahmud", "Sami", "Aydin");

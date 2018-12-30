@@ -45,10 +45,6 @@
     }
 
     if ($register_succeed) {
-      $_SESSION['session_username'] = $username_input;
-      $_SESSION['session_fullname'] = $first_name_input
-          . " " . $middle_name_input
-          . " " . $last_name_input;
       header("location: index.php?registered=true");
     }
 
@@ -105,7 +101,7 @@
           return false;
         }
         if (!isAlphaNumeric(username)) {
-          showError("Username can contain only letters and numbers.");
+          showError("Username can contain only lowercase letters and numbers.");
           return false;
         }
         if (username.length < 3) {

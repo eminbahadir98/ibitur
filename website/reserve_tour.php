@@ -142,7 +142,7 @@
                 echo "<p>This customer does not have any dependents yet.</p>";
             }
             else {
-                echo "<form name='done-reservation' action='make_reservation.php?id=$tour_id' method='post' >";
+                echo "<form name='done-reservation' action='done_reservation.php?id=$tour_id' method='post' >";
                 
                 echo "<table>
                 <tr>

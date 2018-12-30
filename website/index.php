@@ -23,10 +23,10 @@
 
 
     <?php
-      if (isset($_GET['registered']) && $logged_in) {
+      if (isset($_GET['registered'])) {
         echo
         "<div class='alert alert-success' role='alert'>
-          You have successfully registered.
+          You have successfully registered. You can now log in to your account.
         </div>";
       }
     ?>
