@@ -26,6 +26,8 @@
             $gender = mysqli_real_escape_string($db, $_POST['gender']);
             $date_of_birth = mysqli_real_escape_string($db, $_POST['date_of_birth']);
 
+            $phone_number = mysqli_real_escape_string($db, $_POST['phone_number']);
+
             if(checkNationality()) {
                 $update_query = " UPDATE CustomerAccount natural join Account
                 SET first_name = '$first_name', middle_name = '', last_name = '$last_name',
@@ -38,6 +40,13 @@
 
                 if($update_result) {
                     echo "Successful";
+                }
+
+                $update_query = "UPDATE CustomerTelephones SET telephone_no = $phone_number  WHERE customer_ID = $current_id; ";
+                $update_result = mysqli_query($db, $update_query);
+                
+                if($update_result) {
+                    echo "SuccessfulPhone";
                 }
             }
             else {
@@ -99,7 +108,7 @@
                 $check_code_result = mysqli_query($db, $check_code_query);
 
                 if($check_code_result->num_rows != 0) {
-                    echo "You already have this promotion card.";
+                    echo "This promotion card is already taken.";
                 }
                 else {
                     $add_promotion_query = "insert into CustomerPromotionCards values('$cur_promo_code',$current_id);";
@@ -128,6 +137,18 @@
         $gender = $profile_settings_data['gender'];
         $booking_pts = $profile_settings_data['booking_points'];
         $email = $profile_settings_data['email'];
+
+        $phone_query = "select telephone_no from CustomerTelephones where customer_ID=$current_id;";
+
+        $phone_result = mysqli_query($db, $phone_query);
+
+        if($phone_result->num_rows != 0) {
+            $phone_data = $phone_result->fetch_assoc();
+            $phone_number = $phone_data['telephone_no'];
+        }
+        else {
+            $phone_number = "";
+        }
         
         $dep_first_name = "";
         $dep_last_name = "";
@@ -355,7 +376,7 @@
                     <label>Date of Birth:</label>
                     <input class='form-control input-field' type='date' name='dep_dob' value = '<?php echo $dep_dob ?>'/> <br><br>
                     <label>Gender:</label>
-                    <select class="form-control input-field" name="dep_gender"> 
+                    <select class="form-control input-field" name="dep_gender">
                     <option>Male</option>
                     <option>Female</option>
                     <option>Other</option>
