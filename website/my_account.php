@@ -85,6 +85,32 @@
 
             $remove_complete = true;
         }
+        else if(isset($_POST['redeem-submit'])) {
+            $cur_promo_code = $_POST['promo_code'];
+            echo "Here: " . $cur_promo_code;
+            $get_promotion_query = "select * from PromotionCard where promo_code = '$cur_promo_code';";
+            $get_promo_result = mysqli_query($db, $get_promotion_query);
+
+            if($get_promo_result->num_rows == 0) {
+                echo "Invalid Promotion Code.";
+            }
+            else {
+                $check_code_query = "select * from CustomerPromotionCards where promo_code = '$cur_promo_code';";
+                $check_code_result = mysqli_query($db, $check_code_query);
+
+                if($check_code_result->num_rows != 0) {
+                    echo "You already have this promotion card.";
+                }
+                else {
+                    $add_promotion_query = "insert into CustomerPromotionCards values('$cur_promo_code',$current_id);";
+                    $add_promotion_result = mysqli_query($db, $add_promotion_query);
+                    if($add_promotion_result) {
+                        echo "Promotion Card Added Successfully";
+                    }
+                }
+                
+            }
+        }
 
         $profile_settings_data_query = "select * from Account A, CustomerAccount C, Country CR where A.ID = C.ID and C.nationality = CR.ID and A.username = '" . $_SESSION['session_username'] . "';";
         
@@ -101,6 +127,7 @@
         $date_of_birth = $profile_settings_data['date_of_birth'];
         $gender = $profile_settings_data['gender'];
         $booking_pts = $profile_settings_data['booking_points'];
+        $email = $profile_settings_data['email'];
         
         $dep_first_name = "";
         $dep_last_name = "";
@@ -349,14 +376,46 @@
             <div class="promotion-settings">
                 <h2> Promotion Cards </h2>
                 <hr>
-                <p>TODO</p>
+                <?php
+                    $promotion_query = "select * from PromotionCard natural join CustomerPromotionCards;";
+                    $promotion_result = mysqli_query($db, $promotion_query);
+
+                    if($promotion_result->num_rows == 0) {
+                        echo "<p>You don't have any promotion cards yet.</p>";
+                    }
+                    else {
+                        echo "<table>
+                        <tr>
+                            <th> Promotion Code </th>
+                            <th> Discount Percent </th>
+                        </tr>";
+                        while($row = $promotion_result->fetch_assoc()) {
+
+                            echo "<tr>";
+                            echo "<td>" . $row['promo_code'] . "</td>";
+                            echo "<td>" . $row['discount_percent'] . "</td>";
+                            echo "</tr>";
+                        }
+
+                        echo "</table>";
+                    }
+
+                ?>
+
+                <form name='redeem' action='' method='post'>
+                <input class='form-control input-field' type='text' name='promo_code' value = ''/>
+                <input class='submit-button btn' type='submit' name='redeem-submit' value='Redeem Promotion Code'/>
+                </form>
             </div>
 
             <div class="account-settings">
                 <h2> Account Details </h2>
                 <hr>
                 
-                <p>TODO: fetch username and email</p>
+                <?php
+                    echo "<label>Username: $current_username</label><br><br>";
+                    echo "<label>E-mail: $email</label><br><br>";
+                ?>
                 <?php
                     echo get_form_btn("Change e-mail");
                     echo get_form_btn("Change password");
