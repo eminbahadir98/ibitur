@@ -164,7 +164,7 @@
             <h1> My Account - <?php echo $current_username ?> </h1>
             <hr>
 
-            <h3> Active Reservations </h2>
+            <h3> Active Reservations </h3>
             <div>
                 <?php
                     echo getActiveReservations();
@@ -172,7 +172,7 @@
             </div>
             <hr>
 
-            <h3> Cancelled Reservations </h2>
+            <h3> Cancelled Reservations </h3>
             <div>
                 <?php
                     echo getCancelledReservations();
@@ -180,7 +180,7 @@
             </div>
             <hr>
 
-            <h3> Past Reservations </h2>
+            <h3> Past Reservations </h3>
             <div>
                 <?php
                     echo getPastReservations();

@@ -30,6 +30,16 @@ h1 {
   padding-top: 2%;
   font-size: larger;
 }
+table {
+    width: 100%;
+    background-color: #454af1;
+}
+
+table th{
+    color: white;
+    border: 3px solid black;
+}
+
 
 .footer {
   margin-top: 30%;

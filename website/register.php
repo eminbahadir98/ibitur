@@ -123,7 +123,7 @@
 
         return true;
       }
-      checkInput() ;
+      //checkInput() ;
     </script>
 
   </head>
