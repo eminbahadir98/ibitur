@@ -59,6 +59,31 @@
             $add_dep_query = "INSERT INTO Dependent(customer_ID, national_ID, gender, date_of_birth, first_name, last_name)
             VALUES( $current_id , $dep_national_id, '$dep_gender', '$dep_dob', '$dep_first_name', '$dep_last_name' );";
 
+            echo $add_dep_query;
+
+            $add_rep_result = mysqli_query($db, $add_dep_query);
+        }
+        else if(isset($_POST['remove-submit'])) {
+            echo "here";
+            $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
+            $remove_complete = false;
+            foreach($checkboxes as $value) {
+                echo "Here: " . $value;
+
+                $remove_include_query = "DELETE
+                FROM IncludedDependents
+                WHERE dependent_ID = $value;";
+                $remove_include_result = mysqli_query($db, $remove_include_query);
+
+                $remove_dep_query = "DELETE
+                FROM Dependent
+                WHERE Dependent.customer_ID = $current_id
+                AND national_ID = $value;";
+                echo $remove_dep_query;
+                $remove_dep_result = mysqli_query($db, $remove_dep_query);
+            }
+
+            $remove_complete = true;
         }
 
         $profile_settings_data_query = "select * from Account A, CustomerAccount C, Country CR where A.ID = C.ID and C.nationality = CR.ID and A.username = '" . $_SESSION['session_username'] . "';";
@@ -75,7 +100,13 @@
         $national_id = $profile_settings_data['national_ID'];
         $date_of_birth = $profile_settings_data['date_of_birth'];
         $gender = $profile_settings_data['gender'];
-        $booking_pts = $profile_settings_data['booking_points'];  
+        $booking_pts = $profile_settings_data['booking_points'];
+        
+        $dep_first_name = "";
+        $dep_last_name = "";
+        $dep_national_id = "";
+        $dep_dob = "";
+        $dep_gender = "";
     }
 
     function getReservations($reservation_query) {
@@ -240,37 +271,51 @@
                 <h2> Dependent Travelers </h2>
                 <hr>
                 
-                <?php 
-                    $get_dependent_query = "SELECT first_name, middle_name, last_name FROM Dependent
-                    WHERE Dependent.customer_ID = $current_id;";
+                <?php
 
-                    $get_dependent_result = mysqli_query($db, $get_dependent_query);
+                $get_dependent_query = "SELECT first_name, middle_name, last_name, national_ID FROM Dependent
+                WHERE Dependent.customer_ID = $current_id;";
+
+                $get_dependent_result = mysqli_query($db, $get_dependent_query);
+                
+                if($get_dependent_result->num_rows == 0) {
+                    echo "<p>This customer does not have any dependents yet.</p>";
+                }
+                else {
+                    echo "<form name='remove-dependent' action='' method='post' >";
                     
-                    if($get_dependent_result->num_rows == 0) {
-                        echo "<p>You do not have any dependents yet.</p>";
+                    echo "<table>
+                    <tr>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                        <th> Include </th>
+                    </tr>";
+                    $count = 0;
+                    while($row = $get_dependent_result->fetch_assoc()) {
+
+                        $temp_check = "<input type='checkbox' name='checkbox[]' value=' " . $row['national_ID'] . "' /> ";
+
+                        echo "<tr>";
+                        echo "<td>" . $row['first_name'] . "</td>";
+                        echo "<td>" . $row['last_name'] . "</td>";
+                        echo "<td>" . $temp_check . "</td>";
+                        echo "</tr>";
+
+                        $count = $count + 1;
                     }
-                    else {
-                        echo "<table>
-                        <tr>
-                            <th> First Name </th>
-                            <th> Last Name </th>
-                        </tr>";
-                        while($row = $get_dependent_result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row['first_name'] . "</td>";
-                            echo "<td>" . $row['last_name'] . "</td>";
-                            echo "</tr>";
-                        }
-        
-                        echo "</table>";
-                    }
-                    
+
+                    echo "</table>";
+
+                    echo "<input class='submit-button btn' type='submit' name='remove-submit' value='Remove Dependent(s)'/>";
+
+                    echo "</form>";
+                }
+
                 ?>
-
-                <?php echo get_form_btn("Remove Dependent/TODO");?>
 
                 <h4> Add New Dependent </h4>
                 <hr>
+                <form name='dep-add-form' action='' method ='post'>
                 <div class="dependent-left">
                     <label>First Name:</label>
                     <input class='form-control input-field' type='text' name='dep_first_name' value = '<?php echo $dep_first_name; ?>'/> <br><br>
@@ -291,7 +336,9 @@
                     
                     <input class='btn right' type='submit' name ='dependent-add-submit' value='Add Dependent'/><br><br>
                 </div>
+                </form>
             </div>
+
 
             <div class="booking-pts">
                     <h2> Booking Points </h2>
