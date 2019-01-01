@@ -5,7 +5,6 @@
 
   function getTours($tours_query) {
     $db = $GLOBALS["db"];
-    echo "|" . $tours_query . "|";
     $tours_result = mysqli_query($db, $tours_query);
     $tours = "";
     while ($row = $tours_result->fetch_assoc()) {
@@ -14,6 +13,8 @@
     $tour_image_path = $row["image_path"];
     $tour_start_date = $row["start_date"];
     $tour_end_date = $row["end_date"];
+    $tour_price = $row["price"];
+    $tour_remaining_quota = $row["remaining_quota"];
     $tours .= "
       <div>
         $tour_name<br>
@@ -21,6 +22,8 @@
         Start: $tour_start_date <br>
         End: $tour_end_date <br><br>
         $tour_description <br>
+        Price: $tour_price <br>
+        Remaining spots: $tour_remaining_quota <br>
         <br>
       </div>
       <br><br>
@@ -39,7 +42,6 @@
     $ordering = "DESC";
     foreach( $_GET as $key => $value )
     {
-      echo "Key ".$key.", Value ".$value."<br>";
       if( $key == "query" )
       {
         $filterQuery .= "AND ( TP.name LIKE CONCAT('%','".$value."','%')";
@@ -67,14 +69,14 @@
     return $filterQuery;
   }
 
-  function getTags(){
+  function getTags() {
     $tag_query = "SELECT DISTINCT name FROM Tag";
     $db = $GLOBALS["db"];
     $tag_result = mysqli_query($db, $tag_query);
     $tags = "";
     while ($row = $tag_result->fetch_assoc()) {
       $name = $row["name"];
-      $tags .= "<input type='checkbox' name='$name'";
+      $tags .= "<input type='checkbox' name='$name' value='true'";
       $tags .= (isset($_GET[$name]) && $_GET[$name] == "true") ? " checked " : '';
       $tags .= ">$name</input><br>";
     }
@@ -91,6 +93,15 @@
       <title>IBITUR - Home</title>
       <link rel="stylesheet" href="style/style.css"/>
       <link rel="stylesheet" href="lib/bootstrap.min.css"/>
+      <script>
+        function disableEmptyInputs(form) {
+          var controls = form.elements;
+          var controls_length = controls.length;
+          for (var i = 0; i < controls_length; i++) {
+            controls[i].disabled = (controls[i].value == '');
+          }
+        }
+      </script>
    </head>
    
    <body class="content">
@@ -111,16 +122,22 @@
           $queryText = isset($_GET['query']) ? $_GET['query'] : '';
         ?>
       
-        <form name="login-form" action="" method="post">
+        <form name="login-form" onsubmit="disableEmptyInputs(this)" action="tour_list.php" method="GET">
 
-          Enter a keyword:
-          <input class="form-control" type="text" value=<?php echo $queryText?>> <br>
+          Search keyword:
+          <input name="query" class="form-control" type="text" value=<?php echo $queryText?>> <br>
 
-          Earliest start date: <input class="form-control" type="date"
+          Earliest start date: <input class="form-control" type="date" name="start"
           <?php echo isset($_GET['start']) ? "value='".$_GET['start']."'" : ''; ?> > <br>
         
-          Latest end date: <input class="form-control" type="date"
+          Latest end date: <input class="form-control" type="date" name="end"
           <?php echo isset($_GET['end']) ? "value='".$_GET['end']."'" : ''; ?> > <br>
+
+          Min price: <input class="form-control" type="number" name="priceMin"
+          <?php echo isset($_GET['priceMin']) ? "value='".$_GET['priceMin']."'" : ''; ?> > <br>
+
+          Max price: <input class="form-control" type="number" name="priceMax"
+          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : ''; ?> > <br>
 
           <?php
             echo getTags();
