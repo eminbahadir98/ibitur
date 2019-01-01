@@ -4,12 +4,64 @@
 
   $reservation_cancel_succeed = false;
   $reservation_cancel_performed = false;
+  $reservation_performed = false;
+  $reservation_succeed = false;
+
   if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cancelled_tour_id = $_GET['id'];
-    $cancel_query = "UPDATE Reservation SET cancel_date = NOW()
-      WHERE customer_ID = $current_id AND tour_ID = $cancelled_tour_id";
-    $reservation_cancel_succeed = mysqli_query($db, $cancel_query);
-    $reservation_cancel_performed = true;
+
+    if(isset($_POST['cancel-reservation'])) {
+      $cancelled_tour_id = $_GET['id'];
+      $cancel_query = "UPDATE Reservation SET cancel_date = NOW()
+        WHERE customer_ID = $current_id AND tour_ID = $cancelled_tour_id";
+      $reservation_cancel_succeed = mysqli_query($db, $cancel_query);
+      $reservation_cancel_performed = true;
+    }
+
+    else if(isset($_POST['reserve-submit'])) {
+      $tour_id = $_GET['id'];
+      
+      $re_reservation_check_query = "SELECT ID FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id;";
+      $re_reservation_check_result = mysqli_query($db, $re_reservation_check_query);
+      $re_reservation_needed = mysqli_num_rows($re_reservation_check_result) > 0;
+      
+      if ($re_reservation_needed) {
+        $old_reservation_id = $re_reservation_check_result->fetch_assoc()["ID"];
+
+        $remove_old_dependents_query = "DELETE FROM IncludedDependents WHERE reservation_ID = $old_reservation_id;";
+        $res1 = mysqli_query($db, $remove_old_dependents_query);
+
+        $remove_old_reservation_query = "DELETE FROM Reservation WHERE ID = $old_reservation_id";
+        $res2 = mysqli_query($db, $remove_old_reservation_query);
+      }
+      
+      $reservation_query = "INSERT INTO Reservation(customer_ID, tour_ID, issue_date,
+          payment_status, cancel_date) VALUES($current_id, $tour_id, NOW(), 'UNPAID', NULL);";
+
+      $reservation_succeed = mysqli_query($db, $reservation_query);
+      
+      if($reservation_succeed) {
+        $reservation_id_query = "select ID from reservation where customer_ID = $current_id and tour_ID=$tour_id;";
+        $reservation_id_result = mysqli_query($db, $reservation_id_query);
+        $reservation_id_data = $reservation_id_result->fetch_assoc();
+        
+        if($reservation_id_result->num_rows == 1) {
+          $rez_id = $reservation_id_data['ID'];
+        }
+        else {
+          $rez_id = -1;
+        }
+      }
+      
+      if($rez_id != -1) {
+        $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
+        foreach($checkboxes as $value) {
+          $ins_dep_query = "insert into IncludedDependents(reservation_ID, dependent_ID) values($rez_id, $value);";
+          $ins_dep_result = mysqli_query($db, $ins_dep_query);
+        }
+      }
+      $reservation_performed = true;
+    }
+    
   }
 ?>
 
@@ -37,6 +89,17 @@
         $reservation_cancel_alert =
           "<div class='alert alert-success' role='alert'>
             $reservation_cancel_message
+          </div>";
+      }
+
+      $reservation_alert = "";
+      if ($reservation_performed) {
+        $reservation_message = $reservation_succeed ?
+          "You have successfully made reservation to this tour." :
+          "Reservation failed. Please try again later.";
+        $reservation_alert =
+          "<div class='alert alert-success' role='alert'>
+            $reservation_message
           </div>";
       }
 
@@ -77,6 +140,7 @@
       <hr>
       <?php
         echo $reservation_cancel_alert;
+        echo $reservation_alert;
 
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
@@ -168,11 +232,16 @@
             $tour_trip_events = "No trip event entry...";
           }
 
-          $tour_action = "
+          $tour_action = "";
+          if ($tour_remaining_quota > 0) {
+            $tour_action = "
             <form action='reserve_tour.php' method='GET'>
               <input type='hidden' name='id' value='$tour_id'> 
               <input type='submit' class='btn' value='Make Reservation'>
             </form>";
+          }
+
+          $payment_action = "";
           
           if ($logged_in && $current_is_staff) {
             $tour_action = "
@@ -183,7 +252,7 @@
           }
 
           if ($logged_in && !$current_is_staff) {
-            $reserved_check_query = "SELECT ID, cancel_date FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id";
+            $reserved_check_query = "SELECT ID, cancel_date, payment_status FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id";
             $reserved_check_result = mysqli_query($db, $reserved_check_query);
             if (mysqli_num_rows($reserved_check_result) > 0) {
                 $row = $reserved_check_result->fetch_assoc();
@@ -193,14 +262,31 @@
                       You have reservation for this tour.
                       <form action='' method='POST'>
                         <input type='hidden' name='id' value='$tour_id'> 
-                        <input type='submit' class='btn' value='Cancel Reservation'>
+                        <input type='submit' class='btn' name='cancel-reservation' value='Cancel Reservation'>
                       </form>
                     </div>
                   ";
+
+                  $payment_action = "You have made the payment for this tour.";
+                  if ($row["payment_status"] != "PAID") {
+                    $rez_id = $row["ID"];
+                    $payment_action = "
+                      <div>
+                        <form action='payment.php' method='post'>
+                          <input type='hidden' name='rez_id' value=$rez_id /> 
+                          <input type='hidden' name='tour_id' value='$tour_id' />
+                          <input class='btn' type='submit' name='submit' value='Make payment'/>
+                        </form>
+                      </div>
+                    ";
+                  }
                 }
             }
           }
           
+          $quota_display = $tour_remaining_quota > 0 ?
+            "$tour_remaining_quota spots remaining."
+            : "The quota for this tour is full.";
           echo "
             <h2>$tour_name $cancel_indicator</h2>
             <div>
@@ -209,8 +295,9 @@
               End: $tour_end_date <br><br>
               $tour_description <br><br>
               $tour_price TL <br><br>
-              $tour_remaining_quota spots remaining <br><br>
+              $quota_display <br><br>
               $tour_action
+              $payment_action
             </div>
             <hr>
             <br>
