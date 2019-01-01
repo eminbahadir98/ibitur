@@ -1,6 +1,5 @@
 <?php
 
-  // TODO : Add a $current_page parameter to show current page as not clickable.
   function get_header($username, $is_staff) {
     $part = $is_staff ? "<a href = 'my_tours.php'>My Tours</a>" 
         : "<a href = 'my_reservations.php'>My Reservations</a>";
@@ -42,4 +41,42 @@
     </div>";
   }
 
+  function format_datetime($datetime) {
+    $sd_arr = explode("-", (explode(" ", $datetime)[0]));
+    return $sd_arr[2] . "/" . $sd_arr[1] . "/" . $sd_arr[0];
+  }
+
+  function get_tour_card($id, $name, $image_path, $start_date, $end_date,
+      $description, $price, $remaining_quota) {
+      $start_date = format_datetime($start_date);
+      $end_date = format_datetime($end_date);
+
+    return "
+      <div class='card tour-card'>
+
+        <div class='card-body'>
+          <image class='card-image' src='./images/$image_path'>
+          <h5 class='card-title'><b>$name</b></h5>
+          <p class='card-text'>
+            $description<br><br>
+            <b>Tour Start:</b> $start_date<br>
+            <b>Tour End:</b> $end_date<br><br>
+            
+          </p>
+        </div>
+
+        <div class='card-footer bg-white'>
+          <div class='right'>
+            <a href='view_tour.php?id=$id' class='btn btn-secondary'>View Details</a>
+            <a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>
+          </div>
+          There are <b>$remaining_quota</b> places remaining.<br>  
+          <b>$price TL</b>
+        </div>
+
+      </div>
+    ";
+  }
+
 ?>
+

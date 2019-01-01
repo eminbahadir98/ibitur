@@ -105,11 +105,29 @@ table {
 }
 
 .right-content {
-  margin-left: 35%;
+  margin-left: 30%;
   width: 70%;
 }
 
 .sidebar {
   width: 25%;
   float: left;
+}
+
+.card-image {
+  max-width: 35%;
+  max-height: 35%;
+  width: auto;
+  height: auto;
+  float: left;
+  border-radius: 5%;
+  margin-right: 3%;
+}
+
+.tour-card {
+  margin-bottom: 3%;
+}
+
+.view-tour-button {
+  float: right;
 }

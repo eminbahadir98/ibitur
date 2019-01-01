@@ -302,7 +302,7 @@
                         echo "<p>You don't have any promotion cards yet.</p>";
                     }
                     else {
-                        echo "<table>
+                        echo "<table class='table table-bordered'>
                         <tr>
                             <th> Promotion Code </th>
                             <th> Discount Percent </th>

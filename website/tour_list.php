@@ -16,20 +16,9 @@
       $tour_end_date = $row["end_date"];
       $tour_price = $row["price"];
       $tour_remaining_quota = $row["remaining_quota"];
-      $tours .= "
-        <div>
-          $tour_name<br>
-          $tour_image_path <br>
-          <a href='view_tour.php?id=$tour_ID'>Details</a> <br><br>
-          Start: $tour_start_date <br>
-          End: $tour_end_date <br><br>
-          $tour_description <br>
-          Price: $tour_price <br>
-          Remaining spots: $tour_remaining_quota <br>
-          <br>
-        </div>
-        <br><br>
-      ";
+      
+      $tours .= get_tour_card($tour_ID, $tour_name, $tour_image_path, $tour_start_date,
+          $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota);
     }
     if ($tours == "") {
       $tours = "No tours to show.";
