@@ -1,1 +1,3 @@
+.DS_Store
 website/util/configurations.php
+database/RESET_ALL.sql

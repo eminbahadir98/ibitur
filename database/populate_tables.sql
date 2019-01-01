@@ -79,4 +79,8 @@ INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date)
     VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
     (SELECT ID FROM Hotel WHERE name="Vikingen Hotel"),
     "2019-01-20", "2019-01-27");
-    
+
+INSERT INTO Tag(name) VALUES("Vegan");
+INSERT INTO Tag(name) VALUES("Historic");
+INSERT INTO Tag(name) VALUES("Short");
+INSERT INTO Tag(name) VALUES("Long");
