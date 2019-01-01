@@ -42,6 +42,7 @@
                 <hr>
                 
                 <?php
+                    echo "This is a confirmed staff acount.<br><br>";
                     echo "<b>Username:</b> $current_username<br>";
                     echo "<b>Email:</b> $email<br><br>";
                 ?>

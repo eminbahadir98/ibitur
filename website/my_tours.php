@@ -14,7 +14,7 @@
    <body class="content">
 
         <?php
-            if ($logged_in) {
+            if ($logged_in && $current_is_staff) {
                 echo get_header($current_fullname, $current_is_staff);
             } else {
                 header("location: login.php");
@@ -29,7 +29,7 @@
         <?php
         $tours_query = "SELECT T.ID FROM Tour T, Account A WHERE T.creator_ID = A.ID
             AND A.username ='".$_SESSION['session_username']."';";
-            
+
         $tours_result = mysqli_query($db,$tours_query);
         if ($tours_result->num_rows > 0) {
             while ($row = $tours_result->fetch_assoc()) {

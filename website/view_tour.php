@@ -145,7 +145,7 @@
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
         } else {
-          $cancel_indicator = $tour_is_cancelled ? "[TOUR CANCELLED]" : "";
+          $cancel_indicator = $tour_is_cancelled ? " [TOUR CANCELLED]" : "";
 
           $tour_days = "";
           $days_query = "SELECT day_no, day_date, D.description AS description
@@ -232,12 +232,14 @@
             $tour_trip_events = "No trip event entry...";
           }
 
+          $has_reservation_text = "";
+
           $tour_action = "";
           if ($tour_remaining_quota > 0) {
             $tour_action = "
-            <form action='reserve_tour.php' method='GET'>
+            <form class='tour-action-button' action='reserve_tour.php' method='GET'>
               <input type='hidden' name='id' value='$tour_id'> 
-              <input type='submit' class='btn' value='Make Reservation'>
+              <input type='submit' class='btn btn-primary' value='Make Reservation'>
             </form>";
           }
 
@@ -257,12 +259,12 @@
             if (mysqli_num_rows($reserved_check_result) > 0) {
                 $row = $reserved_check_result->fetch_assoc();
                 if ($row["cancel_date"] == null) {
+                  $has_reservation_text = "You have reservation for this tour.";
                   $tour_action = "
-                    <div>
-                      You have reservation for this tour.
-                      <form action='' method='POST'>
+                   <div class='tour-action-button'>
+                      <form class='tour-action-button' action='' method='POST'>
                         <input type='hidden' name='id' value='$tour_id'> 
-                        <input type='submit' class='btn' name='cancel-reservation' value='Cancel Reservation'>
+                        <input type='submit' class='btn btn-danger' name='cancel-reservation' value='Cancel Reservation'>
                       </form>
                     </div>
                   ";
@@ -271,11 +273,11 @@
                   if ($row["payment_status"] != "PAID") {
                     $rez_id = $row["ID"];
                     $payment_action = "
-                      <div>
-                        <form action='payment.php' method='post'>
+                      <div class='tour-action-button'>
+                        <form class='tour-action-button' action='payment.php' method='post'>
                           <input type='hidden' name='rez_id' value=$rez_id /> 
                           <input type='hidden' name='tour_id' value='$tour_id' />
-                          <input class='btn' type='submit' name='submit' value='Make payment'/>
+                          <input class='btn btn-primary' type='submit' name='submit' value='Make payment'/>
                         </form>
                       </div>
                     ";
@@ -287,18 +289,15 @@
           $quota_display = $tour_remaining_quota > 0 ?
             "$tour_remaining_quota spots remaining."
             : "The quota for this tour is full.";
+
+          $tour_card = get_tour_details_card($tour_action, $payment_action,
+            $tour_id, $tour_name . $cancel_indicator, $tour_image_path, $tour_start_date,
+            $tour_end_date,
+            $tour_description,
+            $tour_price, $tour_remaining_quota);
+          
           echo "
-            <h2>$tour_name $cancel_indicator</h2>
-            <div>
-              $tour_image_path <br><br>
-              Start: $tour_start_date <br>
-              End: $tour_end_date <br><br>
-              $tour_description <br><br>
-              $tour_price TL <br><br>
-              $quota_display <br><br>
-              $tour_action
-              $payment_action
-            </div>
+            $tour_card
             <hr>
             <br>
 

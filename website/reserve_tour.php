@@ -15,6 +15,7 @@
     if($profile_result->num_rows != 0) {
         $profile_found = true;
         $first_name = $profile_data['first_name'];
+        $middle_name = $profile_data['middle_name'];
         $national_id = $profile_data['national_ID'];
         $phone = $profile_data['telephone_no'];
         $last_name = $profile_data['last_name'];
@@ -85,19 +86,15 @@
                 echo "<h2> Tour Not Found </h2>";
             }
             else {
-                echo " $tour_image_path <br><br>
-                Start: $tour_start_date <br>
-                End: $tour_end_date <br><br>
-                $tour_description <br>
-                <br>
-                $tour_price TL<br><br>";
-                if($quota <= 5) {
-                    echo "Last $quota spots! <br><br>";
-                }
+                $reservation_card = get_tour_summary_card($tour_id, $tour_name,
+                    $tour_image_path, $tour_start_date, $tour_end_date, $tour_description,
+                    $tour_price, $quota);
+                echo $reservation_card;
             }
         ?>
         </div>
 
+        <br>
         <h3> Reservation Information </h3>
         <hr>
         <div class = "reservation-info">
@@ -105,9 +102,11 @@
             <div class = "reservation-info-left">
                 <?php
                     if($profile_found) {
-                        echo "<p>First Name: $first_name</p>";
-                        echo "<p>National ID: $national_id</p>";
-                        echo "<p>Phone Number: $phone</p>";
+                        echo "<p><b>Name:</b> $first_name $middle_name $last_name</p>";
+                        echo "<p><b>Gender:</b> $gender</p>";
+                        echo "<p><b>Date of Birth:</b> $dob</p>";
+                        echo "<p><b>National ID:</b> $national_id</p>";
+                        echo "<p><b>Phone Number:</b> $phone</p>";
                     }
                     else {
                         echo "<p>Profile Data Not Available.</p>";
@@ -117,19 +116,9 @@
 
             </div>
 
-            <div class = "reservation-info-left">
-
-                <?php
-                    if($profile_found) {
-                        echo "<p>Last Name: $last_name</p>";
-                        echo "<p>Date of Birth: $dob</p>";
-                        echo "<p>Gender: $gender</p>";
-                    }  
-                ?>
-
-            </div>
         </div>
 
+        <br>
         <h3> Dependent Information </h3>
         <hr>
         <?php
@@ -167,7 +156,11 @@
 
                     echo "</table>";
 
-                    echo "<br><input class='submit-button btn' type='submit' name='reserve-submit' value='Reserve Tour'/>";
+                    echo "<br><br><hr>Before proceeding, make sure that the information above is complete.
+                          <br>You can correct it in your <a href='my_account.php'>account page</a>.
+                          <br><br>";
+                    
+                    echo "<input class='submit-button btn' type='submit' name='reserve-submit' value='Reserve Tour'/>";
 
                     echo "</form>";
                 }

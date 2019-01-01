@@ -50,7 +50,9 @@
     if ($remaining_quota < 1) {
       return "The quota is full.";
     } else if ($remaining_quota == 1) {
-      return " There is only <b>$remaining_quota</b> place remaining.";
+      return " There is only <b>ONE</b> place remaining!";
+    } else if ($remaining_quota < 5) {
+      return " There are only <b>$remaining_quota</b> places remaining!";
     }
     return "There are <b>$remaining_quota</b> places remaining.";
   }
@@ -69,7 +71,7 @@
         <p class='card-text'>
           $description<br><br>
           <b>Tour Start:</b> $start_date<br>
-          <b>Tour End:</b> $end_date<br><br>
+          <b>Tour End:</b> $end_date
         </p>
     ";
   }
@@ -96,12 +98,10 @@
 
     return "
       <div class='card tour-card'>
-
         <div class='card-body'>
           $tour_card_body_skeleton
           $tour_card_footer_skeleton
         </div>
-
       </div>
     ";
   }
@@ -125,18 +125,38 @@
 
     return "
       <div class='card tour-card'>
-
         <div class='card-body'>
           $tour_card_body_skeleton
         </div>
-
         <div class='card-footer bg-white'>
           $tour_card_footer_skeleton
         </div>
-
       </div>
     ";
   }
+
+  function get_tour_details_card($button1, $button2, $id, $name, $image_path, $start_date, $end_date, $description,
+      $price, $remaining_quota) {
+       
+        $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
+        $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, $id, $price, $remaining_quota);
+    
+        return "
+          <div class='card tour-card'>
+            <div class='card-body'>
+              $tour_card_body_skeleton
+            </div>
+            <div class='card-footer bg-white'>
+              $tour_card_footer_skeleton
+              <div class='right'>
+                $button1
+                $button2
+              </div>
+            </div>
+          </div>
+        ";
+  }
+
 
 ?>
 
