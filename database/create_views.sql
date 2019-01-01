@@ -94,3 +94,45 @@ CREATE VIEW TourPreview AS
     (quota - resv_no) AS remaining_quota
     FROM Tour, ReservationCounts, TourInterval
     WHERE Tour.ID = ReservationCounts.tour_ID AND Tour.ID = TourInterval.tour_ID);
+    
+    
+    ----------------------------------------- TourAssoc--------------
+    CREATE VIEW TripAssociations AS 
+(SELECT
+    Tour.ID AS tour_ID,
+    Tour.name AS tour_name,
+    City.name AS city_name,
+    Country.name AS country_name 
+FROM (Tour, TripEvent, City, Country)
+WHERE (Tour.ID = TripEvent.tour_ID
+    AND TripEvent.city_ID = City.ID
+    AND City.country_ID = Country.ID));
+
+CREATE VIEW AccommodationAssociations AS
+(SELECT
+    Tour.ID AS tour_ID,
+    Tour.name AS tour_name,
+    City.name AS city_name,
+    Country.name AS country_name
+FROM (Tour, Accommodation, Hotel, City, Country)
+WHERE (Tour.ID = Accommodation.tour_ID
+    AND Accommodation.place_ID = Hotel.ID
+    AND Hotel.city_ID = City.ID
+    AND City.country_ID = Country.ID));
+
+CREATE VIEW TravelAssociations AS
+(SELECT
+    Tour.ID AS tour_ID,
+    Tour.name AS tour_name,
+    City.name AS city_name,
+    Country.name AS country_name
+FROM (Tour, TravelRoute, City, Country)
+WHERE (Tour.ID = TravelRoute.tour_ID
+    AND (TravelRoute.from_city_ID = City.ID OR TravelRoute.to_city_ID = City.ID)
+    AND City.country_ID = Country.ID));
+
+CREATE VIEW TourAssociations AS
+(SELECT DISTINCT * FROM TripAssociations)
+UNION (SELECT DISTINCT * FROM AccommodationAssociations)
+UNION (SELECT DISTINCT * FROM TravelAssociations);
+
