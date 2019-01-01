@@ -73,7 +73,7 @@
 <html>
    
    <head>
-      <title>IBITUR - Home</title>
+      <title>IBITUR - My Reservations</title>
       <link rel="stylesheet" href="style/style.css"/>
       <link rel="stylesheet" href="lib/bootstrap.min.css"/>
    </head>

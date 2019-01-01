@@ -6,7 +6,7 @@
 <html>
    
    <head>
-      <title>IBITUR - Home</title>
+      <title>IBITUR - My Tours</title>
       <link rel="stylesheet" href="style/style.css"/>
       <link rel="stylesheet" href="lib/bootstrap.min.css"/>
    </head>

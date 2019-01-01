@@ -3,10 +3,6 @@
     include('util/visuals.php');
     include('util/forms.php');
 
-    function checkNationality() {
-        return true;
-    }
-
     if ($logged_in == false) {
         header("location: login.php");
     }
@@ -17,6 +13,7 @@
         if( isset($_POST['profile-submit'] ) ) {
 
             $first_name = mysqli_real_escape_string($db, $_POST['first_name']);
+            $middle_name = mysqli_real_escape_string($db, $_POST['middle_name']);
             $last_name = mysqli_real_escape_string($db, $_POST['last_name']);
             $nationality = mysqli_real_escape_string($db, $_POST['nationality']);
             $national_id = mysqli_real_escape_string($db, $_POST['national_id']);
@@ -25,35 +22,30 @@
 
             $phone_number = mysqli_real_escape_string($db, $_POST['phone_number']);
 
-            if(checkNationality()) {
-                $update_query = " UPDATE CustomerAccount natural join Account
-                SET first_name = '$first_name', middle_name = '', last_name = '$last_name',
-                nationality = '$nationality', national_ID = $national_id,
-                gender= '$gender', date_of_birth = '$date_of_birth' WHERE CustomerAccount.ID = $current_id; ";
-                
-                $update_result = mysqli_query($db, $update_query);
-
-                $update_query = "UPDATE CustomerTelephones SET telephone_no = $phone_number  WHERE customer_ID = $current_id; ";
-                $update_result = mysqli_query($db, $update_query);
-                
-            }
-            else {
-                // Nationality exists.
-            }
+            $update_query = " UPDATE CustomerAccount natural join Account
+            SET first_name = '$first_name', middle_name = '$middle_name', last_name = '$last_name',
+            nationality = '$nationality', national_ID = $national_id,
+            gender= '$gender', date_of_birth = '$date_of_birth' WHERE CustomerAccount.ID = $current_id; ";
             
+            $update_result = mysqli_query($db, $update_query);
+
+            $update_query = "UPDATE CustomerTelephones SET telephone_no = $phone_number  WHERE customer_ID = $current_id; ";
+            $update_result = mysqli_query($db, $update_query);
+
         }
         else if(isset($_POST['dependent-add-submit'])) {
-
+            
             $dep_first_name = mysqli_real_escape_string($db, $_POST['dep_first_name']);
+            $dep_middle_name = mysqli_real_escape_string($db, $_POST['dep_middle_name']);
             $dep_last_name = mysqli_real_escape_string($db, $_POST['dep_last_name']);
             $dep_national_id = mysqli_real_escape_string($db, $_POST['dep_national_id']);
             $dep_dob = mysqli_real_escape_string($db, $_POST['dep_dob']);
             $dep_gender = mysqli_real_escape_string($db, $_POST['dep_gender']);
 
-            $add_dep_query = "INSERT INTO Dependent(customer_ID, national_ID, gender, date_of_birth, first_name, last_name)
-            VALUES( $current_id , $dep_national_id, '$dep_gender', '$dep_dob', '$dep_first_name', '$dep_last_name' );";
+            $add_dep_query = "INSERT INTO Dependent(customer_ID, national_ID, gender, date_of_birth, first_name, middle_name, last_name)
+            VALUES( $current_id , $dep_national_id, '$dep_gender', '$dep_dob', '$dep_first_name', '$dep_middle_name', '$dep_last_name' );";
 
-            $add_rep_result = mysqli_query($db, $add_dep_query);
+            $add_dep_result = mysqli_query($db, $add_dep_query);
         }
         else if(isset($_POST['remove-submit'])) {
             $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
@@ -107,7 +99,8 @@
         $profile_settings_data = $profile_settings_result->fetch_assoc();
         
 
-        $first_name = " " . $profile_settings_data['first_name'] . " " .  $profile_settings_data['middle_name'];
+        $first_name = $profile_settings_data['first_name'];
+        $middle_name = $profile_settings_data['middle_name'];
         $last_name = $profile_settings_data['last_name'];
         $nationality = $profile_settings_data['name'];
         $national_id = $profile_settings_data['national_ID'];
@@ -129,6 +122,7 @@
         }
         
         $dep_first_name = "";
+        $dep_middle_name = "";
         $dep_last_name = "";
         $dep_national_id = "";
         $dep_dob = "";
@@ -162,9 +156,25 @@
                 <hr>
                 <form action="" method="POST">
                 <div class="profile-left">
-                    <label>First Name</label>
+                    <label>First Name:</label>
                     <input class='form-control input-field' type='text' name='first_name' value = '<?php echo $first_name ?>'/> <br><br>
-                    <label>Nationality</label>
+
+                    <label>Middle Name:</label>
+                    <input class='form-control input-field' type='text' name='middle_name' value = '<?php echo $middle_name ?>'/> <br><br>
+
+                    <label>Last Name:</label>
+                    <input class='form-control input-field' type='text' name='last_name' value = '<?php echo $last_name ?>'/> <br><br>
+
+                    <label>Date of Birth:</label>
+                    <input class='form-control input-field' type='date' name='date_of_birth' value = '<?php echo $date_of_birth ?>'/> <br><br>
+                    <label>Gender:</label>
+                    <select class="form-control input-field" name="gender"> 
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                    </select> <br><br>
+
+                    <label>Nationality:</label>
                     <?php
                         echo '<select class="form-control input-field" name="nationality">';
                         $country_query = "SELECT ID, name FROM Country";
@@ -179,25 +189,12 @@
                         echo '</select> <br><br>';
                     ?>
 
-                    <label>National ID</label>
+                    <label>National ID:</label>
                     <input class='form-control input-field' type='text' name='national_id' value = '<?php echo $national_id ?>'/> <br><br>
-                    <label>Phone Number</label>
+                    
+                    <label>Phone Number:</label>
                     <input class='form-control input-field' type='text' name='phone_number' value = '<?php echo $phone_number ?>'/> <br><br>
-                    
-                </div>
-                <div class="profile-left">
 
-                    <label>Last Name:</label>
-                    <input class='form-control input-field' type='text' name='last_name' value = '<?php echo $last_name ?>'/> <br><br>
-                    <label>Date of Birth:</label>
-                    <input class='form-control input-field' type='date' name='date_of_birth' value = '<?php echo $date_of_birth ?>'/> <br><br>
-                    <label>Gender:</label>
-                    <select class="form-control input-field" name="gender"> 
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                    </select> <br><br>
-                    
                     <input class='btn right' type='submit' name ='profile-submit' value='Save Changes'/><br><br>
                 </div>
 
@@ -216,7 +213,7 @@
                 $get_dependent_result = mysqli_query($db, $get_dependent_query);
                 
                 if($get_dependent_result->num_rows == 0) {
-                    echo "<p>This customer does not have any dependents yet.</p>";
+                    echo "<p>You do not have any dependents yet.</p>";
                 }
                 else {
                     echo "<form name='remove-dependent' action='' method='post' >";
@@ -227,6 +224,7 @@
                             <tr>
                             <th> </th>
                             <th>First Name</th>
+                            <th>Middle Name</th>
                             <th>Last Name</th>
                             </tr>
                         </thead>
@@ -241,6 +239,7 @@
                         echo "<tr>";
                         echo "<td>" . $temp_check . "</td>";
                         echo "<td>" . $row['first_name'] . "</td>";
+                        echo "<td>" . $row['middle_name'] . "</td>";
                         echo "<td>" . $row['last_name'] . "</td>";
                         echo "</tr>";
 
@@ -262,20 +261,22 @@
                 <div class="dependent-left">
                     <label>First Name:</label>
                     <input class='form-control input-field' type='text' name='dep_first_name' value = '<?php echo $dep_first_name; ?>'/> <br><br>
-                    <label>National ID:</label>
-                    <input class='form-control input-field' type='text' name='dep_national_id' value = '<?php echo $dep_national_id; ?>'/> <br><br>
-                </div>
-                <div class="dependent-right">
+                    <label>Middle Name:</label>
+                    <input class='form-control input-field' type='text' name='dep_middle_name' value = '<?php echo $dep_middle_name; ?>'/> <br><br>
                     <label>Last Name:</label>
                     <input class='form-control input-field' type='text' name='dep_last_name' value = '<?php echo $dep_last_name ?>'/> <br><br>
                     <label>Date of Birth:</label>
                     <input class='form-control input-field' type='date' name='dep_dob' value = '<?php echo $dep_dob ?>'/> <br><br>
+                    
                     <label>Gender:</label>
                     <select class="form-control input-field" name="dep_gender">
                     <option>Male</option>
                     <option>Female</option>
                     <option>Other</option>
-                    </select> <br><br>
+                    </select><br><br>
+
+                    <label>National ID:</label>
+                    <input class='form-control input-field' type='text' name='dep_national_id' value = '<?php echo $dep_national_id; ?>'/> <br><br>
                     
                     <input class='btn right' type='submit' name ='dependent-add-submit' value='Add Dependent'/><br><br>
                 </div>
