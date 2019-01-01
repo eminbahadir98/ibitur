@@ -338,8 +338,13 @@
                     echo "<b>Username:</b> $current_username<br>";
                     echo "<b>Email:</b> $email<br><br>";
                 ?>
+                <form method='post'>
+                    <label>New Email: </label>
+                    <input class='form-control input-field' type='text' name='new_email' value = ''/><br><br>
+                    <input class='btn right' type='submit' name='email-submit' value='Change Email'/>
+                </form>
                 <?php
-                    echo get_form_btn("Change Email");
+                    
                     echo get_form_btn("Change Password");
                 ?>
                 
