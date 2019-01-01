@@ -295,7 +295,7 @@
                 <h2> Promotion Cards </h2>
                 <hr>
                 <?php
-                    $promotion_query = "select * from PromotionCard natural join CustomerPromotionCards;";
+                    $promotion_query = "select * from PromotionCard natural join CustomerPromotionCards where customer_ID = '$current_id';";
                     $promotion_result = mysqli_query($db, $promotion_query);
 
                     if($promotion_result->num_rows == 0) {

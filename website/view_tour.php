@@ -269,7 +269,7 @@
                     </div>
                   ";
 
-                  $payment_action = "You have made the payment for this tour.";
+                  $payment_action = "You have already paid for this tour.";
                   if ($row["payment_status"] != "PAID") {
                     $rez_id = $row["ID"];
                     $payment_action = "
