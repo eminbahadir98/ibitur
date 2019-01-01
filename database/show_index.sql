@@ -1,0 +1,2 @@
+SHOW INDEX FROM Account;
+SHOW INDEX FROM Tour;

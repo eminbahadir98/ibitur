@@ -248,7 +248,7 @@
 
                     echo "</tbody></table>";
 
-                    echo "<input class='submit-button btn' type='submit' name='remove-submit' value='Remove Selected Dependent(s)'/>";
+                    echo "<input class='right btn' type='submit' name='remove-submit' value='Remove Selected Dependent(s)'/>";
 
                     echo "</form>";
                 }
