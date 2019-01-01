@@ -31,7 +31,7 @@
       }
     ?>
 
-    <h1 class="home-title">IBITUR - Tour Reservation</h1>
+    <h1 class="home-title">IBITUR</h1>
 
     <div class="home-content">
       <h2>Where do you want to travel?</h2>

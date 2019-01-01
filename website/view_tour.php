@@ -143,18 +143,36 @@
             $tour_trip_events = "No trip event entry...";
           }
 
-          $tour_action_button = "
+          $tour_action = "
             <form action='reserve_tour.php' method='GET'>
               <input type='hidden' name='id' value='$tour_id'> 
               <input type='submit' class='btn' value='Make Reservation'>
             </form>";
           
           if ($logged_in && $current_is_staff) {
-            $tour_action_button = "
+            $tour_action = "
               <form action='manage_tour.php' method='GET'>
                 <input type='hidden' name='id' value='$tour_id'> 
                 <input type='submit' class='btn' value='Manage Tour'>
               </form>";
+          }
+
+          if ($logged_in && !$current_is_staff) {
+            $reserved_check_query = "SELECT ID FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id";
+            $reserved_check_result = mysqli_query($db, $reserved_check_query);
+            if (mysqli_num_rows($reserved_check_result) > 0) {
+                $row = $reserved_check_result->fetch_assoc();
+                // TODO : Get pnr and room numbers
+                $tour_action = "
+                  <div>
+                    You have reservation for this tour.
+                    <form action='cancel_reservation.php' method='POST'>
+                      <input type='hidden' name='id' value='$tour_id'> 
+                      <input type='submit' class='btn' value='Cancel Reservation'>
+                    </form>
+                  </div>
+                ";
+            }
           }
           
           echo "
@@ -166,7 +184,7 @@
               $tour_description <br><br>
               $tour_price TL <br><br>
               $tour_remaining_quota spots remaining <br><br>
-              $tour_action_button
+              $tour_action
             </div>
             <hr>
             <br>
