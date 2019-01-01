@@ -5,6 +5,10 @@
 
   function getTours($tours_query) {
     $db = $GLOBALS["db"];
+    $logged_in = $GLOBALS["logged_in"];
+    $current_id = isset($GLOBALS["current_id"]) ? $GLOBALS["current_id"] : false;
+    $current_is_staff = isset($GLOBALS["current_is_staff"]) ? $GLOBALS["current_is_staff"] : false;
+
     $tours_result = mysqli_query($db, $tours_query);
     $tours = "";
     while ($row = $tours_result->fetch_assoc()) {
@@ -16,8 +20,22 @@
       $tour_end_date = $row["end_date"];
       $tour_price = $row["price"];
       $tour_remaining_quota = $row["remaining_quota"];
+
+      $reserved_before = false;
       
-      $tours .= get_tour_purchase_card($tour_ID, $tour_name, $tour_image_path, $tour_start_date,
+      if ($logged_in) {
+        $reservation_check_query = "SELECT cancel_date FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_ID;";
+        $reservation_check_result = mysqli_query($db, $reservation_check_query);
+        if (mysqli_num_rows($reservation_check_result) > 0) {
+          if ($reservation_check_result->fetch_assoc()["cancel_date"] == null) {
+            $reserved_before = true;
+          }
+        }
+      }
+
+      
+
+      $tours .= get_tour_purchase_card($current_is_staff, $reserved_before, $tour_ID, $tour_name, $tour_image_path, $tour_start_date,
           $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota);
     }
     if ($tours == "") {

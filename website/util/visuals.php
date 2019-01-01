@@ -76,11 +76,19 @@
     ";
   }
 
-  function get_tour_card_footer_skeleton($remove_buttons, $id, $price, $remaining_quota) {
+  function get_tour_card_footer_skeleton($remove_buttons, $reserved, $is_staff, $id, $price, $remaining_quota) {
+    
+    $reservation_button = $reserved ?
+      "<button class='btn' disabled>Reserved</button>" :
+      "<a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>";
+    
+    $reservation_button = !$is_staff ? $reservation_button :
+      "<a href='manage_tour.php?id=$id' class='btn btn-primary'>Manage Tour</a>";
+
     $button_part = $remove_buttons ? "" :
       "<div class='right'>
           <a href='view_tour.php?id=$id' class='btn btn-secondary'>View Details</a>
-          <a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>
+          $reservation_button
         </div>";
     $remaining_quota_text = get_remaining_quota_text($remaining_quota);
     return "
@@ -94,7 +102,7 @@
       $price, $remaining_quota) {
     
     $tour_card_body_skeleton = get_tour_card_body_skeleton(true, $id, $name, $image_path, $start_date, $end_date, $description);
-    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, $id, $price, $remaining_quota);
+    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, $id, $price, $remaining_quota);
 
     return "
       <div class='card tour-card'>
@@ -117,11 +125,11 @@
     ";
   }
 
-  function get_tour_purchase_card($id, $name, $image_path, $start_date, $end_date, $description,
+  function get_tour_purchase_card($is_staff, $reserved, $id, $name, $image_path, $start_date, $end_date, $description,
       $price, $remaining_quota) {
     
     $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
-    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(false, $id, $price, $remaining_quota);
+    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(false, $reserved, $is_staff, $id, $price, $remaining_quota);
 
     return "
       <div class='card tour-card'>
@@ -139,7 +147,7 @@
       $price, $remaining_quota) {
        
         $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
-        $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, $id, $price, $remaining_quota);
+        $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, $id, $price, $remaining_quota);
     
         return "
           <div class='card tour-card'>

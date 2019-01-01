@@ -249,7 +249,7 @@
             $tour_action = "
               <form action='manage_tour.php' method='GET'>
                 <input type='hidden' name='id' value='$tour_id'> 
-                <input type='submit' class='btn' value='Manage Tour'>
+                <input type='submit' class='btn btn-primary' value='Manage Tour'>
               </form>";
           }
 
