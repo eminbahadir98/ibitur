@@ -35,7 +35,7 @@
 
     <div class="home-content">
       <h2>Where do you want to travel?</h2>
-        <form action='tour_list.php' method='GET'>
+        <form action='tours.php' method='GET'>
           <input class="form-control home-search" type="text" name="query"/>
           <input type='submit' class='btn' value='Search'>
         </form>

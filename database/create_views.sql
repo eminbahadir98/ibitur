@@ -141,3 +141,21 @@ CREATE VIEW TourAssociations AS
 (SELECT DISTINCT * FROM TripAssociations)
 UNION (SELECT DISTINCT * FROM AccommodationAssociations)
 UNION (SELECT DISTINCT * FROM TravelAssociations);
+
+
+-- City Popularity 
+
+DROP VIEW IF EXISTS CityPopularity;
+DROP VIEW IF EXISTS TempTourAssociations;
+
+CREATE VIEW TempTourAssociations AS (
+    SELECT tour_ID, city_name FROM TourAssociations NATURAL JOIN TourPreview
+    WHERE TRUE -- (start-of-the-month) <= start_date AND start_date <= (end-of-the-month)
+);
+
+CREATE VIEW CityPopularity AS (
+    SELECT city_name, SUM(resv_no) AS popularity
+    FROM TempTourAssociations NATURAL JOIN ReservationCounts
+    GROUP BY city_name    
+    ORDER BY popularity DESC
+);

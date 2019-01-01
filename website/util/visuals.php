@@ -18,8 +18,8 @@
     return 
     "<div class='header'>
       <a href = 'index.php'>Home</a> |
-      <a href = 'tour_list.php'>Tours</a> |
-      <a href = 'tour_list.php'>Top Lists</a>
+      <a href = 'tours.php'>Tours</a> |
+      <a href = 'top_lists.php'>Top Lists</a>
       <span class='right'>
         $profile_bar
       </span>
