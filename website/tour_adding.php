@@ -2,6 +2,11 @@
 include("util/visuals.php");
 include("util/session.php");
 
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $error = "";
 
 /**
@@ -82,7 +87,7 @@ $error = "";
 
 }*/
 
-
+	
 ?>
 
 <html>
@@ -170,10 +175,10 @@ if ($logged_in && $current_is_staff) {
                 return false;
             }
 
-            if(!is_valid_days(start_date,end_date)){
+            /*if(!is_valid_days(start_date,end_date)){
                 showError("For Tour: End date cannot be before the start date");
                 return false;
-            }
+            }*/
 
             if (tour_desc.length < 20) {
                 showError("Tour description contain minimum of 20 characters.");
@@ -219,26 +224,38 @@ if ($logged_in && $current_is_staff) {
         }
 
 
+        var day_base = "day";
+        var day_row = 1;
+
         function createTourDay() {
 
             var start_date = document.forms["add-tour"]["start_date"].value;
             var end_date = document.forms["add-tour"]["end_date"].value;
             var tour_day      = document.forms["add-tour"]["tour_day"].value;
             var tour_day_desc = document.forms["add-tour"]["tour_day_desc"].value;
-            var included_loc1 = document.forms["add-tour"]["included_loc1"].options[document.forms["add-tour"]["included_loc1"].selectedIndex].text;
-            var included_loc2 = document.forms["add-tour"]["included_loc2"].options[document.forms["add-tour"]["included_loc2"].selectedIndex].text;
+            //var included_loc1 = document.forms["add-tour"]["included_loc1"].options[document.forms["add-tour"]["included_loc1"].selectedIndex].text;
+            //var included_loc2 = document.forms["add-tour"]["included_loc2"].options[document.forms["add-tour"]["included_loc2"].selectedIndex].text;
             if (tour_day) {
-                if(!is_valid_days(start_date,tour_day) || !is_valid_days(tour_day,end_date)){
+                /*if(!is_valid_days(start_date,tour_day) || !is_valid_days(tour_day,end_date)){
                     showError("Tour days must be between the start date and end date included");
                     return false;
-                }
+                }*/
 
                 if (checkBaseInfo("add-tour")) {
                     day_counter++;
-                    var numOfDay = daysBetween(start_date, tour_day);
-                    document.getElementById("tour-days").innerHTML += "<tr id='" + day_counter + "'><p><td> " + numOfDay + "</p></td><p><td>" + included_loc1
-                        + "</p></td><p><td>" + included_loc2 + "</p></td><p><td>" + formattedDate(tour_day) + "</p></td><p><td> " + tour_day_desc + "</p></td><p><td>"
-                        + "<button class='submit-button btn' type='button' onclick='removeField(" + day_counter + ")'>Remove</button><p><td></tr>";
+
+                    var param_name = day_base + day_row + "[]";
+
+                    // var numOfDay = daysBetween(start_date, tour_day);
+                    document.getElementById("tour-days").innerHTML += "<tr id='" + day_counter + "'>\
+                    <td> " + getHidden(param_name, day_row) + day_row + "</td>\
+                    <td>" + getHidden(param_name, tour_day)  + formattedDate(tour_day) + "</td>\
+                    <td> " + getHidden(param_name, tour_day_desc)  + tour_day_desc + "</td>\
+                    <td>" + "<button class='submit-button btn' type='button' onclick='removeField(" + day_counter + ")'>Remove</button></td>\
+                    </tr>";
+
+                    document.getElementById("day_row").value = day_row;
+                    day_row++;
 
                 }
             }
@@ -252,12 +269,15 @@ if ($logged_in && $current_is_staff) {
 
 
 
+        var accom_base = "accom";
+        var accom_row = 1;
 
 
         function createAccom(){
             var start_accom_date = document.forms["add-tour"]["start_accom_date"].value;
             var end_accom_date   = document.forms["add-tour"]["end_accom_date"].value;
             var hotel            = document.forms["add-tour"]["hotel"].options[document.forms["add-tour"]["hotel"].selectedIndex].text;
+            var hotel_id            = document.forms["add-tour"]["hotel"].options[document.forms["add-tour"]["hotel"].selectedIndex].value;
             var rating = hotel.split(", ")[2];
             var address = hotel.split(", ").slice(3,hotel.split(", ").length);
             hotel = hotel.split(", ")[0] + ", " + hotel.split(", ")[1];
@@ -270,12 +290,20 @@ if ($logged_in && $current_is_staff) {
 
                 var numOfDay = daysBetween(start_accom_date, end_accom_date);
                 accom_counter++;
-                document.getElementById("accoms").innerHTML += "<tr id='" + accom_counter + "'><p><td> " + hotel + "</p></td><p><td>" + numOfDay + "</p></td><p><td>"
-                    + formattedDate(start_accom_date) + "</p></td><p><td>" + formattedDate(end_accom_date)+ "</p></td><p><td>" +
-                  rating + "</p></td><p><td>" + address + " </p></td><p><td>"
-                    + "<button class='submit-button btn' type='button' onclick='removeField(" + accom_counter + ")'>Remove</button></p></td></tr>";
+                var param_name = accom_base + accom_row + "[]";
 
-
+                document.getElementById("accoms").innerHTML += "<tr id='" + accom_counter + "'>\
+                <td>" + getHidden(param_name, hotel_id) + hotel_id + "</td>\
+                <td>" + getHidden(param_name, hotel) +hotel + "</td>\
+                <td>" + getHidden(param_name, start_accom_date)+formattedDate(start_accom_date) + "</td>\
+                <td>" + getHidden(param_name, end_accom_date) +formattedDate(end_accom_date)+ "</td>\
+                <td>" + getHidden(param_name, rating) +rating + "</td>\
+                <td>" + getHidden(param_name, address) + address + " </td>\
+                <td>" + "<button class='submit-button btn' type='button' onclick='removeField(" + accom_counter + ")'>Remove</button></td>\
+                </tr>";
+                document.getElementById("accom_row").value = accom_row;
+                accom_row++;
+                console.log(document.getElementById("accoms").innerHTML);
 
             } else {
                 showError("For Accommodations: Please enter an end date and start date to proceed");
@@ -283,9 +311,18 @@ if ($logged_in && $current_is_staff) {
             }
         }
 
+        function getHidden(name, val) {
+            return "<input type='hidden' name='" + name + "' value='" + val + "' />";
+        }
+
+        var route_base = "route";
+        var route_row = 1;
+        
         function createTravelRoute() {
             var source_city         = document.forms["add-tour"]["source_city"].options[document.forms["add-tour"]["source_city"].selectedIndex].text;
             var dest_city           = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].text;
+            var source_city_id = document.forms["add-tour"]["source_city"].options[document.forms["add-tour"]["source_city"].selectedIndex].value;
+            var dest_city_id = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].value;
             var departure_date      = document.forms["add-tour"]["departure_date"].value;
             var departure_time      = document.forms["add-tour"]["departure_time"].value;
             var vehicle_type        = document.forms["add-tour"]["vehicle_type"].options[document.forms["add-tour"]["vehicle_type"].selectedIndex].text;
@@ -296,10 +333,24 @@ if ($logged_in && $current_is_staff) {
             if(departure_date && departure_time && departure_address && destination_address && travel_company){
                 route_counter++;
 
-                document.getElementById("travel-routes").innerHTML += "<tr id='" + route_counter + "'><p><td> " + source_city +" </p></td><p><td> "+ dest_city
-                    + "</p></td><p><td>"+ vehicle_type +"</p></td><p><td>" + travel_company+" )"+"</p></td><p><td>" + formattedDate(departure_date) + "</p></td><p><td>"
-                    + departure_time + "</p></td><p><td>" + departure_address+ "</p></td><p><td>" + destination_address + "</p></td><p><td>"+
-                    "<button class='submit-button btn' type='button' onclick='removeField(" + route_counter + ")'>Remove</button></p></td></tr>";
+                var param_name = route_base + route_row + "[]";
+
+                document.getElementById("travel-routes").innerHTML += "<tr id='" + route_counter + "'>\
+                <td> " + getHidden(param_name, source_city_id) + source_city +"</td>\
+                <td> "+ getHidden(param_name, dest_city_id) + dest_city + "</td>\
+                <td>"+ getHidden(param_name, vehicle_type) + vehicle_type +"</td>\
+                <td>" + getHidden(param_name, travel_company)+ travel_company +"</td>\
+                <td>" + getHidden(param_name, departure_date) + formattedDate(departure_date) + "</td>\
+                <td>" + getHidden(param_name, departure_time)+ departure_time + "</td>\
+                <td>" + getHidden(param_name, departure_address) + departure_address+ "</td>\
+                <td>" + getHidden(param_name, destination_address) + destination_address + "</td>\
+                <td>" + "<button class='submit-button btn' type='button' onclick='removeField(" + route_counter + ")'>Remove</button></td>\
+                </tr>";
+
+                document.getElementById("route_row").value = route_row;
+
+                route_row++;
+
             } else
             {
 
@@ -311,17 +362,32 @@ if ($logged_in && $current_is_staff) {
 
         }
 
+        var event_base = "event";
+        var event_row = 1;
+
         function createTripEvent() {
+            
             var event_title       = document.forms["add-tour"]["event_title"].value;
             var event_date        = document.forms["add-tour"]["event_date"].value;
             var event_description = document.forms["add-tour"]["event_description"].value;
             var event_city =  document.forms["add-tour"]["event_city"].options[document.forms["add-tour"]["event_city"].selectedIndex].text;
+            var event_city_id = document.forms["add-tour"]["event_city"].options[document.forms["add-tour"]["event_city"].selectedIndex].value;
             if(event_date && event_description && event_title){
                 event_counter++;
 
-                document.getElementById("trip-events").innerHTML += "<tr id='" + event_counter + "'><p><td><u> " + event_title + "</u> </p></td> <p><td>  "
-                    + formattedDate(event_date)+"</p></td><p><td> "+ event_city +"</p></td><p><td>"+ event_description +"</p></td><p><td>"+
-                    "<button class='submit-button btn' type='button' onclick='removeField(" + event_counter + ")'>Remove</button></p></td></tr>";
+                var param_name = event_base + event_row + "[]";
+
+                document.getElementById("trip-events").innerHTML += "<tr id='" + event_counter + "'>\
+                <td>" + getHidden(param_name, event_title) + event_title + "</td>\
+                <td>" + getHidden(param_name, event_date) + formattedDate(event_date)+"</td>\
+                <td>"+ getHidden(param_name, event_city_id) + event_city +"</td>\
+                <td>"+ getHidden(param_name, event_description) + event_description +"</td>\
+                <td>"+ "<button class='submit-button btn' type='button' onclick='removeField(" + event_counter + ")'>Remove</button></td>\
+                </tr>";
+
+                document.getElementById("event_row").value = event_row;
+
+                event_row++;
             } else
             {
                 showError("For Trip Events: Please fill the empty places");
@@ -355,10 +421,11 @@ if ($logged_in && $current_is_staff) {
 
 <h1 class="home-title">Add New Tour</h1>
 <div class="register-div">
-
-    <form name="add-tour" action="" method="post" >
+    
+    <form name="add-tour" action="add_tour_post.php" method="post" >
 
         <!--<form name="register-form"  action="" method="post">-->
+        
             <label>Title:</label>
             <input required class="form-control input-field" type="text" name="title"/> <br><br>
             <label>Description:</label>
@@ -375,10 +442,10 @@ if ($logged_in && $current_is_staff) {
             <input required class="form-control input-field" type="date" name="cancelling_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
             <label>Start Date:</label>
-            <input required class="form-control input-field" type="date" name="start_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input  class="form-control input-field" type="date" name="start_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
             <label>End Date:</label>
-            <input required class="form-control input-field" type="date" name="end_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input  class="form-control input-field" type="date" name="end_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
             <label>Tour Tags:</label>
             <select class="form-control input-field" name="vehicle-type" id="tour_tag">
@@ -387,55 +454,28 @@ if ($logged_in && $current_is_staff) {
             </select> <br><br>
 
             <hr>
-
+        
             <h3 class="home-title">Tour Schedule</h3>
 
             <table id="tour-days">
 
                 <tr>
                     <th>Day</th>
-                    <th>Included Location 1</th>
-                    <th>Included Location 2</th>
                     <th>Tour Day Date</th>
                     <th>Description</th>
                     <th>Remove Tour Day</th>
                 </tr>
 
             </table>
+
+            <input type='hidden' id='day_row' name='day_row' value='0' />
             <hr>
             <br><br>
 
             <label>Date:</label>
             <input required class="form-control input-field" type="date" id="tour_day" name="tour_day" min=<?php echo date("Y-m-j")?>> <br><br>
 
-            <label>Included Locations:</label>
-            <?php
-            echo '<select class="form-control input-field" name="included_loc1">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select> <br><br>';
-            ?>
-            <br>
-            <?php
-            echo '<select class="form-control input-field" name="included_loc2">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select> <br><br>';
-            ?>
+            
 
             <label>Decription:</label>
             <textarea class="form-control input-field" name="tour_day_desc" rows="5" cols="50" wrap="soft"> </textarea>
@@ -450,7 +490,7 @@ if ($logged_in && $current_is_staff) {
             <hr>
 
             <h3 class="home-title">Accommodations</h3>
-
+            
             <table id ="accoms">
                 <tr>
                     <th>Accommodation Place</th>
@@ -463,6 +503,8 @@ if ($logged_in && $current_is_staff) {
                 </tr>
 
             </table>
+            <input type='hidden' id='accom_row' name='accom_row' value='0' />
+            
             <hr>
             <br><br>
 
@@ -472,11 +514,8 @@ if ($logged_in && $current_is_staff) {
             $country_query = "SELECT address, star_rating, Hotel.ID as hid, Hotel.name as hname, City.name as cname FROM Hotel cross join City WHERE Hotel .city_ID = City.ID";
             $country_result = mysqli_query($db, $country_query);
             while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["hid"];
-                echo " name=";
-                echo $row["address"];
-                echo ">";
+                echo "<option value='" . $row['hid'] . "' name='" . $row["hname"] . "'>";
+
                 echo $row["hname"].", ".$row["cname"].", ".$row["star_rating"].", Address:".$row["address"];
                 echo '</option>';
             }
@@ -485,10 +524,10 @@ if ($logged_in && $current_is_staff) {
 
             <br><br>
             <label>Start Date:</label>
-            <input required class="form-control input-field" type="date" id="start_accom_date" name="start_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input class="form-control input-field" type="date" id="start_accom_date" name="start_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
             <br><br>
             <label>End Date:</label>
-            <input required class="form-control input-field" type="date" id="end_accom_date" name="end_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input class="form-control input-field" type="date" id="end_accom_date" name="end_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
             <br><br>
 
             <button class="submit-button btn" type="button" onclick="createAccom()">Add New Accommodation</button>
@@ -512,6 +551,7 @@ if ($logged_in && $current_is_staff) {
                 </tr>
 
             </table>
+            <input type='hidden' id='route_row' name='route_row' value='0' />
             <hr>
             <br><br>
 
@@ -549,11 +589,11 @@ if ($logged_in && $current_is_staff) {
 
             <br><br>
             <label>Departure Date:</label>
-            <input required class="form-control input-field" type="date" id="departure_date" name="departure_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input  class="form-control input-field" type="date" id="departure_date" name="departure_date" min=<?php echo date("Y-m-j")?>> <br><br>
             <br><br>
 
             <label>Departure Time:</label>
-            <input required class="form-control input-field" type="text" id="departure_time" name="departure_time" > <br><br>
+            <input  class="form-control input-field" type="text" id="departure_time" name="departure_time" > <br><br>
             <br><br>
 
             <label>Vehicle Type:</label>
@@ -565,7 +605,7 @@ if ($logged_in && $current_is_staff) {
             </select> <br><br>
 
             <label>Travel Company:</label>
-            <input required class="form-control input-field" type="text" id="travel_company" name="travel_company" > <br><br>
+            <input  class="form-control input-field" type="text" id="travel_company" name="travel_company" > <br><br>
             <br><br>
 
 
@@ -600,12 +640,12 @@ if ($logged_in && $current_is_staff) {
                     <th>Remove Trip Event</th>
                 </tr>
             </table>
-
+            <input type='hidden' id='event_row' name='event_row' value='0' />
             <hr>
             <br><br>
 
             <label>Event Title:</label>
-            <input required class="form-control input-field" type="text" id="event_title" name="tevent_title" > <br><br>
+            <input  class="form-control input-field" type="text" id="event_title" name="tevent_title" > <br><br>
             <br><br>
 
             <label>Description:</label>
@@ -615,7 +655,7 @@ if ($logged_in && $current_is_staff) {
             <br><br>
 
             <label>Event Date:</label>
-            <input required class="form-control input-field" type="date" id="event_date" name="event_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input  class="form-control input-field" type="date" id="event_date" name="event_date" min=<?php echo date("Y-m-j")?>> <br><br>
             <br><br>
 
             <label>Event City:</label>
@@ -627,7 +667,7 @@ if ($logged_in && $current_is_staff) {
             while ($row = $country_result->fetch_assoc()) {
                 echo '<option value=';
                 echo $row["ID"];
-                echo ">";
+                echo "'>";
                 echo $row["name"];
                 echo '</option>';
             }
@@ -641,7 +681,7 @@ if ($logged_in && $current_is_staff) {
         <br>
         <hr>
         <br>
-        <button class="right btn" type="button" onclick="checkAllTourInfo()">Add Tour</button>
+        <button class="right btn" type="submit" name="add-tour-submit" onclick="checkAllTourInfo()">Add Tour</button>
     </form>
 
 
