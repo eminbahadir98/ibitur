@@ -34,7 +34,7 @@
         $cancel_message = $cancel_succeed ?
           "The tour has been successfully cancelled." :
           "Cancellation failed. The tour might be cancelled already.";
-        echo
+        $cancel_alert =
           "<div class='alert alert-success' role='alert'>
             $cancel_message
           </div>";
@@ -101,6 +101,7 @@
       <h1>Tour Management</h1>
       <hr>
       <?php
+        echo $cancel_alert;
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
         } else {

@@ -1,6 +1,16 @@
 <?php
   include('util/session.php');
   include('util/visuals.php');
+
+  $reservation_cancel_succeed = false;
+  $reservation_cancel_performed = false;
+  if($_SERVER["REQUEST_METHOD"] == "POST") {
+    $cancelled_tour_id = $_GET['id'];
+    $cancel_query = "UPDATE Reservation SET cancel_date = NOW()
+      WHERE customer_ID = $current_id AND tour_ID = $cancelled_tour_id";
+    $reservation_cancel_succeed = mysqli_query($db, $cancel_query);
+    $reservation_cancel_performed = true;
+  }
 ?>
 
 <html>
@@ -17,6 +27,17 @@
         echo get_header($current_fullname, $current_is_staff);
       } else {
         echo get_header(null, false);
+      }
+
+      $reservation_cancel_alert = "";
+      if ($reservation_cancel_performed) {
+        $reservation_cancel_message = $reservation_cancel_succeed ?
+          "Your reservation has been successfully cancelled." :
+          "Cancellation failed. Please try again later.";
+        $reservation_cancel_alert =
+          "<div class='alert alert-success' role='alert'>
+            $reservation_cancel_message
+          </div>";
       }
 
       $tour_found = true;
@@ -52,11 +73,15 @@
     ?>
     
     <div class="inner-content">
+      <h1>Tour Details</h1>
+      <hr>
       <?php
+        echo $reservation_cancel_alert;
+
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
         } else {
-          $cancel_indicator = $tour_is_cancelled ? "[CANCELLED]" : "";
+          $cancel_indicator = $tour_is_cancelled ? "[TOUR CANCELLED]" : "";
 
           $tour_days = "";
           $days_query = "SELECT day_no, day_date, D.description AS description
@@ -158,20 +183,21 @@
           }
 
           if ($logged_in && !$current_is_staff) {
-            $reserved_check_query = "SELECT ID FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id";
+            $reserved_check_query = "SELECT ID, cancel_date FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id";
             $reserved_check_result = mysqli_query($db, $reserved_check_query);
             if (mysqli_num_rows($reserved_check_result) > 0) {
                 $row = $reserved_check_result->fetch_assoc();
-                // TODO : Get pnr and room numbers
-                $tour_action = "
-                  <div>
-                    You have reservation for this tour.
-                    <form action='cancel_reservation.php' method='POST'>
-                      <input type='hidden' name='id' value='$tour_id'> 
-                      <input type='submit' class='btn' value='Cancel Reservation'>
-                    </form>
-                  </div>
-                ";
+                if ($row["cancel_date"] == null) {
+                  $tour_action = "
+                    <div>
+                      You have reservation for this tour.
+                      <form action='' method='POST'>
+                        <input type='hidden' name='id' value='$tour_id'> 
+                        <input type='submit' class='btn' value='Cancel Reservation'>
+                      </form>
+                    </div>
+                  ";
+                }
             }
           }
           

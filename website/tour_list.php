@@ -8,26 +8,28 @@
     $tours_result = mysqli_query($db, $tours_query);
     $tours = "";
     while ($row = $tours_result->fetch_assoc()) {
-    $tour_name = $row["name"];
-    $tour_description = $row["description"];
-    $tour_image_path = $row["image_path"];
-    $tour_start_date = $row["start_date"];
-    $tour_end_date = $row["end_date"];
-    $tour_price = $row["price"];
-    $tour_remaining_quota = $row["remaining_quota"];
-    $tours .= "
-      <div>
-        $tour_name<br>
-        $tour_image_path <br><br>
-        Start: $tour_start_date <br>
-        End: $tour_end_date <br><br>
-        $tour_description <br>
-        Price: $tour_price <br>
-        Remaining spots: $tour_remaining_quota <br>
-        <br>
-      </div>
-      <br><br>
-    ";
+      $tour_ID = $row["tour_ID"];
+      $tour_name = $row["name"];
+      $tour_description = $row["description"];
+      $tour_image_path = $row["image_path"];
+      $tour_start_date = $row["start_date"];
+      $tour_end_date = $row["end_date"];
+      $tour_price = $row["price"];
+      $tour_remaining_quota = $row["remaining_quota"];
+      $tours .= "
+        <div>
+          $tour_name<br>
+          $tour_image_path <br>
+          <a href='view_tour.php?id=$tour_ID'>Details</a> <br><br>
+          Start: $tour_start_date <br>
+          End: $tour_end_date <br><br>
+          $tour_description <br>
+          Price: $tour_price <br>
+          Remaining spots: $tour_remaining_quota <br>
+          <br>
+        </div>
+        <br><br>
+      ";
     }
     if ($tours == "") {
       $tours = "No tours to show.";

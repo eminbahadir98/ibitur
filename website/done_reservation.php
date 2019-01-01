@@ -10,8 +10,6 @@
 
     if(isset($_POST['reserve-submit'])) {
         
-        echo $first_name;
-        
         $reservation_query = "INSERT INTO Reservation(customer_ID, tour_ID, issue_date, payment_status, cancel_date)
         VALUES($current_id, $tour_id, NOW(), 'UNPAID', NULL);";
 
@@ -46,7 +44,6 @@
 
         
     }
-
 
 ?>
 
