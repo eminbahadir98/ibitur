@@ -3,19 +3,17 @@
     include('util/visuals.php');
     include('util/forms.php');
 
-    function updateProfile() {
-        
-    }
-
     function checkNationality() {
-        //TODO
         return true;
     }
 
-    if($logged_in == false) {
+    if ($logged_in == false) {
         header("location: login.php");
     }
-    else { 
+    else if ($current_is_staff) {
+        header("location: my_account_staff.php");
+    }
+    else {
         if( isset($_POST['profile-submit'] ) ) {
 
             $first_name = mysqli_real_escape_string($db, $_POST['first_name']);
@@ -43,8 +41,6 @@
                 // Nationality exists.
             }
             
-            
-
         }
         else if(isset($_POST['dependent-add-submit'])) {
 
