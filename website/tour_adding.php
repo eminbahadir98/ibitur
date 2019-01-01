@@ -340,7 +340,7 @@ $error = "";
 
 <?php
 if ($logged_in) {
-    echo get_header($current_fullname);
+    echo get_header($current_fullname, $current_is_staff);
 } else {
     header("location: login.php");
 }

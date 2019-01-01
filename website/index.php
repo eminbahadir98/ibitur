@@ -15,9 +15,9 @@
 
     <?php
       if ($logged_in) {
-        echo get_header($current_fullname);
+        echo get_header($current_fullname, $current_is_staff);
       } else {
-        echo get_header(null);
+        echo get_header(null, false);
       }
     ?>
 
@@ -26,7 +26,7 @@
       if (isset($_GET['registered'])) {
         echo
         "<div class='alert alert-success' role='alert'>
-          You have successfully registered. You can now log in to your account.
+          You have successfully registered. You can now login to your account.
         </div>";
       }
     ?>

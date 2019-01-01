@@ -7,6 +7,10 @@ h1 {
   margin-right: 5%;
 }
 
+.right {
+  float: right;
+}
+
 .home-content {
   text-align: center;
 }
@@ -30,16 +34,6 @@ h1 {
   padding-top: 2%;
   font-size: larger;
 }
-table {
-    width: 100%;
-    background-color: #454af1;
-}
-
-table th{
-    color: white;
-    border: 3px solid black;
-}
-
 
 .footer {
   margin-top: 30%;
@@ -62,8 +56,6 @@ table th{
   width: 60% !important;
   vertical-align: middle;
 }
-
-
 
 .submit-button {
   float: right;

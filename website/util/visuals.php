@@ -1,11 +1,13 @@
 <?php
 
   // TODO : Add a $current_page parameter to show current page as not clickable.
-  function get_header($username) {
+  function get_header($username, $is_staff) {
+    $part = $is_staff ? "<a href = 'my_tours.php'>My Tours</a>" 
+        : "<a href = 'my_reservations.php'>My Reservations</a>";
     if ($username != null) {
       $profile_bar =
         "Welcome <b>$username</b> |
-        <a href = 'my_account.php'>My Reservations</a> |
+        $part |
         <a href = 'my_account.php'>My Account</a> |
         <a href = 'logout.php'>Logout</a>";
     } else {
@@ -17,8 +19,8 @@
     return 
     "<div class='header'>
       <a href = 'index.php'>Home</a> |
-      <a href = 'tours.php'>Tours</a> |
-      <a href = 'tours.php'>Top Lists</a>
+      <a href = 'tour_list.php'>Tours</a> |
+      <a href = 'tour_list.php'>Top Lists</a>
       <span class='right'>
         $profile_bar
       </span>

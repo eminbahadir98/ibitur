@@ -94,9 +94,9 @@
 
       <?php
          if ($logged_in) {
-            echo get_header($current_fullname);
+            echo get_header($current_fullname, $current_is_staff);
          } else {
-            echo get_header(null);
+            echo get_header(null, false);
          }
       ?>
 

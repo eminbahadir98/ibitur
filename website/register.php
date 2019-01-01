@@ -134,7 +134,7 @@
       if ($logged_in) {
         header("location: index.php");
       } else {
-        echo get_header(null);
+        echo get_header(null, false);
       }
     ?>
     
@@ -153,7 +153,7 @@
         <label>First Name:</label>
         <input required class="form-control input-field" type="text" name="first_name"/> <br><br>
         <label>Middle Name:</label>
-        <input required class="form-control input-field" type="text" name="middle_name"/> <br><br>
+        <input class="form-control input-field" type="text" name="middle_name"/> <br><br>
         <label>Last Name:</label>
         <input required class="form-control input-field" type="text" name="last_name"/> <br><br>
         <label>Date of Birth:</label>

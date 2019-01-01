@@ -62,7 +62,7 @@
       if ($logged_in) {
         header("location: index.php");
       } else {
-        echo get_header(null);
+        echo get_header(null, false);
       }
 
       if ($is_staff_login) {
