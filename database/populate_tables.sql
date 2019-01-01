@@ -84,3 +84,8 @@ INSERT INTO Tag(name) VALUES("Vegan");
 INSERT INTO Tag(name) VALUES("Historic");
 INSERT INTO Tag(name) VALUES("Short");
 INSERT INTO Tag(name) VALUES("Long");
+
+INSERT INTO TourTags(tour_ID, tag_ID)
+    VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"), (SELECT ID FROM Tag WHERE name="Vegan"));
+    
+    
