@@ -17,7 +17,6 @@
     }
     else { 
         if( isset($_POST['profile-submit'] ) ) {
-            echo "HERE";
 
             $first_name = mysqli_real_escape_string($db, $_POST['first_name']);
             $last_name = mysqli_real_escape_string($db, $_POST['last_name']);
@@ -34,20 +33,11 @@
                 nationality = '$nationality', national_ID = $national_id,
                 gender= '$gender', date_of_birth = '$date_of_birth' WHERE CustomerAccount.ID = $current_id; ";
                 
-                echo $update_query;
-
                 $update_result = mysqli_query($db, $update_query);
-
-                if($update_result) {
-                    echo "Successful";
-                }
 
                 $update_query = "UPDATE CustomerTelephones SET telephone_no = $phone_number  WHERE customer_ID = $current_id; ";
                 $update_result = mysqli_query($db, $update_query);
                 
-                if($update_result) {
-                    echo "SuccessfulPhone";
-                }
             }
             else {
                 // Nationality exists.
@@ -57,7 +47,6 @@
 
         }
         else if(isset($_POST['dependent-add-submit'])) {
-            echo "Inside Dependent-Add";
 
             $dep_first_name = mysqli_real_escape_string($db, $_POST['dep_first_name']);
             $dep_last_name = mysqli_real_escape_string($db, $_POST['dep_last_name']);
@@ -68,16 +57,12 @@
             $add_dep_query = "INSERT INTO Dependent(customer_ID, national_ID, gender, date_of_birth, first_name, last_name)
             VALUES( $current_id , $dep_national_id, '$dep_gender', '$dep_dob', '$dep_first_name', '$dep_last_name' );";
 
-            echo $add_dep_query;
-
             $add_rep_result = mysqli_query($db, $add_dep_query);
         }
         else if(isset($_POST['remove-submit'])) {
-            echo "here";
             $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
             $remove_complete = false;
             foreach($checkboxes as $value) {
-                echo "Here: " . $value;
 
                 $remove_include_query = "DELETE
                 FROM IncludedDependents
@@ -88,7 +73,6 @@
                 FROM Dependent
                 WHERE Dependent.customer_ID = $current_id
                 AND national_ID = $value;";
-                echo $remove_dep_query;
                 $remove_dep_result = mysqli_query($db, $remove_dep_query);
             }
 
@@ -96,13 +80,13 @@
         }
         else if(isset($_POST['redeem-submit'])) {
             $cur_promo_code = $_POST['promo_code'];
-            echo "Here: " . $cur_promo_code;
             $get_promotion_query = "select * from PromotionCard where promo_code = '$cur_promo_code';";
             $get_promo_result = mysqli_query($db, $get_promotion_query);
 
             if($get_promo_result->num_rows == 0) {
                 echo "Invalid Promotion Code.";
             }
+
             else {
                 $check_code_query = "select * from CustomerPromotionCards where promo_code = '$cur_promo_code';";
                 $check_code_result = mysqli_query($db, $check_code_query);
@@ -122,8 +106,6 @@
         }
 
         $profile_settings_data_query = "select * from Account A, CustomerAccount C, Country CR where A.ID = C.ID and C.nationality = CR.ID and A.username = '" . $_SESSION['session_username'] . "';";
-        
-        echo $profile_settings_data_query;
         
         $profile_settings_result = mysqli_query($db, $profile_settings_data_query);
         $profile_settings_data = $profile_settings_result->fetch_assoc();
@@ -157,70 +139,6 @@
         $dep_gender = "";
     }
 
-    function getReservations($reservation_query) {
-        $db = $GLOBALS["db"];
-        $reservations_result = mysqli_query($db, $reservation_query);
-
-        $reservations = "";
-          while ($row = $reservations_result->fetch_assoc()) {
-            $tour_name = $row["name"];
-            $tour_description = $row["description"];
-            $tour_image_path = $row["image_path"];
-            $tour_start_date = $row["start_date"];
-            $tour_end_date = $row["end_date"];
-
-            $reservations .= "
-                <div>
-                    $tour_name<br>
-                    $tour_image_path <br><br>
-                    Start: $tour_start_date <br>
-                    End: $tour_end_date <br><br>
-                    $tour_description <br>
-                    <br>
-                </div>
-            ";
-          }
-          
-          if ($reservations == "") {
-            $reservations = "&lt;empty&gt;";
-          }
-
-          return $reservations;
-    }
-
-    function getActiveReservations() {
-        $current_id = $GLOBALS["current_id"];
-        $active_reservation_query = "
-            SELECT name, description, image_path, start_date, end_date
-            FROM (TourPreview NATURAL JOIN Reservation)
-            WHERE Reservation.customer_ID = $current_id
-            AND Reservation.cancel_date IS NULL
-            AND start_date > NOW();";
-        return getReservations($active_reservation_query);
-    }
-
-    function getCancelledReservations() {
-        $current_id = $GLOBALS["current_id"];
-        $cancelled_reservation_query = "
-            SELECT name, description, image_path, start_date, end_date
-            FROM (TourPreview NATURAL JOIN Reservation)
-            WHERE Reservation.customer_ID = $current_id
-            AND Reservation.cancel_date IS NOT NULL
-            AND start_date > NOW();";
-        return getReservations($cancelled_reservation_query);
-    }
-
-    function getPastReservations() {
-        $current_id = $GLOBALS["current_id"];
-        $past_reservation_query = "
-            SELECT name, description, image_path, start_date, end_date
-            FROM (TourPreview NATURAL JOIN Reservation)
-            WHERE Reservation.customer_ID = $current_id
-            AND Reservation.cancel_date IS NULL
-            AND end_date < NOW();";
-        return getReservations($past_reservation_query);
-    }
-
 ?>
 
 <html>
@@ -240,34 +158,9 @@
         ?>
         
         <div class="inner-content">
-            <h1> My Account - <?php echo $current_username ?> </h1>
-            <hr>
-
-            <h3> Active Reservations </h3>
-            <div>
-                <?php
-                    echo getActiveReservations();
-                ?>
-            </div>
-            <hr>
-
-            <h3> Cancelled Reservations </h3>
-            <div>
-                <?php
-                    echo getCancelledReservations();
-                ?>
-            </div>
-            <hr>
-
-            <h3> Past Reservations </h3>
-            <div>
-                <?php
-                    echo getPastReservations();
-                ?>
-            </div>
+            <h1> My Account</h1>
             <hr>
             <br><br>
-            
             <div class="profile-settings">
                 <h2> Profile Settings </h2>
                 <hr>
@@ -332,34 +225,40 @@
                 else {
                     echo "<form name='remove-dependent' action='' method='post' >";
                     
-                    echo "<table>
-                    <tr>
-                        <th> First Name </th>
-                        <th> Last Name </th>
-                        <th> Include </th>
-                    </tr>";
+                    echo "
+                    <table class='table table-bordered'>
+                        <thead>
+                            <tr>
+                            <th> </th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    ";
+
                     $count = 0;
                     while($row = $get_dependent_result->fetch_assoc()) {
 
                         $temp_check = "<input type='checkbox' name='checkbox[]' value=' " . $row['national_ID'] . "' /> ";
 
                         echo "<tr>";
+                        echo "<td>" . $temp_check . "</td>";
                         echo "<td>" . $row['first_name'] . "</td>";
                         echo "<td>" . $row['last_name'] . "</td>";
-                        echo "<td>" . $temp_check . "</td>";
                         echo "</tr>";
 
                         $count = $count + 1;
                     }
 
-                    echo "</table>";
+                    echo "</tbody></table>";
 
-                    echo "<input class='submit-button btn' type='submit' name='remove-submit' value='Remove Dependent(s)'/>";
+                    echo "<input class='submit-button btn' type='submit' name='remove-submit' value='Remove Selected Dependent(s)'/>";
 
                     echo "</form>";
                 }
-
                 ?>
+                <br>
 
                 <h4> Add New Dependent </h4>
                 <hr>
@@ -389,9 +288,10 @@
 
 
             <div class="booking-pts">
-                    <h2> Booking Points </h2>
-                    <hr>
-                    <p>Currently you have <?php echo $booking_pts ?> booking points</p>
+                <h2> Booking Points </h2>
+                <hr>
+                <p>Currently you have <?php echo $booking_pts ?> booking points.</p>
+                <br><br>
             </div>
 
             <div class="promotion-settings">
@@ -424,9 +324,13 @@
                 ?>
 
                 <form name='redeem' action='' method='post'>
-                <input class='form-control input-field' type='text' name='promo_code' value = ''/>
-                <input class='submit-button btn' type='submit' name='redeem-submit' value='Redeem Promotion Code'/>
+                    <label>Enter new promotion code: </label>
+                    <input class='form-control input-field' type='text' name='promo_code' value = ''/>
+                    <br><br>
+                    <input class='btn right' type='submit' name='redeem-submit' value='Redeem Card'/>
                 </form>
+                <br><br>
+
             </div>
 
             <div class="account-settings">
@@ -434,12 +338,12 @@
                 <hr>
                 
                 <?php
-                    echo "<label>Username: $current_username</label><br><br>";
-                    echo "<label>E-mail: $email</label><br><br>";
+                    echo "<b>Username:</b> $current_username<br>";
+                    echo "<b>Email:</b> $email<br><br>";
                 ?>
                 <?php
-                    echo get_form_btn("Change e-mail");
-                    echo get_form_btn("Change password");
+                    echo get_form_btn("Change Email");
+                    echo get_form_btn("Change Password");
                 ?>
                 
             </div>

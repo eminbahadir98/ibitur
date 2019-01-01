@@ -394,7 +394,8 @@ if ($logged_in && $current_is_staff) {
 
                 <tr>
                     <th>Day</th>
-                    <th>Included Locations</th>
+                    <th>Included Location 1</th>
+                    <th>Included Location 2</th>
                     <th>Tour Day Date</th>
                     <th>Description</th>
                     <th>Remove Tour Day</th>

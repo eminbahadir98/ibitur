@@ -1,6 +1,73 @@
 <?php
    include('util/session.php');
    include('util/visuals.php');
+
+   function getReservations($reservation_query) {
+      $db = $GLOBALS["db"];
+      $reservations_result = mysqli_query($db, $reservation_query);
+
+        $reservations = "";
+        while ($row = $reservations_result->fetch_assoc()) {
+            $tour_ID = $row["tour_ID"];
+            $tour_name = $row["name"];
+            $tour_description = $row["description"];
+            $tour_image_path = $row["image_path"];
+            $tour_start_date = $row["start_date"];
+            $tour_end_date = $row["end_date"];
+
+            $reservations .= "
+                <div>
+                    $tour_name<br>
+                    $tour_image_path <br>
+                    <a href='view_tour.php?id=$tour_ID'>Details</a> <br><br>
+                    Start: $tour_start_date <br>
+                    End: $tour_end_date <br><br>
+                    $tour_description <br>
+                    <br>
+                </div>
+            ";
+        }
+        
+        if ($reservations == "") {
+            $reservations = "No reservations...<br><br>";
+        }
+
+        return $reservations;
+  }
+
+  function getActiveReservations() {
+      $current_id = $GLOBALS["current_id"];
+      $active_reservation_query = "
+          SELECT tour_ID, name, description, image_path, start_date, end_date
+          FROM (TourPreview NATURAL JOIN Reservation)
+          WHERE Reservation.customer_ID = $current_id
+          AND Reservation.cancel_date IS NULL
+          AND start_date > NOW();";
+      return getReservations($active_reservation_query);
+  }
+
+  function getCancelledReservations() {
+      $current_id = $GLOBALS["current_id"];
+      $cancelled_reservation_query = "
+          SELECT tour_ID, name, description, image_path, start_date, end_date
+          FROM (TourPreview NATURAL JOIN Reservation)
+          WHERE Reservation.customer_ID = $current_id
+          AND Reservation.cancel_date IS NOT NULL
+          AND start_date > NOW();";
+      return getReservations($cancelled_reservation_query);
+  }
+
+  function getPastReservations() {
+      $current_id = $GLOBALS["current_id"];
+      $past_reservation_query = "
+          SELECT tour_ID, name, description, image_path, start_date, end_date
+          FROM (TourPreview NATURAL JOIN Reservation)
+          WHERE Reservation.customer_ID = $current_id
+          AND Reservation.cancel_date IS NULL
+          AND end_date < NOW();";
+      return getReservations($past_reservation_query);
+  }
+
 ?>
 
 <html>
@@ -21,48 +88,36 @@
          }
       ?>
 
+      <div class="inner-content">
 
-      <?php
-         if (isset($_GET['registered']) && $logged_in) {
-            echo
-            "<div class='alert alert-success' role='alert'>
-               You have successfully registered.
-            </div>";
-         }
-      ?>
+      <h1>My Reservations</h1>
+      <hr>
 
-      <h1 class="home-title">IBITUR - Tour Reservation</h1>
+      <h3> Active Reservations </h3>
+      <div>
+            <?php
+               echo getActiveReservations();
+            ?>
+      </div>
+      <hr>
 
-      <div class="home-content">
-        <h2>Your Tours</h2>
-	<?php
-	  $tours_query = "SELECT tour_ID FROM Tour, Reservation, Account WHERE tour_ID = Tour.ID AND customer_ID = Account.ID AND Account.username ='".$_SESSION['session_username']."';";
-	  $tours_result = mysqli_query($db,$tours_query);
-	  if($tours_result->num_rows <> 0 )
-	  {
-		while($row = $tours_result->fetch_assoc()){
-	         $tour_query = "SELECT * FROM TourPreview WHERE tour_ID =".$row["tour_ID"].";";
-                 $tour_result = mysqli_query($db,$tour_query);
-                 if( $tour_result->num_rows == 1 )
-                  {
-                    $tour_row = $tour_result->fetch_assoc();
-		?>
-                 <div class="cart">
-                   <img src=<?php echo $tour_row["image_path"]; ?> >
-                   <label> <?php echo $tour_row["name"]; ?></label>
-                   <label> <?php echo $tour_row["start_date"];?></label>
-                   <label> <?php echo $tour_row["end_date"];?></label>
-                   <label> <?php echo $tour_row["description"]; ?></label>
-                   <label> <?php echo $tour_row["price"]."TRY"; ?></label>
-		   <a href=<?php echo "view_tour.php?id=".$tour_row["tour_ID"]; ?>>TODO</a>
-                 </div>
-	<?php
-                  }
-		}
-	  }else{
-		echo "<h3>You Have No Reservation.</h3>";
-	  }
-	?>
+      <h3> Cancelled Reservations </h3>
+      <div>
+            <?php
+               echo getCancelledReservations();
+            ?>
+      </div>
+      <hr>
+
+      <h3> Past Reservations </h3>
+      <div>
+            <?php
+               echo getPastReservations();
+            ?>
+      </div>
+      <hr>
+      <br><br>
+
       </div>
 
       <?php
