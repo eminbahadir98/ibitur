@@ -78,7 +78,7 @@
       $name = $row["name"];
       $tags .= "<input type='checkbox' name='$name' value='true'";
       $tags .= (isset($_GET[$name]) && $_GET[$name] == "true") ? " checked " : '';
-      $tags .= ">$name</input><br>";
+      $tags .= "> $name</input><br>";
     }
     if ($tags == "") {
       $tags = "No tags to filter.";
@@ -125,24 +125,24 @@
       <div class="sidebar">
         <form name="login-form" onsubmit="disableEmptyInputs(this)" action="tour_list.php" method="GET">
 
-          <br>
+          <hr>
           <b>Sort by:</b>
           <fieldset id="orderby">
-            <input type="radio" name="orderby" value="price" checked>Price</input><br>
+            <input type="radio" name="orderby" value="price" checked> Price</input><br>
             <input type="radio" name="orderby" value="start_date"
               <?php echo isset($_GET["orderby"]) && $_GET["orderby"] == "start_date" ? "checked" : ""; ?>
-            >Start date</input><br>
+            > Start date</input><br>
             <input type="radio" name="orderby" value="end_date"
               <?php echo isset($_GET["orderby"]) && $_GET["orderby"] == "end_date" ? "checked" : ""; ?>
-            >End date</input>
+            > End date</input>
           </fieldset>
           <hr>
           <b>Sort in:</b>
           <fieldset id="ordering">
-            <input type="radio" name="ordering" value="ASC" checked>Increasing order</input><br>
+            <input type="radio" name="ordering" value="ASC" checked> Increasing order</input><br>
             <input type="radio" name="ordering" value="DESC"
               <?php echo isset($_GET["ordering"]) && $_GET["ordering"] == "DESC" ? "checked" : ""; ?>
-            >Decreasing order</input>
+            > Decreasing order</input>
           </fieldset>
 
           <hr>

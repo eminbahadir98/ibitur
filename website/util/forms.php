@@ -17,7 +17,7 @@ function get_pass_form($label, $var_name) {
 
 function get_form_btn($val, $name="") {
 
-    return "<input class='input-field btn' type='submit' value='$val' name='$name'/><br><br>";
+    return "<input class='btn' type='submit' value='$val' name='$name'/><br><br>";
 }
 
 
