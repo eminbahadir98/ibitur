@@ -96,7 +96,7 @@ if(isset($_POST['add-tour-submit'])) {
 
         echo $route_query;
         echo "<br>";
-        $route_result = $mysqli_query($db, $route_query);
+        $route_result = mysqli_query($db, $route_query);
         // DEBUG
         /*
         foreach($data as $item) {
