@@ -28,7 +28,7 @@
 
   function filtersAdd()
   {
-    $filterQuery = "SELECT * FROM TourPreview TP WHERE TRUE ";
+    $filterQuery = "SELECT DISTINCT TP.* FROM TourPreview TP NATURAL JOIN TourAssociations TA WHERE TRUE ";
     $orderby = "TP.price" ;
     $ordering = "DESC";
     foreach( $_GET as $key => $value )
@@ -36,7 +36,8 @@
       if( $key == "query" )
       {
         $filterQuery .= "AND ( TP.name LIKE CONCAT('%','".$value."','%')";
-        $filterQuery .= " OR TP.description LIKE CONCAT('%','".$value."','%')) ";
+        $filterQuery .= " OR TP.description LIKE CONCAT('%','".$value."','%') ";
+        $filterQuery .= " OR TA.city_name LIKE CONCAT('%','".$value."','%')) ";
       }
 
       if( $key == "orderby")
@@ -75,6 +76,17 @@
       $tags = "No tags to filter.";
     }
     return $tags;
+  }
+
+  function getMax(){
+  $price_query = "SELECT MAX(price) AS price_max FROM TourPreview; ";
+  $db = $GLOBALS["db"];
+  $price_result = mysqli_query($db,$price_query);
+  $max_price = "";
+  if( $row = $price_result->fetch_assoc()){
+    $max_price = $row["price_max"];
+  }
+  return ceil($max_price);
   }
 ?>
 
@@ -148,7 +160,7 @@
           <?php echo isset($_GET['priceMin']) ? "value='".$_GET['priceMin']."'" : ''; ?> ><br>
 
           <b>Max price:</b> <input class="form-control" type="number" name="priceMax"
-          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : ''; ?> >
+          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : "value='".getMax()."'"; ?> >
 
           <hr>
           <b>Tags</b><br>
