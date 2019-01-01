@@ -89,77 +89,105 @@
 
 <html>
    
-   <head>
-      <title>IBITUR - Home</title>
-      <link rel="stylesheet" href="style/style.css"/>
-      <link rel="stylesheet" href="lib/bootstrap.min.css"/>
-      <script>
-        function disableEmptyInputs(form) {
-          var controls = form.elements;
-          var controls_length = controls.length;
-          for (var i = 0; i < controls_length; i++) {
-            controls[i].disabled = (controls[i].value == '');
-          }
+  <head>
+    <title>IBITUR - Home</title>
+    <link rel="stylesheet" href="style/style.css"/>
+    <link rel="stylesheet" href="lib/bootstrap.min.css"/>
+    <script>
+      function disableEmptyInputs(form) {
+        var controls = form.elements;
+        var controls_length = controls.length;
+        for (var i = 0; i < controls_length; i++) {
+          controls[i].disabled = (controls[i].value == '');
         }
-      </script>
-   </head>
-   
-   <body class="content">
+      }
+    </script>
+  </head>
+  
+  <body class="content">
 
-      <?php
-        if ($logged_in) {
-          echo get_header($current_fullname, $current_is_staff);
-        } else {
-          echo get_header(null, false);
-        }
-      ?>
+    <?php
+      if ($logged_in) {
+        echo get_header($current_fullname, $current_is_staff);
+      } else {
+        echo get_header(null, false);
+      }
 
-      <div class="inner-content">
-        <h1>Tours</h1>
-        <hr>
+      $queryText = isset($_GET['query']) ? $_GET['query'] : '';
+    ?>
 
-        <?php	
-          $queryText = isset($_GET['query']) ? $_GET['query'] : '';
-        ?>
-      
+    
+    <div class="wider-inner-content">
+
+      <h1>Tours</h1>
+      <hr>
+
+      <div class="sidebar">
         <form name="login-form" onsubmit="disableEmptyInputs(this)" action="tour_list.php" method="GET">
 
-          Search keyword:
-          <input name="query" class="form-control" type="text" value=<?php echo $queryText?>> <br>
+          <br>
+          <b>Sort by:</b>
+          <fieldset id="orderby">
+            <input type="radio" name="orderby" value="price" checked>Price</input><br>
+            <input type="radio" name="orderby" value="start_date"
+              <?php echo isset($_GET["orderby"]) && $_GET["orderby"] == "start_date" ? "checked" : ""; ?>
+            >Start date</input><br>
+            <input type="radio" name="orderby" value="end_date"
+              <?php echo isset($_GET["orderby"]) && $_GET["orderby"] == "end_date" ? "checked" : ""; ?>
+            >End date</input>
+          </fieldset>
+          <hr>
+          <b>Sort in:</b>
+          <fieldset id="ordering">
+            <input type="radio" name="ordering" value="ASC" checked>Increasing order</input><br>
+            <input type="radio" name="ordering" value="DESC"
+              <?php echo isset($_GET["ordering"]) && $_GET["ordering"] == "DESC" ? "checked" : ""; ?>
+            >Decreasing order</input>
+          </fieldset>
 
-          Earliest start date: <input class="form-control" type="date" name="start"
-          <?php echo isset($_GET['start']) ? "value='".$_GET['start']."'" : ''; ?> > <br>
+          <hr>
+          <b>Earliest start date:</b> <input class="form-control" type="date" name="start"
+          <?php echo isset($_GET['start']) ? "value='".$_GET['start']."'" : ''; ?> ><br>
         
-          Latest end date: <input class="form-control" type="date" name="end"
-          <?php echo isset($_GET['end']) ? "value='".$_GET['end']."'" : ''; ?> > <br>
+          <b>Latest end date:</b> <input class="form-control" type="date" name="end"
+          <?php echo isset($_GET['end']) ? "value='".$_GET['end']."'" : ''; ?> >
 
-          Min price: <input class="form-control" type="number" name="priceMin"
-          <?php echo isset($_GET['priceMin']) ? "value='".$_GET['priceMin']."'" : ''; ?> > <br>
+          <hr>
+          <b>Min price:</b> <input class="form-control" type="number" name="priceMin"
+          <?php echo isset($_GET['priceMin']) ? "value='".$_GET['priceMin']."'" : ''; ?> ><br>
 
-          Max price: <input class="form-control" type="number" name="priceMax"
-          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : ''; ?> > <br>
+          <b>Max price:</b> <input class="form-control" type="number" name="priceMax"
+          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : ''; ?> >
 
-          <?php
-            echo getTags();
-          ?>
+          <hr>
+          <b>Tags</b><br>
+          <?php echo getTags(); ?>
+
+          <hr>
+          <b>Keyword:</b>
+          <input class="form-control" type="text" name="query" value=<?php echo $queryText?>>
+
+          <hr>
+
+          <input class=" btn" type="submit" value="Filter"/>
           <br>
 
-          <input class=" btn" type="submit" value="Search"/>
-
         </form>
-
-        <div>
-          <?php
-              echo getTours(filtersAdd());
-          ?>
-        </div>
       
       </div>
 
-      <?php
-         echo get_footer();
-      ?>
+      <div class="right-content">
 
-   </body>
+          <?php echo getTours(filtersAdd()); ?>
+      
+      </div>
+
+    </div>
+
+    <?php
+        echo get_footer();
+    ?>
+
+  </body>
    
 </html>

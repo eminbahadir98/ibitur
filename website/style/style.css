@@ -82,3 +82,21 @@ h1 {
 .paid-checkbox {
   text-align: center;
 }
+
+.wider-inner-content {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 5%;
+  width: 80%;
+  min-height: 120%;
+}
+
+.right-content {
+  margin-left: 35%;
+  width: 70%;
+}
+
+.sidebar {
+  width: 25%;
+  float: left;
+}
