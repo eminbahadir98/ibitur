@@ -46,32 +46,92 @@
     return $sd_arr[2] . "/" . $sd_arr[1] . "/" . $sd_arr[0];
   }
 
-  function get_tour_card($id, $name, $image_path, $start_date, $end_date,
-      $description, $price, $remaining_quota) {
-      $start_date = format_datetime($start_date);
-      $end_date = format_datetime($end_date);
+  function get_remaining_quota_text($remaining_quota) {
+    if ($remaining_quota < 1) {
+      return "The quota is full.";
+    } else if ($remaining_quota == 1) {
+      return " There is only <b>$remaining_quota</b> place remaining.";
+    }
+    return "There are <b>$remaining_quota</b> places remaining.";
+  }
+
+  function get_tour_card_body_skeleton($has_linked_title, $id, $name, $image_path, $start_date, $end_date, $description) {
+    
+    $start_date = format_datetime($start_date);
+    $end_date = format_datetime($end_date);
+    $title_part = $has_linked_title ? 
+        "<h5 class='card-title'><b><a href='view_tour.php?id=$id'>$name</a></b></h5>"
+        : "<h5 class='card-title'><b>$name</b></h5>";
+
+    return "
+        <image class='card-image' src='./images/$image_path'>
+        $title_part
+        <p class='card-text'>
+          $description<br><br>
+          <b>Tour Start:</b> $start_date<br>
+          <b>Tour End:</b> $end_date<br><br>
+        </p>
+    ";
+  }
+
+  function get_tour_card_footer_skeleton($remove_buttons, $id, $price, $remaining_quota) {
+    $button_part = $remove_buttons ? "" :
+      "<div class='right'>
+          <a href='view_tour.php?id=$id' class='btn btn-secondary'>View Details</a>
+          <a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>
+        </div>";
+    $remaining_quota_text = get_remaining_quota_text($remaining_quota);
+    return "
+      $remaining_quota_text<br>  
+      <b>$price TL</b>
+      $button_part
+    ";
+  }
+
+  function get_tour_summary_card($id, $name, $image_path, $start_date, $end_date, $description,
+      $price, $remaining_quota) {
+    
+    $tour_card_body_skeleton = get_tour_card_body_skeleton(true, $id, $name, $image_path, $start_date, $end_date, $description);
+    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, $id, $price, $remaining_quota);
 
     return "
       <div class='card tour-card'>
 
         <div class='card-body'>
-          <image class='card-image' src='./images/$image_path'>
-          <h5 class='card-title'><b>$name</b></h5>
-          <p class='card-text'>
-            $description<br><br>
-            <b>Tour Start:</b> $start_date<br>
-            <b>Tour End:</b> $end_date<br><br>
-            
-          </p>
+          $tour_card_body_skeleton
+          $tour_card_footer_skeleton
+        </div>
+
+      </div>
+    ";
+  }
+
+  function get_tour_preview_card($id, $name, $image_path, $start_date, $end_date, $description) {
+    $tour_card_body_skeleton = get_tour_card_body_skeleton(true, $id, $name, $image_path, $start_date, $end_date, $description);
+    return "
+      <div class='card tour-card'>
+        <div class='card-body'>
+          $tour_card_body_skeleton
+        </div>
+      </div>
+    ";
+  }
+
+  function get_tour_purchase_card($id, $name, $image_path, $start_date, $end_date, $description,
+      $price, $remaining_quota) {
+    
+    $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
+    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(false, $id, $price, $remaining_quota);
+
+    return "
+      <div class='card tour-card'>
+
+        <div class='card-body'>
+          $tour_card_body_skeleton
         </div>
 
         <div class='card-footer bg-white'>
-          <div class='right'>
-            <a href='view_tour.php?id=$id' class='btn btn-secondary'>View Details</a>
-            <a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>
-          </div>
-          There are <b>$remaining_quota</b> places remaining.<br>  
-          <b>$price TL</b>
+          $tour_card_footer_skeleton
         </div>
 
       </div>

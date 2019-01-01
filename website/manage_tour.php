@@ -30,6 +30,7 @@
         header("location: login.php");
       }
 
+      $cancel_alert = "";
       if ($cancel_performed) {
         $cancel_message = $cancel_succeed ?
           "The tour has been successfully cancelled." :
@@ -55,6 +56,7 @@
           $tour_price = $result_row["price"];
           $tour_start_date = $result_row["start_date"];
           $tour_end_date = $result_row["end_date"];
+          $tour_remaining_quota = $result_row["remaining_quota"];
 
           $reservations_query = "SELECT Account.ID AS customer_ID, 
             first_name, middle_name, last_name, payment_status, dependent_count
@@ -105,18 +107,16 @@
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
         } else {
-          $cancel_indicator = $tour_is_cancelled ? "[CANCELLED]" : "";
+          $cancel_indicator = $tour_is_cancelled ? " [CANCELLED]" : "";
+          $tour_summary_card = get_tour_summary_card($tour_id, $tour_name . $cancel_indicator,
+              $tour_image_path, $tour_start_date, $tour_end_date, $tour_description,
+              $tour_price, $tour_remaining_quota);
+
           echo "
-            <h2>$tour_name $cancel_indicator</h2>
-            <div>
-              $tour_image_path <br><br>
-              Start: $tour_start_date <br>
-              End: $tour_end_date <br><br>
-              $tour_description <br>
-              <br>
-              $tour_price TL
-            </div>
-            <hr>
+            
+            $tour_summary_card
+            
+            <br><hr>
 
             <h2>Reservations</h2>
             <div>
@@ -133,6 +133,7 @@
               </tbody>
               </table>
             </div>
+            <br><br>
             <hr>
           ";
           if ($tour_is_cancelled) {

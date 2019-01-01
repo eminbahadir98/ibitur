@@ -15,17 +15,11 @@
             $tour_start_date = $row["start_date"];
             $tour_end_date = $row["end_date"];
 
-            $reservations .= "
-                <div>
-                    $tour_name<br>
-                    $tour_image_path <br>
-                    <a href='view_tour.php?id=$tour_ID'>Details</a> <br><br>
-                    Start: $tour_start_date <br>
-                    End: $tour_end_date <br><br>
-                    $tour_description <br>
-                    <br>
-                </div>
-            ";
+           
+            $tour_preview_card = get_tour_preview_card($tour_ID, $tour_name,
+                  $tour_image_path, $tour_start_date, $tour_end_date, $tour_description);
+
+            $reservations .= $tour_preview_card;
         }
         
         if ($reservations == "") {

@@ -17,7 +17,7 @@
       $tour_price = $row["price"];
       $tour_remaining_quota = $row["remaining_quota"];
       
-      $tours .= get_tour_card($tour_ID, $tour_name, $tour_image_path, $tour_start_date,
+      $tours .= get_tour_purchase_card($tour_ID, $tour_name, $tour_image_path, $tour_start_date,
           $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota);
     }
     if ($tours == "") {
