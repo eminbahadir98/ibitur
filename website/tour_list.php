@@ -28,7 +28,7 @@
 
   function filtersAdd()
   {
-    $filterQuery = "SELECT DISTINCT TP.* FROM TourPreview TP NATURAL JOIN TourAssociations TA WHERE TRUE ";
+    $filterQuery = "SELECT DISTINCT TP.* FROM TourPreview TP NATURAL LEFT JOIN TourAssociations TA WHERE TRUE ";
     $orderby = "TP.price" ;
     $ordering = "DESC";
     foreach( $_GET as $key => $value )

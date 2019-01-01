@@ -96,8 +96,14 @@ CREATE VIEW TourPreview AS
     WHERE Tour.ID = ReservationCounts.tour_ID AND Tour.ID = TourInterval.tour_ID);
     
     
-    ----------------------------------------- TourAssoc--------------
-    CREATE VIEW TripAssociations AS 
+-- Tour Associations 
+
+DROP VIEW IF EXISTS TourAssociations;
+DROP VIEW IF EXISTS TravelAssociations;
+DROP VIEW IF EXISTS AccommodationAssociations;
+DROP VIEW IF EXISTS TripAssociations;
+
+CREATE VIEW TripAssociations AS 
 (SELECT
     Tour.ID AS tour_ID,
     Tour.name AS tour_name,
@@ -135,4 +141,3 @@ CREATE VIEW TourAssociations AS
 (SELECT DISTINCT * FROM TripAssociations)
 UNION (SELECT DISTINCT * FROM AccommodationAssociations)
 UNION (SELECT DISTINCT * FROM TravelAssociations);
-
