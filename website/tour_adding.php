@@ -86,9 +86,15 @@ $error = "";
 ?>
 
 <html>
-
+<?php
+if ($logged_in && $current_is_staff) {
+    echo get_header($current_fullname, true);
+} else {
+    header("location: login.php");
+}
+?>
 <head>
-    <title>IBITUR - Register</title>
+    <title>IBITUR - Tour Adding</title>
     <link rel="stylesheet" href="style/style.css"/>
     <link rel="stylesheet" href="lib/bootstrap.min.css"/>
 
@@ -118,7 +124,7 @@ $error = "";
             if( d3 < d2){
                 return false;
             }
-                return true;
+            return true;
         }
         function showError(message) {
             var errorDiv = document.getElementById("error-div");
@@ -128,19 +134,19 @@ $error = "";
                 "</div>";
         }
 
-        function checkBaseInfo(varForm) {
-            var title      = document.forms[varForm]["title"].value;
-            var tour_desc  = document.forms[varForm]["tour_desc"].value;
-            var image_path = document.forms[varForm]["image_path"].value;
-            var tour_tag = document.forms[varForm]["tour_tag"].value;
-            var tour_price = document.forms[varForm]["tour_price"].value;
-            var tour_quota = document.forms[varForm]["tour_quota"].value;
+        function checkBaseInfo() {
+            var title      = document.forms["add-tour"]["title"].value;
+            var tour_desc  = document.forms["add-tour"]["tour_desc"].value;
+            var image_path = document.forms["add-tour"]["image_path"].value;
+            var tour_tag = document.forms["add-tour"]["tour_tag"].value;
+            var tour_price = document.forms["add-tour"]["tour_price"].value;
+            var tour_quota = document.forms["add-tour"]["tour_quota"].value;
 
-            var cancelling_date = document.forms[varForm]["cancelling_date"].value;
-            var start_date = document.forms[varForm]["start_date"].value;
-            var end_date = document.forms[varForm]["end_date"].value;
+            var cancelling_date = document.forms["add-tour"]["cancelling_date"].value;
+            var start_date = document.forms["add-tour"]["start_date"].value;
+            var end_date = document.forms["add-tour"]["end_date"].value;
 
-            var tour_desc = document.forms[varForm]["tour_desc"].value;
+            var tour_desc = document.forms["add-tour"]["tour_desc"].value;
 
 
             if (title.length < 3) {
@@ -175,7 +181,7 @@ $error = "";
             }
 
 
-                return true;
+            return true;
         }
         function treatAsUTC(date) {
             var result = new Date(date);
@@ -213,25 +219,25 @@ $error = "";
         }
 
 
-        function createTourDay(varForm) {
+        function createTourDay() {
 
-            var start_date = document.forms[varForm]["start_date"].value;
-            var end_date = document.forms[varForm]["end_date"].value;
-            var tour_day      = document.forms[varForm]["tour_day"].value;
-            var tour_day_desc = document.forms[varForm]["tour_day_desc"].value;
-            var included_loc1 = document.forms[varForm]["included_loc1"].options[document.forms[varForm]["included_loc1"].selectedIndex].text;
-            var included_loc2 = document.forms[varForm]["included_loc2"].options[document.forms[varForm]["included_loc2"].selectedIndex].text;
+            var start_date = document.forms["add-tour"]["start_date"].value;
+            var end_date = document.forms["add-tour"]["end_date"].value;
+            var tour_day      = document.forms["add-tour"]["tour_day"].value;
+            var tour_day_desc = document.forms["add-tour"]["tour_day_desc"].value;
+            var included_loc1 = document.forms["add-tour"]["included_loc1"].options[document.forms["add-tour"]["included_loc1"].selectedIndex].text;
+            var included_loc2 = document.forms["add-tour"]["included_loc2"].options[document.forms["add-tour"]["included_loc2"].selectedIndex].text;
             if (tour_day) {
-                if(!is_valid_days(start_date,tour_days) || !is_valid_days(tour_days,end_date)){
+                if(!is_valid_days(start_date,tour_day) || !is_valid_days(tour_day,end_date)){
                     showError("Tour days must be between the start date and end date included");
                     return false;
                 }
 
-                if (checkBaseInfo()) {
+                if (checkBaseInfo("add-tour")) {
                     day_counter++;
                     var numOfDay = daysBetween(start_date, tour_day);
-                    document.getElementById("tour-days").innerHTML += "<th id='" + day_counter + "'><br><br><p> Day " + numOfDay + " - " + included_loc1 + " - " + included_loc2 + "</p><br><p> Tour Day: " + formattedDate(tour_day) + "</p><br><p> " + tour_day_desc + "</p><br><br>"
-                        + "<button class='submit-button btn' type='button' onclick='removeField(" + day_counter + ")'>Remove</button><br><br></th>";
+                    document.getElementById("tour-days").innerHTML += "<td id='" + day_counter + "'><br><br><p> Day " + numOfDay + " - " + included_loc1 + " - " + included_loc2 + "</p><br><p> Tour Day: " + formattedDate(tour_day) + "</p><br><p> " + tour_day_desc + "</p><br><br>"
+                        + "<button class='submit-button btn' type='button' onclick='removeField(" + day_counter + ")'>Remove</button><br><br></td>";
 
                 }
             }
@@ -245,10 +251,12 @@ $error = "";
 
 
 
+
+
         function createAccom(){
-            var start_accom_date = document.forms["accom-form"]["start_accom_date"].value;
-            var end_accom_date   = document.forms["accom-form"]["end_accom_date"].value;
-            var hotel            = document.forms["accom-form"]["hotel"].options[document.forms["accom-form"]["hotel"].selectedIndex].text;
+            var start_accom_date = document.forms["add-tour"]["start_accom_date"].value;
+            var end_accom_date   = document.forms["add-tour"]["end_accom_date"].value;
+            var hotel            = document.forms["add-tour"]["hotel"].options[document.forms["add-tour"]["hotel"].selectedIndex].text;
             var rating = hotel.split(", ")[2];
             var address = hotel.split(", ").slice(3,hotel.split(", ").length);
             hotel = hotel.split(", ")[0] + ", " + hotel.split(", ")[1];
@@ -261,9 +269,9 @@ $error = "";
 
                 var numOfDay = daysBetween(start_accom_date, end_accom_date);
                 accom_counter++;
-                document.getElementById("accoms").innerHTML += "<th id='" + accom_counter + "'><br><br><p> " + hotel + "</p><br><p> Number of day that will be stayed: " + numOfDay + "</p><br><p> Start Day: " + formattedDate(start_accom_date) + "</p><br><p> End Day: " + formattedDate(end_accom_date)+
+                document.getElementById("accoms").innerHTML += "<td id='" + accom_counter + "'><br><br><p> " + hotel + "</p><br><p> Number of day that will be stayed: " + numOfDay + "</p><br><p> Start Day: " + formattedDate(start_accom_date) + "</p><br><p> End Day: " + formattedDate(end_accom_date)+
                     "</p><br><p>Rating: " + rating + "</p><br><p>" + address + " </p> <br><br>"
-                    + "<button class='submit-button btn' type='button' onclick='removeField(" + accom_counter + ")'>Remove</button><br><br></th>";
+                    + "<button class='submit-button btn' type='button' onclick='removeField(" + accom_counter + ")'>Remove</button><br><br></td>";
 
 
 
@@ -274,20 +282,20 @@ $error = "";
         }
 
         function createTravelRoute() {
-            var source_city         = document.forms["travel-routes-form"]["source-city"].options[document.forms["travel-routes-form"]["source-city"].selectedIndex].text;
-            var dest_city           = document.forms["travel-routes-form"]["dest-city"].options[document.forms["travel-routes-form"]["dest-city"].selectedIndex].text;
-            var departure_date      = document.forms["travel-routes-form"]["departure_date"].value;
-            var departure_time      = document.forms["travel-routes-form"]["departure_time"].value;
-            var vehicle_type        = document.forms["travel-routes-form"]["vehicle-type"].options[document.forms["travel-routes-form"]["vehicle-type"].selectedIndex].text;
-            var travel_company      = document.forms["travel-routes-form"]["travel_company"].value;
-            var departure_address   = document.forms["travel-routes-form"]["departure_address"].value;
-            var destination_address = document.forms["travel-routes-form"]["destination_address"].value;
+            var source_city         = document.forms["add-tour"]["source_city"].options[document.forms["add-tour"]["source_city"].selectedIndex].text;
+            var dest_city           = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].text;
+            var departure_date      = document.forms["add-tour"]["departure_date"].value;
+            var departure_time      = document.forms["add-tour"]["departure_time"].value;
+            var vehicle_type        = document.forms["add-tour"]["vehicle_type"].options[document.forms["add-tour"]["vehicle_type"].selectedIndex].text;
+            var travel_company      = document.forms["add-tour"]["travel_company"].value;
+            var departure_address   = document.forms["add-tour"]["departure_address"].value;
+            var destination_address = document.forms["add-tour"]["destination_address"].value;
 
             if(departure_date && departure_time && departure_address && destination_address && travel_company){
                 route_counter++;
 
-                document.getElementById("travel-routes").innerHTML += "<th id='" + route_counter + "'><br><br><p> " + source_city +" --> "+ dest_city + " ("+ vehicle_type +",  " + travel_company+" )"+"</p><br><p> Departure Date: " + formattedDate(departure_date) + "</p><br><p> Departure Time: " + departure_time + "</p><br><p> Departure address: " + departure_address+ "</p><br><p> Destination address: " + destination_address+
-                     "<button class='submit-button btn' type='button' onclick='removeField(" + route_counter + ")'>Remove</button><br><br></th>";
+                document.getElementById("travel-routes").innerHTML += "<td id='" + route_counter + "'><br><br><p> " + source_city +" --> "+ dest_city + " ("+ vehicle_type +",  " + travel_company+" )"+"</p><br><p>Departure Date: " + formattedDate(departure_date) + "</p><br><p> Departure Time: " + departure_time + "</p><br><p> Departure address: " + departure_address+ "</p><br><p> Destination address: " + destination_address +
+                    "<button class='submit-button btn' type='button' onclick='removeField(" + route_counter + ")'>Remove</button><br><br></td>";
             } else
             {
 
@@ -300,15 +308,15 @@ $error = "";
         }
 
         function createTripEvent() {
-            var event_title       = document.forms["trip-events-form"]["event_title"].value;
-            var event_date        = document.forms["trip-events-form"]["event_date"].value;
-            var event_description = document.forms["trip-events-form"]["event_description"].value;
-            var event_city =  document.forms["trip-events-form"]["event_city"].options[document.forms["trip-events-form"]["event_city"].selectedIndex].text;
+            var event_title       = document.forms["add-tour"]["event_title"].value;
+            var event_date        = document.forms["add-tour"]["event_date"].value;
+            var event_description = document.forms["add-tour"]["event_description"].value;
+            var event_city =  document.forms["add-tour"]["event_city"].options[document.forms["add-tour"]["event_city"].selectedIndex].text;
             if(event_date && event_description && event_title){
                 event_counter++;
 
-                document.getElementById("trip-events").innerHTML += "<th id='" + event_counter + "'><br><br><p><u> " + event_title + "</u>  ( "+ formattedDate(event_date)+" ) </p><br><p> "+ event_city +"</p><br><p>"+ + event_description +"</p><br><p>"+
-                    "<button class='submit-button btn' type='button' onclick='removeField(" + event_counter + ")'>Remove</button><br><br></th>";
+                document.getElementById("trip-events").innerHTML += "<td id='" + event_counter + "'><br><br><p><u> " + event_title + "</u>  ( "+ formattedDate(event_date)+" ) </p><br><p> "+ event_city +"</p><br><p>"+ + event_description +"</p><br><p>"+
+                    "<button class='submit-button btn' type='button' onclick='removeField(" + event_counter + ")'>Remove</button><br><br></td>";
             } else
             {
                 showError("For Trip Events: Please fill the empty places");
@@ -316,9 +324,9 @@ $error = "";
             }
 
         }
-        function checkAllTourInfo(varForm) {
+        function checkAllTourInfo() {
 
-            if(!checkBaseInfo(varForm)){
+            if(!checkBaseInfo()){
                 return false;
             }
             if(accom_counter !== 100 && day_counter !== 200 && route_counter !== 300&& event_counter !== 400) {
@@ -338,270 +346,276 @@ $error = "";
 
 <body class="content">
 
-<?php
-if ($logged_in) {
-    echo get_header($current_fullname, $current_is_staff);
-} else {
-    header("location: login.php");
-}
-?>
+
 
 <h1 class="home-title">Add New Tour</h1>
 <div class="register-div">
 
     <form name="add-tour" action="" method="post" >
 
-        <form name="register-form"  action="" method="post">
-            <label>Title:</label>
-            <input required class="form-control input-field" type="text" name="title"/> <br><br>
-            <label>Description:</label>
-            <input required class="form-control input-field" type="text" name="tour_desc"/> <br><br>
-            <label>Tour Image:</label>
-            <input required class="form-control input-field" type="text" name="image_path"/> <br><br>
-            <label>Tour Price:</label>
-            <input required class="form-control input-field" type="text" name="tour_price"/> <br><br>
+        <!--<form name="register-form"  action="" method="post">-->
+        <label>Title:</label>
+        <input required class="form-control input-field" type="text" name="title"/> <br><br>
+        <label>Description:</label>
+        <input required class="form-control input-field" type="text" name="tour_desc"/> <br><br>
+        <label>Tour Image:</label>
+        <input required class="form-control input-field" type="text" name="image_path"/> <br><br>
+        <label>Tour Price:</label>
+        <input required class="form-control input-field" type="text" name="tour_price"/> <br><br>
 
-            <label>Quota:</label>
-            <input required class="form-control input-field" type="text" name="tour_quota"/> <br><br>
+        <label>Quota:</label>
+        <input required class="form-control input-field" type="text" name="tour_quota"/> <br><br>
 
-            <label>Cancelling Date:</label>
-            <input required class="form-control input-field" type="date" name="cancelling_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <label>Cancelling Date:</label>
+        <input required class="form-control input-field" type="date" name="cancelling_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
-            <label>Start Date:</label>
-            <input required class="form-control input-field" type="date" name="start_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <label>Start Date:</label>
+        <input required class="form-control input-field" type="date" name="start_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
-            <label>End Date:</label>
-            <input required class="form-control input-field" type="date" name="end_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <label>End Date:</label>
+        <input required class="form-control input-field" type="date" name="end_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
-            <label>Tour Tags:</label>
-            <select class="form-control input-field" name="vehicle-type" id="tour_tag">
-                <option>Vegan</option>
-                <option>Vegetarian</option>
-            </select> <br><br>
+        <label>Tour Tags:</label>
+        <select class="form-control input-field" name="vehicle-type" id="tour_tag">
+            <option>Vegan</option>
+            <option>Vegetarian</option>
+        </select> <br><br>
 
-            <hr>
+        <hr>
 
-            <h3 class="home-title">Tour Schedule</h3>
+        <h3 class="home-title">Tour Schedule</h3>
 
-            <table id="tour-days">
+        <table id="tour-adding">
+            <tr id="tour-days">
 
-            </table>
-            <hr>
-            <br><br>
+            </tr>
 
-            <label>Date:</label>
-            <input required class="form-control input-field" type="date" id="tour_day" name="tour_day" min=<?php echo date("Y-m-j")?>> <br><br>
+        </table>
+        <hr>
+        <br><br>
 
-            <label>Included Locations:</label>
-            <?php
-            echo '<select class="form-control input-field" name="included_loc1">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select> <br><br>';
-            ?>
-            <br>
-            <?php
-            echo '<select class="form-control input-field" name="included_loc2">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select> <br><br>';
-            ?>
+        <label>Date:</label>
+        <input required class="form-control input-field" type="date" id="tour_day" name="tour_day" min=<?php echo date("Y-m-j")?>> <br><br>
 
-            <label>Decription:</label>
-            <textarea class="form-control input-field" name="tour_day_desc" rows="5" cols="50" wrap="soft"> </textarea>
-            <br><br>
-            <br><br>
-            <br><br>
-            <button class="submit-button btn" type="button" onclick="createTourDay(varForm)">Add New Schedule Item</button>
-        </form>
+        <label>Included Locations:</label>
+        <?php
+        echo '<select class="form-control input-field" name="included_loc1">';
+        $country_query = "SELECT ID, name FROM City";
+        $country_result = mysqli_query($db, $country_query);
+        while ($row = $country_result->fetch_assoc()) {
+            echo '<option value=';
+            echo $row["ID"];
+            echo ">";
+            echo $row["name"];
+            echo '</option>';
+        }
+        echo '</select> <br><br>';
+        ?>
+        <br>
+        <?php
+        echo '<select class="form-control input-field" name="included_loc2">';
+        $country_query = "SELECT ID, name FROM City";
+        $country_result = mysqli_query($db, $country_query);
+        while ($row = $country_result->fetch_assoc()) {
+            echo '<option value=';
+            echo $row["ID"];
+            echo ">";
+            echo $row["name"];
+            echo '</option>';
+        }
+        echo '</select> <br><br>';
+        ?>
 
-        <form name="accom-form" action="" method="post">
-            <br><br>
-            <hr>
+        <label>Decription:</label>
+        <textarea class="form-control input-field" name="tour_day_desc" rows="5" cols="50" wrap="soft"> </textarea>
+        <br><br>
+        <br><br>
+        <br><br>
+        <button class="submit-button btn" type="button" onclick="createTourDay('add-tour')">Add New Schedule Item</button>
+        <!--</form>-->
 
-            <h3 class="home-title">Accommodations</h3>
+        <!--<form name="accom-form" action="" method="post">-->
+        <br><br>
+        <hr>
 
-            <table id ="accoms">
+        <h3 class="home-title">Accommodations</h3>
 
-            </table>
-            <hr>
-            <br><br>
+        <table id="tour-adding">
+            <tr id ="accoms">
 
-            <label>Accommodation:</label>
-            <?php
-            echo '<select class="form-control input-field" name="hotel" id="hotel">';
-            $country_query = "SELECT address, star_rating, Hotel.ID as hid, Hotel.name as hname, City.name as cname FROM Hotel cross join City WHERE Hotel .city_ID = City.ID";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["hid"];
-                echo " name=";
-                echo $row["address"];
-                echo ">";
-                echo $row["hname"].", ".$row["cname"].", ".$row["star_rating"].", Address:".$row["address"];
-                echo '</option>';
-            }
-            echo '</select> <br><br>';
-            ?>
+            </tr>
 
-            <br><br>
-            <label>Start Date:</label>
-            <input required class="form-control input-field" type="date" id="start_accom_date" name="start_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
-            <br><br>
-            <label>End Date:</label>
-            <input required class="form-control input-field" type="date" id="end_accom_date" name="end_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
-            <br><br>
+        </table>
+        <hr>
+        <br><br>
 
-            <button class="submit-button btn" type="button" onclick="createAccom()">Add New Accommodation</button>
+        <label>Accommodation:</label>
+        <?php
+        echo '<select class="form-control input-field" name="hotel" id="hotel">';
+        $country_query = "SELECT address, star_rating, Hotel.ID as hid, Hotel.name as hname, City.name as cname FROM Hotel cross join City WHERE Hotel .city_ID = City.ID";
+        $country_result = mysqli_query($db, $country_query);
+        while ($row = $country_result->fetch_assoc()) {
+            echo '<option value=';
+            echo $row["hid"];
+            echo " name=";
+            echo $row["address"];
+            echo ">";
+            echo $row["hname"].", ".$row["cname"].", ".$row["star_rating"].", Address:".$row["address"];
+            echo '</option>';
+        }
+        echo '</select> <br><br>';
+        ?>
 
-        </form>
-        <form name="travel-routes-form" action="" method="post">
-            <br><br>
-            <hr>
+        <br><br>
+        <label>Start Date:</label>
+        <input required class="form-control input-field" type="date" id="start_accom_date" name="start_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <br><br>
+        <label>End Date:</label>
+        <input required class="form-control input-field" type="date" id="end_accom_date" name="end_accom_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <br><br>
 
-            <h3 class="home-title">Tour Routes</h3>
+        <button class="submit-button btn" type="button" onclick="createAccom()">Add New Accommodation</button>
 
-            <table id ="travel-routes">
+        <!--</form>-->
+        <!--<form name="travel-routes-form" action="" method="post">-->
+        <br><br>
+        <hr>
 
-            </table>
-            <hr>
-            <br><br>
-
-            <label>Source City:</label>
-
-            <?php
-            echo '<select class="form-control input-field" name="source-city" id="source-city">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select><br><br>';
-            ?>
-
-            <label>Destination City:</label>
-
-            <?php
-            echo '<select class="form-control input-field" name="dest-city" id="dest-city">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select><br><br>';
-            ?>
-
-            <br><br>
-            <label>Departure Date:</label>
-            <input required class="form-control input-field" type="date" id="departure_date" name="departure_date" min=<?php echo date("Y-m-j")?>> <br><br>
-            <br><br>
-
-            <label>Departure Time:</label>
-            <input required class="form-control input-field" type="text" id="departure_time" name="departure_time" > <br><br>
-            <br><br>
-
-            <label>Vehicle Type:</label>
-            <select class="form-control input-field" name="vehicle-type" id="vehicle-type">
-                <option>Plane</option>
-                <option>Bus</option>
-                <option>Cruise Ship</option>
-                <option>Train</option>
-            </select> <br><br>
-
-            <label>Travel Company:</label>
-            <input required class="form-control input-field" type="text" id="travel_company" name="travel_company" > <br><br>
-            <br><br>
+        <h3 class="home-title">Travel Routes</h3>
 
 
-            <label>Departure Address:</label>
-            <textarea class="form-control input-field" name="departure_address" rows="5" cols="50" wrap="soft"> </textarea>
-            <br><br>
-            <br><br>
-            <br><br>
+        <table id="tour-adding">
+            <tr id ="travel-routes">
 
-            <label>Destination Address:</label>
-            <textarea class="form-control input-field" name="destination_address" rows="5" cols="50" wrap="soft"> </textarea>
-            <br><br>
-            <br><br>
-            <br><br>
+            </tr>
 
-            <button class="submit-button btn" type="button" onclick="createTravelRoute()">Add New Travel Route</button>
+        </table>
+        <hr>
+        <br><br>
 
-        </form>
+        <label>Source City:</label>
 
-        <form name="trip-events-form" action="" method="post">
-            <br><br>
-            <hr>
+        <?php
+        echo '<select class="form-control input-field" name="source_city" id="source_city">';
+        $country_query = "SELECT ID, name FROM City";
+        $country_result = mysqli_query($db, $country_query);
+        while ($row = $country_result->fetch_assoc()) {
+            echo '<option value=';
+            echo $row["ID"];
+            echo ">";
+            echo $row["name"];
+            echo '</option>';
+        }
+        echo '</select><br><br>';
+        ?>
 
-            <h3 class="home-title">Trip Events</h3>
+        <label>Destination City:</label>
 
-            <table id ="trip-events">
+        <?php
+        echo '<select class="form-control input-field" name="dest_city" id="dest_city">';
+        $country_query = "SELECT ID, name FROM City";
+        $country_result = mysqli_query($db, $country_query);
+        while ($row = $country_result->fetch_assoc()) {
+            echo '<option value=';
+            echo $row["ID"];
+            echo ">";
+            echo $row["name"];
+            echo '</option>';
+        }
+        echo '</select><br><br>';
+        ?>
 
-            </table>
+        <br><br>
+        <label>Departure Date:</label>
+        <input required class="form-control input-field" type="date" id="departure_date" name="departure_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <br><br>
 
-            <hr>
-            <br><br>
+        <label>Departure Time:</label>
+        <input required class="form-control input-field" type="text" id="departure_time" name="departure_time" > <br><br>
+        <br><br>
 
-            <label>Event Title:</label>
-            <input required class="form-control input-field" type="text" id="event_title" name="tevent_title" > <br><br>
-            <br><br>
+        <label>Vehicle Type:</label>
+        <select class="form-control input-field" name="vehicle_type" id="vehicle_type">
+            <option>Plane</option>
+            <option>Bus</option>
+            <option>Cruise Ship</option>
+            <option>Train</option>
+        </select> <br><br>
 
-            <label>Description:</label>
-            <textarea class="form-control input-field" name="event_description" rows="5" cols="50" wrap="soft"> </textarea>
-            <br><br>
-            <br><br>
-            <br><br>
+        <label>Travel Company:</label>
+        <input required class="form-control input-field" type="text" id="travel_company" name="travel_company" > <br><br>
+        <br><br>
 
-            <label>Event Date:</label>
-            <input required class="form-control input-field" type="date" id="event_date" name="event_date" min=<?php echo date("Y-m-j")?>> <br><br>
-            <br><br>
 
-            <label>Event City:</label>
+        <label>Departure Address:</label>
+        <textarea class="form-control input-field" name="departure_address" rows="5" cols="50" wrap="soft"> </textarea>
+        <br><br>
+        <br><br>
+        <br><br>
 
-            <?php
-            echo '<select class="form-control input-field" name="dest-city" id="event_city">';
-            $country_query = "SELECT ID, name FROM City";
-            $country_result = mysqli_query($db, $country_query);
-            while ($row = $country_result->fetch_assoc()) {
-                echo '<option value=';
-                echo $row["ID"];
-                echo ">";
-                echo $row["name"];
-                echo '</option>';
-            }
-            echo '</select><br><br>';
-            ?>
+        <label>Destination Address:</label>
+        <textarea class="form-control input-field" name="destination_address" rows="5" cols="50" wrap="soft"> </textarea>
+        <br><br>
+        <br><br>
+        <br><br>
 
-            <button class="submit-button btn" type="button" onclick="createTripEvent()">Add New Travel Route</button>
+        <button class="submit-button btn" type="button" onclick="createTravelRoute()">Add New Travel Route</button>
 
-        </form>
+        <!-- </form>-->
+
+        <!-- <form name="trip-events-form" action="" method="post">-->
+        <br><br>
+        <hr>
+
+        <h3 class="home-title">Trip Events</h3>
+
+        <table id="tour-adding">
+            <tr id ="trip-events">
+
+            </tr>
+        </table>
+
+        <hr>
+        <br><br>
+
+        <label>Event Title:</label>
+        <input required class="form-control input-field" type="text" id="event_title" name="tevent_title" > <br><br>
+        <br><br>
+
+        <label>Description:</label>
+        <textarea class="form-control input-field" name="event_description" rows="5" cols="50" wrap="soft"> </textarea>
+        <br><br>
+        <br><br>
+        <br><br>
+
+        <label>Event Date:</label>
+        <input required class="form-control input-field" type="date" id="event_date" name="event_date" min=<?php echo date("Y-m-j")?>> <br><br>
+        <br><br>
+
+        <label>Event City:</label>
+
+        <?php
+        echo '<select class="form-control input-field" name="event_city" id="event_city">';
+        $country_query = "SELECT ID, name FROM City";
+        $country_result = mysqli_query($db, $country_query);
+        while ($row = $country_result->fetch_assoc()) {
+            echo '<option value=';
+            echo $row["ID"];
+            echo ">";
+            echo $row["name"];
+            echo '</option>';
+        }
+        echo '</select><br><br>';
+        ?>
+
+        <button class="submit-button btn" type="button" onclick="createTripEvent()">Add New Travel Route</button>
+
+        <!--</form>-->
 
         <br>
         <hr>
         <br>
-        <button class="right btn" type="button" onclick="checkAllTourInfo('add-tour')">Add Tour</button>
+        <button class="right btn" type="button" onclick="checkAllTourInfo()">Add Tour</button>
     </form>
 
 
