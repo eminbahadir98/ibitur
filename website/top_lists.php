@@ -28,17 +28,17 @@
       <br><br>
       <h3> Most visited cities of the month </h3>
       <hr>
-      <div>
-        1. Istanbul
-        2. Tokyo
+      <div class='top-list'>
+        <b>1.</b> Istanbul [~7500 visits]<br>
+        <b>2.</b> Tokyo [~6800 visits]<br>
       </div>
 
       <br><br><br><br>
       <h3> Top revenue-making countries of the year </h3>
       <hr>
-      <div>
-        1. Turkey
-        2. Japan
+      <div class='top-list'>
+        <b>1.</b> Turkey [~345000 TL]<br>
+        <b>2.</b> Japan [~320000 TL]<br>
       </div>
 
     </div>
