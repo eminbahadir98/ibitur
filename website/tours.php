@@ -57,7 +57,6 @@
     $filterQuery = "SELECT DISTINCT TP.* FROM TourPreview TP NATURAL LEFT JOIN TourAssociations TA WHERE TRUE ";
     $orderby = "TP.price" ;
     $ordering = "DESC";
-    $added_start_filter = false;
     foreach( $_GET as $key => $value )
     {
       if( $key == "query" )
@@ -71,22 +70,19 @@
         $orderby = $value;
       if( $key == "ordering")
         $ordering = $value;
-      if( $key == "start" ) {
+      if( $key == "start" ) 
         $filterQuery .= "AND TP.start_date >= '".$value."' " ;
-        $added_start_filter = true;
-      }
       if( $key == "end" )
         $filterQuery .= "AND TP.end_date <= '".$value."' " ;
       if( $key == "priceMax" )
         $filterQuery .= "AND TP.price <= '".$value."' " ;
       if( $key == "priceMin" )
         $filterQuery .= "AND TP.price >= '".$value."' " ;
+      if ( $key == "hideExpired")
+        $filterQuery .= "AND TP.start_date >= NOW() " ;
       if( $value == "true" )
         $filterQuery .= "AND '$key' IN (SELECT Tag.name FROM Tour, TourTags, Tag
           WHERE TP.tour_ID = Tour.ID AND Tour.ID = TourTags.tour_ID AND TourTags.tag_ID = Tag.ID) ";
-    }
-    if (!$added_start_filter) {
-      $filterQuery .= "AND TP.start_date >= NOW() " ;
     }
 
     $filterQuery .= " AND (TP.tour_ID NOT IN (SELECT tour_ID FROM TourCancel)) ";
@@ -187,7 +183,11 @@
           <?php echo isset($_GET['start']) ? "value='".$_GET['start']."'" : ''; ?> ><br>
         
           <b>Latest end date:</b> <input class="form-control" type="date" name="end"
-          <?php echo isset($_GET['end']) ? "value='".$_GET['end']."'" : ''; ?> >
+          <?php echo isset($_GET['end']) ? "value='".$_GET['end']."'" : ''; ?> ><br>
+
+          <input class="" type="checkbox" name="hideExpired"
+          <?php echo isset($_GET['hideExpired']) ? "checked" : ''; ?> >
+          Hide expired tours
 
           <hr>
           <b>Min price:</b> <input class="form-control" type="number" name="priceMin"
