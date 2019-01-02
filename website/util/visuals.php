@@ -1,12 +1,15 @@
 <?php
 
   function get_header($username, $is_staff) {
-    $part = $is_staff ? "<a href = 'my_tours.php'>My Tours</a>" 
+    $my_tours_part = $is_staff ? "<a href = 'my_tours.php'>My Tours</a>" 
         : "<a href = 'my_reservations.php'>My Reservations</a>";
+    $create_tour_part = $is_staff ? "<a href = 'tour_adding.php'>Create New Tour</a> |" : "";
+
     if ($username != null) {
       $profile_bar =
         "Welcome <b>$username</b> |
-        $part |
+        $create_tour_part
+        $my_tours_part |
         <a href = 'my_account.php'>My Account</a> |
         <a href = 'logout.php'>Logout</a>";
     } else {
@@ -46,8 +49,23 @@
     return $sd_arr[2] . "/" . $sd_arr[1] . "/" . $sd_arr[0];
   }
 
+  function format_datetime_all($datetime) {
+    $comp_arr = explode(" ", $datetime);
+    $date_arr = explode("-", ($comp_arr[0]));
+    $time_arr = explode(":", ($comp_arr[1]));
+    return $date_arr[2] . "/" . $date_arr[1] . "/" . $date_arr[0]
+          . " (" . $time_arr[0] . ":" . $time_arr[1] . ")";
+  }
+
+  function format_date($date) {
+    $sd_arr = explode("-", $date);
+    return $sd_arr[2] . "/" . $sd_arr[1] . "/" . $sd_arr[0];
+  }
+
   function get_remaining_quota_text($remaining_quota) {
-    if ($remaining_quota < 1) {
+    if ($remaining_quota < 0) {
+      return "";
+    } else if ($remaining_quota == 0) {
       return "The quota is full.";
     } else if ($remaining_quota == 1) {
       return " There is only <b>ONE</b> place remaining!";
@@ -66,7 +84,7 @@
         : "<h5 class='card-title'><b>$name</b></h5>";
 
     return "
-        <image class='card-image' src='./images/$image_path'>
+        <image class='card-image' src='./$image_path'>
         $title_part
         <p class='card-text'>
           $description<br><br>
@@ -76,12 +94,15 @@
     ";
   }
 
-  function get_tour_card_footer_skeleton($remove_buttons, $reserved, $is_staff, $id, $price, $remaining_quota) {
+  function get_tour_card_footer_skeleton($remove_buttons, $reserved, $expired, $is_staff, $id, $price, $remaining_quota) {
     
     $reservation_button = $reserved ?
       "<button class='btn' disabled>Reserved</button>" :
       "<a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>";
     
+    $reservation_button = !$expired ? $reservation_button :
+      "<button class='btn' disabled>Expired</button>";
+
     $reservation_button = !$is_staff ? $reservation_button :
       "<a href='manage_tour.php?id=$id' class='btn btn-primary'>Manage Tour</a>";
 
@@ -91,6 +112,11 @@
           $reservation_button
         </div>";
     $remaining_quota_text = get_remaining_quota_text($remaining_quota);
+
+    if ($expired) {
+      $remaining_quota_text = "";
+    }
+
     return "
       $remaining_quota_text<br>  
       <b>$price TL</b>
@@ -102,7 +128,7 @@
       $price, $remaining_quota) {
     
     $tour_card_body_skeleton = get_tour_card_body_skeleton(true, $id, $name, $image_path, $start_date, $end_date, $description);
-    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, $id, $price, $remaining_quota);
+    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, false, $id, $price, $remaining_quota);
 
     return "
       <div class='card tour-card'>
@@ -125,16 +151,18 @@
     ";
   }
 
-  function get_tour_purchase_card($is_staff, $reserved, $id, $name, $image_path, $start_date, $end_date, $description,
-      $price, $remaining_quota) {
+  function get_tour_purchase_card($is_staff, $reserved, $expired, $id, $name, $image_path, $start_date, $end_date, $description,
+      $price, $remaining_quota, $tags) {
     
     $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
-    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(false, $reserved, $is_staff, $id, $price, $remaining_quota);
-
+    $tour_card_footer_skeleton = get_tour_card_footer_skeleton(false, $reserved, $expired, $is_staff, $id, $price, $remaining_quota);
+    $tags_display = get_tags_display($tags);
+    
     return "
       <div class='card tour-card'>
         <div class='card-body'>
           $tour_card_body_skeleton
+          $tags_display
         </div>
         <div class='card-footer bg-white'>
           $tour_card_footer_skeleton
@@ -144,15 +172,16 @@
   }
 
   function get_tour_details_card($button1, $button2, $id, $name, $image_path, $start_date, $end_date, $description,
-      $price, $remaining_quota) {
+      $price, $remaining_quota, $tags) {
        
         $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
-        $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, $id, $price, $remaining_quota);
-    
+        $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, false, $id, $price, $remaining_quota);
+        $tags_display = get_tags_display($tags);
         return "
           <div class='card tour-card'>
             <div class='card-body'>
               $tour_card_body_skeleton
+              $tags_display
             </div>
             <div class='card-footer bg-white'>
               $tour_card_footer_skeleton
@@ -163,6 +192,17 @@
             </div>
           </div>
         ";
+  }
+
+  function get_tags_display($tags) {
+    $tags_display = "Tags: ";
+    foreach ($tags as $tag) {
+      $tags_display .= "<span class='badge badge-info'>$tag</span> ";
+    }
+    if ($tags_display == "Tags: ") {
+      $tags_display = "";
+    }
+    return $tags_display;
   }
 
 

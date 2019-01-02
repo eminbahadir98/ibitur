@@ -35,28 +35,56 @@ DROP VIEW IF EXISTS TourSubDates4;
 DROP VIEW IF EXISTS TourSubDates3;
 DROP VIEW IF EXISTS TourSubDates2;
 DROP VIEW IF EXISTS TourSubDates1;
+DROP VIEW IF EXISTS TourUsedQuotas;
+DROP VIEW IF EXISTS AllzeroUsedQuotas;
+DROP VIEW IF EXISTS NonzeroUsedQuotas;
 DROP VIEW IF EXISTS ReservationCounts;
 DROP VIEW IF EXISTS AllzeroReservationCounts;
 DROP VIEW IF EXISTS NonzeroReservationCounts;
+DROP VIEW IF EXISTS NonCancelledIncludedDependents;
 DROP VIEW IF EXISTS NonCancelledReservation;
 
 CREATE VIEW NonCancelledReservation AS
     (SELECT * FROM Reservation WHERE cancel_date IS NULL);
 
+CREATE VIEW NonCancelledIncludedDependents AS (
+    SELECT * FROM IncludedDependents
+    WHERE reservation_ID IN
+        (SELECT ID FROM Reservation WHERE cancel_date IS NULL)
+);
+    
 CREATE VIEW NonzeroReservationCounts AS
-    (SELECT tour_ID, COUNT(customer_ID) AS resv_no
-    FROM NonCancelledReservation GROUP BY tour_ID);
-
+    (SELECT reservation_ID, COUNT(dependent_ID) + 1 AS res_count
+    FROM NonCancelledIncludedDependents GROUP BY reservation_ID);
+    
 CREATE VIEW AllzeroReservationCounts AS (
-    SELECT ID AS tour_ID, 0 AS resv_no
-    FROM Tour
-    WHERE Tour.ID NOT IN (SELECT tour_ID FROM NonzeroReservationCounts)
+    SELECT ID AS reservation_ID, 1 AS res_count
+    FROM NonCancelledReservation
+    WHERE NonCancelledReservation.ID NOT IN (SELECT reservation_ID FROM NonzeroReservationCounts)
 );
 
 CREATE VIEW ReservationCounts AS
    (SELECT * FROM NonzeroReservationCounts)
    UNION 
    (SELECT * FROM AllzeroReservationCounts);
+
+CREATE VIEW NonzeroUsedQuotas AS (
+    SELECT Reservation.tour_ID AS tour_ID, SUM(res_count) AS used_quota
+    FROM ReservationCounts, Reservation
+    WHERE ReservationCounts.reservation_ID = Reservation.ID
+    GROUP BY tour_ID
+);
+
+CREATE VIEW AllzeroUsedQuotas AS (
+    SELECT ID AS tour_ID, 0 AS used_quota
+    FROM Tour
+    WHERE Tour.ID NOT IN (SELECT tour_ID FROM NonzeroUsedQuotas)
+);
+
+CREATE VIEW TourUsedQuotas AS
+   (SELECT * FROM NonzeroUsedQuotas)
+   UNION 
+   (SELECT * FROM AllzeroUsedQuotas);
 
 CREATE VIEW TourSubDates1 AS
     (SELECT tour_ID, enter_date AS the_date FROM Tour, Accommodation
@@ -91,9 +119,9 @@ CREATE VIEW TourInterval AS
 
 CREATE VIEW TourPreview AS 
     (SELECT Tour.ID AS tour_ID, name, description, image_path, price, start_date, end_date,
-    (quota - resv_no) AS remaining_quota
-    FROM Tour, ReservationCounts, TourInterval
-    WHERE Tour.ID = ReservationCounts.tour_ID AND Tour.ID = TourInterval.tour_ID);
+    (quota - used_quota) AS remaining_quota
+    FROM Tour, TourUsedQuotas, TourInterval
+    WHERE Tour.ID = TourUsedQuotas.tour_ID AND Tour.ID = TourInterval.tour_ID);
     
     
 -- Tour Associations 
@@ -150,12 +178,30 @@ DROP VIEW IF EXISTS TempTourAssociations;
 
 CREATE VIEW TempTourAssociations AS (
     SELECT tour_ID, city_name FROM TourAssociations NATURAL JOIN TourPreview
-    WHERE TRUE -- (start-of-the-month) <= start_date AND start_date <= (end-of-the-month)
+    WHERE (SELECT CURRENT_DATE + INTERVAL - 1 MONTH) <= start_date AND start_date <= (NOW()) 
 );
 
 CREATE VIEW CityPopularity AS (
-    SELECT city_name, SUM(resv_no) AS popularity
-    FROM TempTourAssociations NATURAL JOIN ReservationCounts
+    SELECT city_name, SUM(used_quota) AS popularity
+    FROM TempTourAssociations NATURAL JOIN TourUsedQuotas
     GROUP BY city_name    
     ORDER BY popularity DESC
+);
+
+
+-- Country Revenues
+
+DROP VIEW IF EXISTS CountryRevenues;
+DROP VIEW IF EXISTS TempTourAssociations;
+
+CREATE VIEW TempTourAssociations AS (
+    SELECT tour_ID, country_name FROM TourAssociations NATURAL JOIN TourPreview
+    WHERE (SELECT CURRENT_DATE + INTERVAL - 1 YEAR) <= start_date AND start_date <= (NOW()) 
+);
+
+CREATE VIEW CountryRevenues AS (
+    SELECT country_name, SUM(price) AS revenue
+    FROM TempTourAssociations NATURAL JOIN TourPreview
+    GROUP BY country_name
+    ORDER BY revenue DESC
 );

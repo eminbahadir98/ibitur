@@ -36,7 +36,7 @@
           FROM (TourPreview NATURAL JOIN Reservation)
           WHERE Reservation.customer_ID = $current_id
           AND Reservation.cancel_date IS NULL
-          AND start_date > NOW();";
+          AND start_date >= NOW();";
       return getReservations($active_reservation_query);
   }
 
@@ -47,7 +47,7 @@
           FROM (TourPreview NATURAL JOIN Reservation)
           WHERE Reservation.customer_ID = $current_id
           AND Reservation.cancel_date IS NOT NULL
-          AND start_date > NOW();";
+          AND start_date >= NOW();";
       return getReservations($cancelled_reservation_query);
   }
 
@@ -58,7 +58,7 @@
           FROM (TourPreview NATURAL JOIN Reservation)
           WHERE Reservation.customer_ID = $current_id
           AND Reservation.cancel_date IS NULL
-          AND end_date < NOW();";
+          AND start_date < NOW();";
       return getReservations($past_reservation_query);
   }
 

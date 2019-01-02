@@ -33,10 +33,18 @@
         }
       }
 
-      
+      $tags_query = "SELECT name FROM Tag, TourTags WHERE Tag.ID = TourTags.tag_ID AND TourTags.tour_ID = $tour_ID;";
+      $tags_result = mysqli_query($db, $tags_query);
+      $tags = array();
+      while ($tag_row = $tags_result->fetch_assoc()) {
+        array_push($tags, $tag_row["name"]);
+      }
 
-      $tours .= get_tour_purchase_card($current_is_staff, $reserved_before, $tour_ID, $tour_name, $tour_image_path, $tour_start_date,
-          $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota);
+      $expired_query = "SELECT '$tour_start_date' < NOW() AS expired";
+      $expired = mysqli_query($db, $expired_query)->fetch_assoc()["expired"];
+
+      $tours .= get_tour_purchase_card($current_is_staff, $reserved_before, $expired, $tour_ID, $tour_name, $tour_image_path, $tour_start_date,
+          $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota, $tags);
     }
     if ($tours == "") {
       $tours = "No tours to show.";
@@ -49,6 +57,7 @@
     $filterQuery = "SELECT DISTINCT TP.* FROM TourPreview TP NATURAL LEFT JOIN TourAssociations TA WHERE TRUE ";
     $orderby = "TP.price" ;
     $ordering = "DESC";
+    $added_start_filter = false;
     foreach( $_GET as $key => $value )
     {
       if( $key == "query" )
@@ -62,19 +71,26 @@
         $orderby = $value;
       if( $key == "ordering")
         $ordering = $value;
-      if( $key == "start" )
-        $filterQuery .= "AND TP.start_date > '".$value."' " ;
+      if( $key == "start" ) {
+        $filterQuery .= "AND TP.start_date >= '".$value."' " ;
+        $added_start_filter = true;
+      }
       if( $key == "end" )
-        $filterQuery .= "AND TP.end_date < '".$value."' " ;
+        $filterQuery .= "AND TP.end_date <= '".$value."' " ;
       if( $key == "priceMax" )
-        $filterQuery .= "AND TP.price < '".$value."' " ;
+        $filterQuery .= "AND TP.price <= '".$value."' " ;
       if( $key == "priceMin" )
-        $filterQuery .= "AND TP.price > '".$value."' " ;
+        $filterQuery .= "AND TP.price >= '".$value."' " ;
       if( $value == "true" )
         $filterQuery .= "AND '$key' IN (SELECT Tag.name FROM Tour, TourTags, Tag
           WHERE TP.tour_ID = Tour.ID AND Tour.ID = TourTags.tour_ID AND TourTags.tag_ID = Tag.ID) ";
-
     }
+    if (!$added_start_filter) {
+      $filterQuery .= "AND TP.start_date >= NOW() " ;
+    }
+
+    $filterQuery .= " AND (TP.tour_ID NOT IN (SELECT tour_ID FROM TourCancel)) ";
+
     $filterQuery .= " ORDER BY ".$orderby." ".$ordering." ;";
     return $filterQuery;
   }
@@ -178,7 +194,7 @@
           <?php echo isset($_GET['priceMin']) ? "value='".$_GET['priceMin']."'" : ''; ?> ><br>
 
           <b>Max price:</b> <input class="form-control" type="number" name="priceMax"
-          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : "value='".getMax()."'"; ?> >
+          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : ''; ?> >
 
           <hr>
           <b>Tags</b><br>

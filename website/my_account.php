@@ -10,6 +10,12 @@
         header("location: my_account_staff.php");
     }
     else {
+
+        $profile_update_message = null;
+        $add_dep_message = null;
+        $remove_dep_message = null;
+        $add_promotion_message = null;
+
         if( isset($_POST['profile-submit'] ) ) {
 
             $first_name = mysqli_real_escape_string($db, $_POST['first_name']);
@@ -27,11 +33,16 @@
             nationality = '$nationality', national_ID = $national_id,
             gender= '$gender', date_of_birth = '$date_of_birth' WHERE CustomerAccount.ID = $current_id; ";
             
-            $update_result = mysqli_query($db, $update_query);
-
+            $update_result1 = mysqli_query($db, $update_query);
+            
             $update_query = "UPDATE CustomerTelephones SET telephone_no = $phone_number  WHERE customer_ID = $current_id; ";
-            $update_result = mysqli_query($db, $update_query);
+            $update_result2 = mysqli_query($db, $update_query);
 
+            if ($update_result1 && $update_result2) {
+                $profile_update_message = "Changes are saved for your profile settings.";
+            } else{
+                $profile_update_message = "Failed to save changes for your profile settings. Please try again later.";
+            }
         }
         else if(isset($_POST['dependent-add-submit'])) {
             
@@ -46,10 +57,16 @@
             VALUES( $current_id , $dep_national_id, '$dep_gender', '$dep_dob', '$dep_first_name', '$dep_middle_name', '$dep_last_name' );";
 
             $add_dep_result = mysqli_query($db, $add_dep_query);
+
+            if ($add_dep_result) {
+                $add_dep_message  = "Dependent added successfully.";
+            } else {
+                $add_dep_message  = "Failed to add dependent. Please try again later.";
+            }
         }
         else if(isset($_POST['remove-submit'])) {
             $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
-            $remove_complete = false;
+            $remove_dep_result = true;
             foreach($checkboxes as $value) {
 
                 $remove_include_query = "DELETE
@@ -61,10 +78,14 @@
                 FROM Dependent
                 WHERE Dependent.customer_ID = $current_id
                 AND national_ID = $value;";
-                $remove_dep_result = mysqli_query($db, $remove_dep_query);
+                $remove_dep_result = $remove_dep_result && mysqli_query($db, $remove_dep_query);
             }
 
-            $remove_complete = true;
+            if ($remove_dep_result) {
+                $remove_dep_message = "Selected dependent(s) are removed.";
+            } else{
+                $remove_dep_message = "Failed to remove dependent(s). Please try again later.";
+            }
         }
         else if(isset($_POST['redeem-submit'])) {
             $cur_promo_code = $_POST['promo_code'];
@@ -72,7 +93,7 @@
             $get_promo_result = mysqli_query($db, $get_promotion_query);
 
             if($get_promo_result->num_rows == 0) {
-                echo "Invalid Promotion Code.";
+                $add_promotion_message = "This promotion code is invalid.";
             }
 
             else {
@@ -80,13 +101,13 @@
                 $check_code_result = mysqli_query($db, $check_code_query);
 
                 if($check_code_result->num_rows != 0) {
-                    echo "This promotion card is already taken.";
+                    $add_promotion_message = "This promotion code is already used.";
                 }
                 else {
                     $add_promotion_query = "insert into CustomerPromotionCards values('$cur_promo_code',$current_id);";
                     $add_promotion_result = mysqli_query($db, $add_promotion_query);
                     if($add_promotion_result) {
-                        echo "Promotion Card Added Successfully";
+                        $add_promotion_message = "The promotion card has been added to your account.";
                     }
                 }
                 
@@ -119,7 +140,7 @@
         $first_name = $profile_settings_data['first_name'];
         $middle_name = $profile_settings_data['middle_name'];
         $last_name = $profile_settings_data['last_name'];
-        $nationality = $profile_settings_data['name'];
+        $nationality = $profile_settings_data['ID'];
         $national_id = $profile_settings_data['national_ID'];
         $date_of_birth = $profile_settings_data['date_of_birth'];
         $gender = $profile_settings_data['gender'];
@@ -265,7 +286,29 @@
         <div class="inner-content">
             <h1> My Account</h1>
             <hr>
-            <br><br>
+            <br>
+            <?php
+                $alert_message = null;
+                if ($profile_update_message != null) {
+                    $alert_message = $profile_update_message;
+                }
+                if ($add_dep_message != null) {
+                    $alert_message = $add_dep_message;
+                }
+                if ($remove_dep_message != null) {
+                    $alert_message = $remove_dep_message;
+                }
+                if ($add_promotion_message != null) {
+                    $alert_message = $add_promotion_message;
+                }
+                if ($alert_message != null) {
+                    echo "
+                    <div class='alert alert-success' role='alert'>
+                        $alert_message
+                    </div>";
+                }
+            ?>
+            <br>
             <div class="profile-settings">
                 <h2> Profile Settings </h2>
                 <hr>
@@ -297,6 +340,7 @@
                         while ($row = $country_result->fetch_assoc()) {
                             echo '<option value=';
                             echo $row["ID"];
+                            echo ($nationality == $row["ID"]) ? " selected " : "";
                             echo ">";
                             echo $row["name"];
                             echo '</option>';
