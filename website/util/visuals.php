@@ -82,7 +82,7 @@
         : "<h5 class='card-title'><b>$name</b></h5>";
 
     return "
-        <image class='card-image' src='./images/$image_path'>
+        <image class='card-image' src='./$image_path'>
         $title_part
         <p class='card-text'>
           $description<br><br>
@@ -142,15 +142,17 @@
   }
 
   function get_tour_purchase_card($is_staff, $reserved, $id, $name, $image_path, $start_date, $end_date, $description,
-      $price, $remaining_quota) {
+      $price, $remaining_quota, $tags) {
     
     $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
     $tour_card_footer_skeleton = get_tour_card_footer_skeleton(false, $reserved, $is_staff, $id, $price, $remaining_quota);
-
+    $tags_display = get_tags_display($tags);
+    
     return "
       <div class='card tour-card'>
         <div class='card-body'>
           $tour_card_body_skeleton
+          $tags_display
         </div>
         <div class='card-footer bg-white'>
           $tour_card_footer_skeleton
@@ -160,15 +162,16 @@
   }
 
   function get_tour_details_card($button1, $button2, $id, $name, $image_path, $start_date, $end_date, $description,
-      $price, $remaining_quota) {
+      $price, $remaining_quota, $tags) {
        
         $tour_card_body_skeleton = get_tour_card_body_skeleton(false, $id, $name, $image_path, $start_date, $end_date, $description);
         $tour_card_footer_skeleton = get_tour_card_footer_skeleton(true, false, false, $id, $price, $remaining_quota);
-    
+        $tags_display = get_tags_display($tags);
         return "
           <div class='card tour-card'>
             <div class='card-body'>
               $tour_card_body_skeleton
+              $tags_display
             </div>
             <div class='card-footer bg-white'>
               $tour_card_footer_skeleton
@@ -179,6 +182,17 @@
             </div>
           </div>
         ";
+  }
+
+  function get_tags_display($tags) {
+    $tags_display = "Tags: ";
+    foreach ($tags as $tag) {
+      $tags_display .= "<span class='badge badge-info'>$tag</span> ";
+    }
+    if ($tags_display == "Tags: ") {
+      $tags_display = "";
+    }
+    return $tags_display;
   }
 
 

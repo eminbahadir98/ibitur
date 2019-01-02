@@ -353,11 +353,17 @@
             "$tour_remaining_quota spots remaining."
             : "The quota for this tour is full.";
 
+          $tags_query = "SELECT name FROM Tag, TourTags WHERE Tag.ID = TourTags.tag_ID AND TourTags.tour_ID = $tour_id;";
+          $tags_result = mysqli_query($db, $tags_query);
+          $tags = array();
+          while ($tag_row = $tags_result->fetch_assoc()) {
+            array_push($tags, $tag_row["name"]);
+          }
           $tour_card = get_tour_details_card($tour_action, $payment_action,
             $tour_id, $tour_name . $cancel_indicator, $tour_image_path, $tour_start_date,
             $tour_end_date,
             $tour_description,
-            $tour_price, $tour_remaining_quota);
+            $tour_price, $tour_remaining_quota, $tags);
           
           echo "
             $tour_card

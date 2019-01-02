@@ -32,7 +32,7 @@ INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
 INSERT INTO StaffAccount(ID) VALUES(LAST_INSERT_ID());
 
 INSERT INTO Tour(name, description, image_path, quota, price, creator_ID, cancelling_deadline)
-    VALUES("Anatolia Tour", "This is an anatolia tour...", "anatolia.png", 5, 395.90,
+    VALUES("Anatolia Tour", "This is an anatolia tour...", "./images/anatolia.png", 5, 395.90,
     (SELECT ID FROM Account WHERE username="abdullah"), "2019-01-05");
     
 INSERT INTO Hotel(city_ID, name, address, star_rating)
@@ -69,7 +69,7 @@ INSERT INTO Reservation(customer_ID, tour_ID, issue_date, payment_status, cancel
     (SELECT ID FROM Tour WHERE name="Anatolia Tour"), "2018-12-30", "PAID", NULL);
 
 INSERT INTO Tour(name, description, image_path, quota, price, creator_ID, cancelling_deadline)
-    VALUES("Europe Tour", "This is an europe tour...", "europe.png", 3, 495.90,
+    VALUES("Europe Tour", "This is an europe tour...", "./images/europe.png", 3, 495.90,
     (SELECT ID FROM Account WHERE username="abdullah"), "2019-01-07");
     
 INSERT INTO Hotel(city_ID, name, address, star_rating)
@@ -102,4 +102,12 @@ INSERT INTO Tag(name) VALUES("Long");
 INSERT INTO TourTags(tour_ID, tag_ID)
     VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"), (SELECT ID FROM Tag WHERE name="Vegan"));
     
+INSERT INTO TourTags(tour_ID, tag_ID)
+    VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"), (SELECT ID FROM Tag WHERE name="Short"));
+    
+INSERT INTO TourTags(tour_ID, tag_ID)
+    VALUES((SELECT ID FROM Tour WHERE name="Anatolia Tour"), (SELECT ID FROM Tag WHERE name="Historic"));
+    
+INSERT INTO TourTags(tour_ID, tag_ID)
+    VALUES((SELECT ID FROM Tour WHERE name="Anatolia Tour"), (SELECT ID FROM Tag WHERE name="Short"));
     

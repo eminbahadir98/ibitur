@@ -33,10 +33,15 @@
         }
       }
 
-      
+      $tags_query = "SELECT name FROM Tag, TourTags WHERE Tag.ID = TourTags.tag_ID AND TourTags.tour_ID = $tour_ID;";
+      $tags_result = mysqli_query($db, $tags_query);
+      $tags = array();
+      while ($tag_row = $tags_result->fetch_assoc()) {
+        array_push($tags, $tag_row["name"]);
+      }
 
       $tours .= get_tour_purchase_card($current_is_staff, $reserved_before, $tour_ID, $tour_name, $tour_image_path, $tour_start_date,
-          $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota);
+          $tour_end_date, $tour_description, $tour_price, $tour_remaining_quota, $tags);
     }
     if ($tours == "") {
       $tours = "No tours to show.";
@@ -178,7 +183,7 @@
           <?php echo isset($_GET['priceMin']) ? "value='".$_GET['priceMin']."'" : ''; ?> ><br>
 
           <b>Max price:</b> <input class="form-control" type="number" name="priceMax"
-          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : "value='".getMax()."'"; ?> >
+          <?php echo isset($_GET['priceMax']) ? "value='".$_GET['priceMax']."'" : ''; ?> >
 
           <hr>
           <b>Tags</b><br>
