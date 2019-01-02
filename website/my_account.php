@@ -92,6 +92,23 @@
                 
             }
         }
+        else if(isset($_POST['email-submit'])) {
+            $new_email = $_POST['new_email'];
+            $change_email_query = "UPDATE Account SET email='$new_email' where ID = '$current_id';";
+            $change_email_result = mysqli_query($db, $change_email_query);
+        }
+        else if(isset($_POST['newpass-submit'])) {
+            $old_pass = $_POST['old_pass'];
+            $new_pass = $_POST['new_pass'];
+
+            $check_pass_query = "select ID from account where ID='$current_id' and passwd='$old_pass';";
+            $check_pass_result = mysqli_query($db, $check_pass_query);
+
+            if($check_pass_result->num_rows == 1) {
+                $change_pass_query = "UPDATE Account SET passwd='$new_pass' where ID='$current_id';";    
+                $change_pass_result = mysqli_query($db, $change_pass_query);
+            }
+        }
 
         $profile_settings_data_query = "select * from Account A, CustomerAccount C, Country CR where A.ID = C.ID and C.nationality = CR.ID and A.username = '" . $_SESSION['session_username'] . "';";
         
@@ -136,7 +153,105 @@
       <title>IBITUR - My Account</title>
       <link rel="stylesheet" href="style/style.css"/>
       <link rel="stylesheet" href="lib/bootstrap.min.css"/>
+
+      <script type="text/javascript">
+      function isASCII(str) {
+        var re = /^[\x00-\x7F]*$/;
+        return re.test(str);
+      }
+      function isAlphaNumeric(str) {
+        var re = /^[a-z0-9]+$/;
+        return re.test(str);
+      }
+      function isValidEmail(email) {
+        var re = /^\S+@\S+$/;
+        return re.test(email);
+      }
+      function showError(message, place) {
+        var errorDiv = document.getElementById(place);
+        errorDiv.innerHTML = 
+          "<div class='alert alert-warning' role='alert'>" + 
+            message +
+          "</div>";
+      }
+
+      function checkPass() {
+          var password1 = document.forms["change-pass"]["new_pass"].value;
+          var password2 = document.forms["change-pass"]["confirm_pass"].value;
+        
+            if (!isASCII(password1)) {
+            showError("Password can contain only ASCII characters.", "account-settings-error-div");
+            return false;
+            }
+            if (password1.length < 6) {
+            showError("Password should contain minimum of 6 characters.","account-settings-error-div");
+            return false;
+            }
+            if (password1 != password2) {
+            showError("The entered passwords do not match.","account-settings-error-div");
+            return false;
+            }
+            return true;
+      }
+
+      function checkEmail() {
+          var email = document.forms["change-email"]["new-email"].value;
+          showError("E-mail is not valid.", "account-settings-error-div");
+          return false;
+          console.log("Hello");
+          /*if(!isValidEmail(email)) {
+            showError("E-mail is not valid.", "account-settings-error-div");
+            return false;
+          }
+          else {
+              return true;
+          }*/
+      }
+      /*
+      function checkInput() {
+        var email = document.forms["register-form"]["email"].value;
+        var username = document.forms["register-form"]["username"].value;
+        var password = document.forms["register-form"]["password"].value;
+        var password2 = document.forms["register-form"]["password2"].value;
+        var first_name = document.forms["register-form"]["first_name"].value;
+        var middle_name = document.forms["register-form"]["middle_name"].value;
+        var last_name = document.forms["register-form"]["last_name"].value;
+        var birthday = document.forms["register-form"]["birthday"].value;
+        var gender = document.forms["register-form"]["gender"].value;
+        var nationality = document.forms["register-form"]["nationality"].value;
+        var national_id = document.forms["register-form"]["national_id"].value;
+
+        if (!isValidEmail(email)) {
+          showError("The entered mail is not valid.");
+          return false;
+        }
+        if (!isAlphaNumeric(username)) {
+          showError("Username can contain only lowercase letters and numbers.");
+          return false;
+        }
+        if (username.length < 3) {
+          showError("Username should contain minimum of 3 characters.");
+          return false;
+        }
+        if (!isASCII(password)) {
+          showError("Password can contain only ASCII characters.");
+          return false;
+        }
+        if (password.length < 6) {
+          showError("Password should contain minimum of 6 characters.");
+          return false;
+        }
+        if (password != password2) {
+          showError("The entered passwords do not match.");
+          return false;
+        }
+
+        return true;
+      }*/
+      //checkInput() ;
+    </script>
    </head>
+
 
    <body class="content">
         <?php
@@ -338,15 +453,32 @@
                     echo "<b>Username:</b> $current_username<br>";
                     echo "<b>Email:</b> $email<br><br>";
                 ?>
-                <form method='post'>
+                <form name='change-email' onSubmit='return checkEmail();' method='post'>
                     <label>New Email: </label>
                     <input class='form-control input-field' type='text' name='new_email' value = ''/><br><br>
                     <input class='btn right' type='submit' name='email-submit' value='Change Email'/>
                 </form>
+                <br><br>
+                <form name='change-pass' onSubmit='return checkPass();' method='post'>
+                    <label>Old Password: </label>
+                    <input class='form-control input-field' type='text' name='old_pass' value = ''/><br><br>
+                    <label>New Password: </label>
+                    <input class='form-control input-field' type='text' name='new_pass' value = ''/><br><br>
+                    <label>Confirm New Password: </label>
+                    <input class='form-control input-field' type='text' name='confirm_pass' value = ''/><br><br>
+                    <input class='btn right' type='submit' name='newpass-submit' value='Change Password'/>
+                </form>
+
+                <div id="account-settings-error-div">
                 <?php
-                    
-                    echo get_form_btn("Change Password");
+                    if ($error != null) {
+                    echo 
+                    "<div class='alert alert-warning' role='alert'>
+                        $error
+                    </div>";
+                    }
                 ?>
+                </div>
                 
             </div>
                     
