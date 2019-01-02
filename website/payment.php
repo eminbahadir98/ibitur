@@ -97,6 +97,9 @@
               init_price = init_price + discount;
               final_price = init_price;
           }
+          if(final_price < 0) {
+                final_price = 0;
+          }
           
           $("#final_price").text(final_price);
           $("#fin_price").val(final_price);
