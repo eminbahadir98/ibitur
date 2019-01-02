@@ -21,6 +21,14 @@
         $point_result = mysqli_query($db, $point_query);
 	echo $point_query;
       }
+      if(isset($_POST['points']) )
+      {
+        echo "points:".$_POST['points']."<-- in here<br>";
+        $pain = $_POST['points'];
+        $point_query = "UPDATE CustomerAccount SET booking_points = booking_points - $pain WHERE ID = $current_id";
+        $point_result = mysqli_query($db, $point_query);
+	echo $point_query;
+      }
       echo "<script>window.location.href = 'view_tour.php?id=$tour_id&paid=true';</script>";
     }
     else {
@@ -197,6 +205,7 @@
     </div>
 
     <form action='' method ='post'>
+    <input type='hidden'  name='points' value='<?php echo $booking_pts;?>'/>
     <input type='hidden' id='fin_price' name='price' value=''/>
     <input type='hidden' name='tour_id' value=<?php echo "'$tour_id'";?> />
       <input type='hidden' name='rez_id' value=<?php echo "'$rez_id'";?> />
