@@ -13,11 +13,10 @@
     $payment_result = mysqli_query($db, $payment_query);
 
     if($payment_result) {
-      echo "<script>alert('Payment complete.');";
-      echo "window.location.href = 'view_tour.php?id=$tour_id';</script>";
+      echo "<script>window.location.href = 'view_tour.php?id=$tour_id&paid=true';</script>";
     }
     else {
-      echo "<script>alert('Payment failure.')</script>";
+      echo "<script>window.location.href = 'view_tour.php?id=$tour_id&paid=false';</script>";
     }
   }
   $tour_found = true;
@@ -117,17 +116,23 @@
   </script>
   <body class="content">
 
+    
+
     <?php
       if ($logged_in) {
         echo get_header($current_fullname, $current_is_staff);
       } else {
         echo get_header(null, false);
       }
-
-      echo "<h1>Tour Payment</h1>";
-      echo $tour_card;
-      echo "<hr>";
     ?>
+
+    <div class="inner-content">
+    <?php
+      echo "<h1>Tour Payment</h1>";
+      echo "<hr>";
+      echo $tour_card;
+      ?>
+    
     
     <div id="payment-settings">
     <h3> Booking Points </h3>
@@ -137,9 +142,11 @@
         $booking_pts_result = mysqli_query($db, $booking_pts_query);
 
         $booking_pts = $booking_pts_result->fetch_assoc()['booking_points'];
-        echo "<label>Booking Points: </label><span id='b_pts'>$booking_pts</span><br>";
-        echo "<label>Use Points: </label><input type='checkbox' class='bonus_box' value='$booking_pts'/>";
+        echo "<label>Booking points: </label><span id='b_pts'> $booking_pts</span><br>";
+        echo "<label>Use booking points: </label> <input type='checkbox' class='bonus_box' value='$booking_pts'/>";
       ?>
+
+    <br><br><br>
     <h3> Promotion Cards </h3>
       <hr>
       <?php
@@ -147,7 +154,7 @@
           $promotion_result = mysqli_query($db, $promotion_query);
 
           if($promotion_result->num_rows == 0) {
-              echo "<p>You don't have any promotion cards yet.</p>";
+              echo "<p>You don't have any promotion cards to use.</p>";
           }
           else {
               echo "<table class='table table-bordered'>
@@ -173,15 +180,17 @@
     </div>
 
     <div id="payment-amount">
-            <label>Final Price: </label><span id="final_price"><?php echo $tour_price;?></span> TRY
+            <label>Final Price: </label> <span id="final_price"><?php echo $tour_price;?></span> TRY
     </div>
 
     <form action='' method ='post'>
     <input type='hidden' name='tour_id' value=<?php echo "'$tour_id'";?> />
       <input type='hidden' name='rez_id' value=<?php echo "'$rez_id'";?> />
-      <button class="right btn" type="submit" name="payment-submit">Complete Payment</button>
+      <button class="right btn btn-primary" type="submit" name="payment-submit">Complete Payment</button>
     </form>
     
+    </div>
+
     <?php
       echo get_footer();
     ?>

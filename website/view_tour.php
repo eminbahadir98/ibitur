@@ -63,6 +63,11 @@
     }
     
   }
+
+  $payment_performed = !$reservation_cancel_performed && isset($_GET['paid']);
+  if ($payment_performed) {
+    $payment_succeed = ($_GET['paid'] == "true");
+  }
 ?>
 
 <html>
@@ -100,6 +105,17 @@
         $reservation_alert =
           "<div class='alert alert-success' role='alert'>
             $reservation_message
+          </div>";
+      }
+
+      $payment_alert = "";
+      if ($payment_performed) {
+        $payment_message = $payment_succeed ?
+          "Payment completed." :
+          "Payment failed. Please try again later.";
+        $payment_alert =
+          "<div class='alert alert-success' role='alert'>
+            $payment_message
           </div>";
       }
 
@@ -141,6 +157,7 @@
       <?php
         echo $reservation_cancel_alert;
         echo $reservation_alert;
+        echo $payment_alert;
 
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
@@ -269,7 +286,7 @@
                     </div>
                   ";
 
-                  $payment_action = "You have already paid for this tour.";
+                  $payment_action = "<button class='btn' disabled>Paid</button>";
                   if ($row["payment_status"] != "PAID") {
                     $rez_id = $row["ID"];
                     $payment_action = "
