@@ -163,7 +163,7 @@
                           <br>You can correct it in your <a href='my_account.php'>account page</a>.
                           <br><br>";
                     
-                echo "<input class='btn btn-primary right' type='submit' name='reserve-submit' value='Reserve Tour'/>";
+                echo "<input class='btn btn-primary right' type='submit' name='reserve-submit' value='Submit Reservation'/>";
 
                 echo "</form>";
 

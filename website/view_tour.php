@@ -169,6 +169,16 @@
         $tour_found = false;
       }
 
+      
+      $tour_cancel_alert = "";
+      if ($tour_is_cancelled) {
+        $tour_cancel_alert = 
+          "<div class='alert alert-success' role='alert'>
+            <h4>Cancelled Tour</h4>
+            $tour_cancel_reason
+          </div>";
+      }
+
     ?>
     
     <div class="inner-content">
@@ -178,11 +188,11 @@
         echo $reservation_cancel_alert;
         echo $reservation_alert;
         echo $payment_alert;
+        echo $tour_cancel_alert;
 
         if (!$tour_found) {
           echo "<h2>The tour is not found.<h2>";
         } else {
-          $cancel_indicator = $tour_is_cancelled ? " [TOUR CANCELLED]" : "";
 
           $tour_days = "";
           $days_query = "SELECT day_no, day_date, D.description AS description
@@ -359,8 +369,23 @@
           while ($tag_row = $tags_result->fetch_assoc()) {
             array_push($tags, $tag_row["name"]);
           }
+
+          $expired_query = "SELECT '$tour_start_date' < NOW() AS expired";
+          $expired = mysqli_query($db, $expired_query)->fetch_assoc()["expired"];
+          if ($expired) {
+            $tour_action = "";
+            $payment_action = "<button class='btn' disabled>Expired</button>";
+            $tour_remaining_quota = -10;
+          }
+
+          if ($tour_is_cancelled) {
+            $tour_action = "";
+            $payment_action = "<button class='btn' disabled>Cancelled</button>";
+            $tour_remaining_quota = -10;
+          }
+
           $tour_card = get_tour_details_card($tour_action, $payment_action,
-            $tour_id, $tour_name . $cancel_indicator, $tour_image_path, $tour_start_date,
+            $tour_id, $tour_name, $tour_image_path, $tour_start_date,
             $tour_end_date,
             $tour_description,
             $tour_price, $tour_remaining_quota, $tags);

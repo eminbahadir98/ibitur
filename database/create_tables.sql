@@ -70,7 +70,6 @@ CREATE TABLE Tour (
     quota INTEGER DEFAULT 0,
     price NUMERIC (7,2) DEFAULT 0,
     creator_ID INTEGER,
-    cancelling_deadline DATETIME NOT NULL,
     FOREIGN KEY (creator_ID) REFERENCES StaffAccount(ID)
 );
 

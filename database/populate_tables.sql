@@ -31,9 +31,9 @@ INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
     VALUES("abdullah", "abdullah@example.com", "123", "Abdullah", NULL, "Talayhan");
 INSERT INTO StaffAccount(ID) VALUES(LAST_INSERT_ID());
 
-INSERT INTO Tour(name, description, image_path, quota, price, creator_ID, cancelling_deadline)
+INSERT INTO Tour(name, description, image_path, quota, price, creator_ID)
     VALUES("Anatolia Tour", "This is an anatolia tour...", "./images/anatolia.png", 5, 395.90,
-    (SELECT ID FROM Account WHERE username="abdullah"), "2019-01-05");
+    (SELECT ID FROM Account WHERE username="abdullah"));
     
 INSERT INTO Hotel(city_ID, name, address, star_rating)
     VALUES((SELECT ID FROM City WHERE name="Antalya"), "Sunflower Hotel", "Some street, some road...", 4);
@@ -68,9 +68,9 @@ INSERT INTO Reservation(customer_ID, tour_ID, issue_date, payment_status, cancel
     VALUES((SELECT ID FROM Account WHERE username="sami"),
     (SELECT ID FROM Tour WHERE name="Anatolia Tour"), "2018-12-30", "PAID", NULL);
 
-INSERT INTO Tour(name, description, image_path, quota, price, creator_ID, cancelling_deadline)
+INSERT INTO Tour(name, description, image_path, quota, price, creator_ID)
     VALUES("Europe Tour", "This is an europe tour...", "./images/europe.png", 3, 495.90,
-    (SELECT ID FROM Account WHERE username="abdullah"), "2019-01-07");
+    (SELECT ID FROM Account WHERE username="abdullah"));
     
 INSERT INTO Hotel(city_ID, name, address, star_rating)
     VALUES((SELECT ID FROM City WHERE name="Sweden"), "Vikingen Hotel", "Another street, another road...", 5);
