@@ -369,10 +369,46 @@ if ($logged_in && $current_is_staff) {
             <input  class="form-control input-field" type="date" name="end_date" min=<?php echo date("Y-m-j")?>> <br><br>
 
             <label>Tour Tags:</label>
-            <select class="form-control input-field" name="vehicle-type" id="tour_tag">
-                <option>Vegan</option>
-                <option>Vegetarian</option>
-            </select> <br><br>
+            <?php
+
+                $get_tags_query = "SELECT * from Tag";
+
+                $get_tags_result = mysqli_query($db, $get_tags_query);
+                
+                if($get_tags_result->num_rows == 0) {
+                    echo "<p>There are no tags on the database yet.</p>";
+                }
+                else {
+                    
+                    
+                    echo "
+                    <table class='table table-bordered'>
+                        <thead>
+                            <tr>
+                            <th>Tag</th>
+                            <th>Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    ";
+
+                    $count = 0;
+                    while($row = $get_tags_result->fetch_assoc()) {
+
+                        $temp_check = "<input type='checkbox' name='checkbox[]' value=' " . $row['ID'] . "' /> ";
+
+                        echo "<tr>";
+                        echo "<td>" . $row['name'] . "</td>";
+                        echo "<td>" . $temp_check . "</td>";
+                        echo "</tr>";
+
+                        $count = $count + 1;
+                    }
+
+                    echo "</tbody></table>";
+
+                }
+                ?>
 
             <hr>
         

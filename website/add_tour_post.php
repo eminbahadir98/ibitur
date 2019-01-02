@@ -22,6 +22,14 @@ if(isset($_POST['add-tour-submit'])) {
 
     $tour_id = mysqli_insert_id($db);
 
+    // add tags
+    $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
+    foreach($checkboxes as $value) {
+
+        $add_tag_query = "insert into TourTags values('$tour_id', '$value');";
+    }
+
+
     $row_cnt = $_POST['day_row'];
 
     for($i = 1; $i <= $row_cnt; $i++) {
@@ -137,3 +145,33 @@ if(isset($_POST['add-tour-submit'])) {
 
 
 ?>
+
+<html>
+
+<head>
+    <title>IBITUR - Tour Details</title>
+    <link rel="stylesheet" href="style/style.css"/>
+    <link rel="stylesheet" href="lib/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+
+<body class="content">
+    <?php
+        if ($logged_in) {
+            echo get_header($current_fullname, $current_is_staff);
+        } else {
+            echo get_header(null, false);
+        }
+
+        echo "<h2>Tour Added Successfuly.</h2>";
+        echo "<hr>";
+        echo get_footer();
+    ?>
+
+    
+
+
+</body>
+
+</html>
