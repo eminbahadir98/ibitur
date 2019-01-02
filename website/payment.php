@@ -91,6 +91,7 @@
           }
           
           $("#final_price").text(final_price);
+          $("fin_price").val(final_price);
       });
 
       // checks and applies promotion card discount.
@@ -110,6 +111,7 @@
           $(".bonus_box").prop("disabled", checked);
 
           $("#final_price").text(final_price);
+          $("fin_price").val(final_price);
       });
     });
     
@@ -184,6 +186,7 @@
     </div>
 
     <form action='' method ='post'>
+    <input type='hidden' id='fin_price' name='price' value=''/>
     <input type='hidden' name='tour_id' value=<?php echo "'$tour_id'";?> />
       <input type='hidden' name='rez_id' value=<?php echo "'$rez_id'";?> />
       <button class="right btn btn-primary" type="submit" name="payment-submit">Complete Payment</button>
