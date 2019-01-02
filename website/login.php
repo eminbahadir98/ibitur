@@ -13,7 +13,7 @@
     
     $username_input = mysqli_real_escape_string($db, $_POST['username']);
     $password_input = mysqli_real_escape_string($db, $_POST['password']);
-    
+    $password_input = hash("sha256", $password_input);
     $login_query = "SELECT ID, username, first_name, middle_name, last_name 
         FROM Account WHERE username = '$username_input' AND passwd = '$password_input'";
     $login_result = mysqli_query($db, $login_query);

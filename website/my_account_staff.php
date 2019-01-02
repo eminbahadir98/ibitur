@@ -23,10 +23,13 @@
             $old_pass = $_POST['old_pass'];
             $new_pass = $_POST['new_pass'];
 
+            $old_pass = hash("sha256", $old_pass);
+
             $check_pass_query = "select ID from account where ID='$current_id' and passwd='$old_pass';";
             $check_pass_result = mysqli_query($db, $check_pass_query);
 
             if($check_pass_result->num_rows == 1) {
+                $new_pass = hash("sha256", $new_pass);
                 $change_pass_query = "UPDATE Account SET passwd='$new_pass' where ID='$current_id';";
                 $change_pass_result = mysqli_query($db, $change_pass_query);
             }

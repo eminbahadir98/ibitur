@@ -26,6 +26,7 @@
     $register_succeed = false;
 
     if (!$user_exists) {
+      $password_input = hash("sha256", $password_input);
       $register_subquery1 = "INSERT INTO Account(username, email, passwd,
         first_name, middle_name, last_name)
         VALUES('$username_input', '$email_input', '$password_input',

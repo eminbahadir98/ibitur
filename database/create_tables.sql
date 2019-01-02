@@ -5,7 +5,7 @@ CREATE TABLE Account (
     ID INTEGER PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL,
     email VARCHAR(50)  NOT NULL,
-    passwd VARCHAR(50) NOT NULL,
+    passwd VARCHAR(64) NOT NULL,
     first_name VARCHAR(50),
     middle_name VARCHAR(50),
     last_name VARCHAR(50)
