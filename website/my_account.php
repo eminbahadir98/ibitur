@@ -123,7 +123,7 @@
         $first_name = $profile_settings_data['first_name'];
         $middle_name = $profile_settings_data['middle_name'];
         $last_name = $profile_settings_data['last_name'];
-        $nationality = $profile_settings_data['name'];
+        $nationality = $profile_settings_data['ID'];
         $national_id = $profile_settings_data['national_ID'];
         $date_of_birth = $profile_settings_data['date_of_birth'];
         $gender = $profile_settings_data['gender'];
@@ -225,6 +225,7 @@
                         while ($row = $country_result->fetch_assoc()) {
                             echo '<option value=';
                             echo $row["ID"];
+                            echo ($nationality == $row["ID"]) ? " selected " : "";
                             echo ">";
                             echo $row["name"];
                             echo '</option>';
