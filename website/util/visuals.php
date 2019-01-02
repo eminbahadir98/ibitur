@@ -1,12 +1,15 @@
 <?php
 
   function get_header($username, $is_staff) {
-    $part = $is_staff ? "<a href = 'my_tours.php'>My Tours</a>" 
+    $my_tours_part = $is_staff ? "<a href = 'my_tours.php'>My Tours</a>" 
         : "<a href = 'my_reservations.php'>My Reservations</a>";
+    $create_tour_part = $is_staff ? "<a href = 'tour_adding.php'>Create New Tour</a> |" : "";
+
     if ($username != null) {
       $profile_bar =
         "Welcome <b>$username</b> |
-        $part |
+        $create_tour_part
+        $my_tours_part |
         <a href = 'my_account.php'>My Account</a> |
         <a href = 'logout.php'>Logout</a>";
     } else {

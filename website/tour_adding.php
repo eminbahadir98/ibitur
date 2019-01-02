@@ -337,10 +337,11 @@ if ($logged_in && $current_is_staff) {
 
 <body class="content">
 
+<div class="inner-content">
 
-
-<h1 class="home-title">Add New Tour</h1>
-<div class="register-div">
+    <h1>Create New Tour</h1>
+    <hr>
+    <br><br>
     
     <form name="add-tour" action="add_tour_post.php" method="post" >
 
@@ -377,7 +378,7 @@ if ($logged_in && $current_is_staff) {
         
             <h3 class="home-title">Tour Schedule</h3>
 
-            <table id="tour-days">
+            <table class='table table-bordered' id="tour-days">
 
                 <tr>
                     <th>Day</th>
@@ -411,7 +412,7 @@ if ($logged_in && $current_is_staff) {
 
             <h3 class="home-title">Accommodations</h3>
             
-            <table id ="accoms">
+            <table class='table table-bordered' id ="accoms">
                 <tr>
                     <th>Accommodation Place</th>
                     <th>Number of day that will be stayed</th>
@@ -460,7 +461,7 @@ if ($logged_in && $current_is_staff) {
             <h3 class="home-title">Travel Routes</h3>
 
 
-            <table id ="travel-routes">
+            <table class='table table-bordered' id ="travel-routes">
                 <tr>
                     <th>Source City</th>
                     <th>Destination City</th>
@@ -551,7 +552,7 @@ if ($logged_in && $current_is_staff) {
 
             <h3 class="home-title">Trip Events</h3>
 
-            <table id ="trip-events">
+            <table class='table table-bordered' id ="trip-events">
                 <tr>
                     <th>Event Title</th>
                     <th>Event Date</th>
@@ -598,10 +599,10 @@ if ($logged_in && $current_is_staff) {
 
     <!--</form>-->
 
-        <br>
+        <br><br><br>
         <hr>
         <br>
-        <button class="right btn" type="submit" name="add-tour-submit" onclick="checkAllTourInfo()">Add Tour</button>
+        <button class="right btn" type="submit" name="add-tour-submit" onclick="checkAllTourInfo()">Create Tour</button>
     </form>
 
 
