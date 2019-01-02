@@ -41,7 +41,7 @@ INSERT INTO Hotel(city_ID, name, address, star_rating)
 INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date)
     VALUES((SELECT ID FROM Tour WHERE name="Anatolia Tour"),
     (SELECT ID FROM Hotel WHERE name="Sunflower Hotel"),
-    "2019-01-10", "2019-01-15");
+    "2019-01-01", "2019-01-15");
     
 INSERT INTO TravelRoute(vehicle_type, company_name, tour_ID,
         from_city_ID, to_city_ID,
@@ -49,8 +49,8 @@ INSERT INTO TravelRoute(vehicle_type, company_name, tour_ID,
         arriv_address, arriv_time)
     VALUES("Bus", "Kamil", (SELECT ID FROM Tour WHERE name="Anatolia Tour"),
         (SELECT ID FROM City WHERE name="Ankara"), (SELECT ID FROM City WHERE name="Antalya"),
-        "Ankara Bus Station", "2019-01-10 10:00:00",
-        "Antalya Bus Station", "2019-01-10 18:00:00");
+        "Ankara Bus Station", "2019-01-01 10:00:00",
+        "Antalya Bus Station", "2019-01-01 18:00:00");
 
 INSERT INTO Reservation(customer_ID, tour_ID, issue_date, payment_status, cancel_date)
     VALUES((SELECT ID FROM Account WHERE username="bahadir"),

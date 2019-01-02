@@ -150,7 +150,7 @@ DROP VIEW IF EXISTS TempTourAssociations;
 
 CREATE VIEW TempTourAssociations AS (
     SELECT tour_ID, city_name FROM TourAssociations NATURAL JOIN TourPreview
-    WHERE TRUE -- (start-of-the-month) <= start_date AND start_date <= (end-of-the-month)
+    WHERE (SELECT CURRENT_DATE + INTERVAL - 1 MONTH) <= start_date AND start_date <= (NOW()) 
 );
 
 CREATE VIEW CityPopularity AS (
@@ -168,7 +168,7 @@ DROP VIEW IF EXISTS TempTourAssociations;
 
 CREATE VIEW TempTourAssociations AS (
     SELECT tour_ID, country_name FROM TourAssociations NATURAL JOIN TourPreview
-    WHERE TRUE -- (start-of-the-year) <= start_date AND start_date <= (end-of-the-year)
+    WHERE (SELECT CURRENT_DATE + INTERVAL - 1 YEAR) <= start_date AND start_date <= (NOW()) 
 );
 
 CREATE VIEW CountryRevenues AS (
