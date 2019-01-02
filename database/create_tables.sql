@@ -85,16 +85,7 @@ CREATE TABLE Reservation (
     FOREIGN KEY (tour_ID) REFERENCES Tour(ID)
 );
 
-CREATE TABLE WaitingList (
-    ID INTEGER PRIMARY KEY AUTO_INCREMENT,
-    customer_ID INTEGER,
-    tour_ID INTEGER,
-    issue_date DATETIME NOT NULL,
-    FOREIGN KEY (customer_ID) REFERENCES CustomerAccount(ID),
-    FOREIGN KEY (tour_ID) REFERENCES Tour(ID)
-);
-
-CREATE TABLE IncludedDependents(
+CREATE TABLE IncludedDependents (
     reservation_ID INTEGER,
     dependent_ID INTEGER,
     PRIMARY KEY (reservation_ID, dependent_ID),
@@ -183,31 +174,4 @@ CREATE TABLE TravelRoute (
     FOREIGN KEY (tour_ID) REFERENCES Tour(ID),
     FOREIGN KEY (from_city_ID) REFERENCES City(ID),
     FOREIGN KEY (to_city_ID) REFERENCES City(ID)
-);
-
-CREATE TABLE CustomerTravels (
-    travel_route_ID INTEGER,
-    customer_ID INTEGER,
-    pnr_no VARCHAR(10),
-    FOREIGN KEY (travel_route_ID) REFERENCES TravelRoute(ID),
-    FOREIGN KEY (customer_ID) REFERENCES CustomerAccount(ID),
-    PRIMARY KEY (travel_route_ID, customer_ID)
-);
-
-CREATE TABLE CustomerAccommodates (
-    accommodation_ID INTEGER,
-    customer_ID INTEGER,
-    room_no VARCHAR(6),
-    FOREIGN KEY (accommodation_ID) REFERENCES Accommodation(ID),
-    FOREIGN KEY (customer_ID) REFERENCES CustomerAccount(ID),
-    PRIMARY KEY (accommodation_ID, customer_ID)
-);
-
-CREATE TABLE DependentAccommodates (
-    national_ID INTEGER,
-    accommodation_ID INTEGER,
-    room_no VARCHAR(6),
-    FOREIGN KEY (accommodation_ID) REFERENCES Accommodation(ID),
-    FOREIGN KEY (national_ID) REFERENCES Dependent(national_ID),
-    PRIMARY KEY (accommodation_ID, national_ID)
 );

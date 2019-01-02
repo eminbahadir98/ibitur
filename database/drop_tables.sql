@@ -1,9 +1,6 @@
 USE ibitur_db;
 
 
-DROP TABLE IF EXISTS DependentAccommodates;
-DROP TABLE IF EXISTS CustomerAccommodates;
-DROP TABLE IF EXISTS CustomerTravels;
 DROP TABLE IF EXISTS TravelRoute;
 DROP TABLE IF EXISTS TripEvent;
 DROP TABLE IF EXISTS Accommodation;
@@ -14,7 +11,6 @@ DROP TABLE IF EXISTS TourTags;
 DROP TABLE IF EXISTS Tag;
 DROP TABLE IF EXISTS TourCancel;
 DROP TABLE IF EXISTS IncludedDependents;
-DROP TABLE IF EXISTS WaitingList;
 DROP TABLE IF EXISTS Reservation;
 DROP TABLE IF EXISTS Tour;
 DROP TABLE IF EXISTS CustomerTelephones;

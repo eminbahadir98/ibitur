@@ -60,7 +60,7 @@ CREATE VIEW NonzeroReservationCounts AS
 CREATE VIEW AllzeroReservationCounts AS (
     SELECT ID AS reservation_ID, 1 AS res_count
     FROM NonCancelledReservation
-    WHERE NonCancelledReservation.ID NOT IN (SELECT reservation_ID FROM NonzeroIncludedDependentCounts)
+    WHERE NonCancelledReservation.ID NOT IN (SELECT reservation_ID FROM NonzeroReservationCounts)
 );
 
 CREATE VIEW ReservationCounts AS
