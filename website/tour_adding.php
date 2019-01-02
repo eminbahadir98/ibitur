@@ -62,7 +62,6 @@ if ($logged_in && $current_is_staff) {
         function checkBaseInfo() {
             var title      = document.forms["add-tour"]["title"].value;
             var tour_desc  = document.forms["add-tour"]["tour_desc"].value;
-            var image_path = document.forms["add-tour"]["image_path"].value;
             var tour_tag = document.forms["add-tour"]["tour_tag"].value;
             var tour_price = document.forms["add-tour"]["tour_price"].value;
             var tour_quota = document.forms["add-tour"]["tour_quota"].value;
@@ -80,10 +79,6 @@ if ($logged_in && $current_is_staff) {
             }
             if (tour_desc.length < 20) {
                 showError("Tour description should contain minimum of 20 characters.");
-                return false;
-            }
-            if (!is_url(image_path)) {
-                showError("Image path is not valid");
                 return false;
             }
             if (Number(tour_price) < 1) {
@@ -343,7 +338,7 @@ if ($logged_in && $current_is_staff) {
     <hr>
     <br><br>
     
-    <form name="add-tour" action="add_tour_post.php" method="post" >
+    <form name="add-tour" action="add_tour_post.php" method="post" enctype="multipart/form-data" >
 
         <!--<form name="register-form"  action="" method="post">-->
         
@@ -352,7 +347,7 @@ if ($logged_in && $current_is_staff) {
             <label>Description:</label>
             <input required class="form-control input-field" type="text" name="tour_desc"/> <br><br>
             <label>Tour Image:</label>
-            <input required class="form-control input-field" type="text" name="image_path"/> <br><br>
+            <input required class="input-field" type="file" name="tour_image"><br><br>
             <label>Tour Price:</label>
             <input required class="form-control input-field" type="text" name="tour_price"/> <br><br>
 
