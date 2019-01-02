@@ -1,9 +1,6 @@
 USE ibitur_db;
 
 
-DELETE FROM DependentAccommodates;
-DELETE FROM CustomerAccommodates;
-DELETE FROM CustomerTravels;
 DELETE FROM TravelRoute;
 DELETE FROM TripEvent;
 DELETE FROM Accommodation;
@@ -14,7 +11,6 @@ DELETE FROM TourTags;
 DELETE FROM Tag;
 DELETE FROM TourCancel;
 DELETE FROM IncludedDependents;
-DELETE FROM WaitingList;
 DELETE FROM Reservation;
 DELETE FROM Tour;
 DELETE FROM CustomerTelephones;

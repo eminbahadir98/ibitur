@@ -11,13 +11,13 @@
   $city_query_2 = "DROP VIEW IF EXISTS TempTourAssociations;";
   $city_query_3 = "CREATE VIEW TempTourAssociations AS (
     SELECT tour_ID, city_name FROM TourAssociations NATURAL JOIN TourPreview
-    WHERE (SELECT CURRENT_DATE + INTERVAL - 1 MONTH) <= start_date AND start_date <= (NOW()) 
+    WHERE TRUE OR (SELECT CURRENT_DATE + INTERVAL - 1 MONTH) <= start_date AND start_date <= (NOW()) 
   );";
   $city_query_4 = "CREATE VIEW CityPopularity AS (
     SELECT city_name, SUM(used_quota) AS popularity
     FROM TempTourAssociations NATURAL JOIN TourUsedQuotas
     GROUP BY city_name    
-    ORDER BY popularity, city_name DESC
+    ORDER BY popularity DESC
   );";
   $city_query_F = "SELECT * FROM CityPopularity";
 
@@ -41,13 +41,13 @@
   $country_query_2 = "DROP VIEW IF EXISTS TempTourAssociations;";
   $country_query_3 = "CREATE VIEW TempTourAssociations AS (
     SELECT tour_ID, country_name FROM TourAssociations NATURAL JOIN TourPreview
-    WHERE (SELECT CURRENT_DATE + INTERVAL - 1 YEAR) <= start_date AND start_date <= (NOW()) 
+    WHERE TRUE OR (SELECT CURRENT_DATE + INTERVAL - 1 YEAR) <= start_date AND start_date <= (NOW()) 
   );";
   $country_query_4 = "CREATE VIEW CountryRevenues AS (
     SELECT country_name, SUM(price) AS revenue
     FROM TempTourAssociations NATURAL JOIN TourPreview
     GROUP BY country_name
-    ORDER BY revenue, country_name DESC
+    ORDER BY revenue DESC
   );";
   $country_query_F = "SELECT * FROM CountryRevenues";
 
