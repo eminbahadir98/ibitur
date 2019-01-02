@@ -197,79 +197,33 @@
       }
 
       function checkPass() {
-          var password1 = document.forms["change-pass"]["new_pass"].value;
-          var password2 = document.forms["change-pass"]["confirm_pass"].value;
-        
-            if (!isASCII(password1)) {
-            showError("Password can contain only ASCII characters.", "account-settings-error-div");
-            return false;
-            }
-            if (password1.length < 6) {
-            showError("Password should contain minimum of 6 characters.","account-settings-error-div");
-            return false;
-            }
-            if (password1 != password2) {
-            showError("The entered passwords do not match.","account-settings-error-div");
-            return false;
-            }
-            return true;
+        var password1 = document.forms["change-pass"]["new_pass"].value;
+        var password2 = document.forms["change-pass"]["confirm_pass"].value;
+    
+        if (!isASCII(password1)) {
+        showError("Password can contain only ASCII characters.", "account-settings-error-div");
+        return false;
+        }
+        if (password1.length < 6) {
+        showError("Password should contain minimum of 6 characters.","account-settings-error-div");
+        return false;
+        }
+        if (password1 != password2) {
+        showError("The entered passwords do not match.","account-settings-error-div");
+        return false;
+        }
+        return true;
       }
 
       function checkEmail() {
-          var email = document.forms["change-email"]["new-email"].value;
-          showError("E-mail is not valid.", "account-settings-error-div");
-          return false;
-          console.log("Hello");
-          /*if(!isValidEmail(email)) {
+        var email = document.forms["change-email"]["new_email"].value;
+          if(!isValidEmail(email)) {
             showError("E-mail is not valid.", "account-settings-error-div");
             return false;
           }
-          else {
-              return true;
-          }*/
-      }
-      /*
-      function checkInput() {
-        var email = document.forms["register-form"]["email"].value;
-        var username = document.forms["register-form"]["username"].value;
-        var password = document.forms["register-form"]["password"].value;
-        var password2 = document.forms["register-form"]["password2"].value;
-        var first_name = document.forms["register-form"]["first_name"].value;
-        var middle_name = document.forms["register-form"]["middle_name"].value;
-        var last_name = document.forms["register-form"]["last_name"].value;
-        var birthday = document.forms["register-form"]["birthday"].value;
-        var gender = document.forms["register-form"]["gender"].value;
-        var nationality = document.forms["register-form"]["nationality"].value;
-        var national_id = document.forms["register-form"]["national_id"].value;
-
-        if (!isValidEmail(email)) {
-          showError("The entered mail is not valid.");
-          return false;
-        }
-        if (!isAlphaNumeric(username)) {
-          showError("Username can contain only lowercase letters and numbers.");
-          return false;
-        }
-        if (username.length < 3) {
-          showError("Username should contain minimum of 3 characters.");
-          return false;
-        }
-        if (!isASCII(password)) {
-          showError("Password can contain only ASCII characters.");
-          return false;
-        }
-        if (password.length < 6) {
-          showError("Password should contain minimum of 6 characters.");
-          return false;
-        }
-        if (password != password2) {
-          showError("The entered passwords do not match.");
-          return false;
-        }
-
         return true;
-      }*/
-      //checkInput() ;
+      }
+      
     </script>
    </head>
 
@@ -505,26 +459,19 @@
                 <br><br>
                 <form name='change-pass' onSubmit='return checkPass();' method='post'>
                     <label>Old Password: </label>
-                    <input class='form-control input-field' type='text' name='old_pass' value = ''/><br><br>
+                    <input class='form-control input-field' type='password' name='old_pass' value = ''/><br><br>
                     <label>New Password: </label>
-                    <input class='form-control input-field' type='text' name='new_pass' value = ''/><br><br>
+                    <input class='form-control input-field' type='password' name='new_pass' value = ''/><br><br>
                     <label>Confirm New Password: </label>
-                    <input class='form-control input-field' type='text' name='confirm_pass' value = ''/><br><br>
+                    <input class='form-control input-field' type='password' name='confirm_pass' value = ''/><br><br>
                     <input class='btn right' type='submit' name='newpass-submit' value='Change Password'/>
                 </form>
 
-                <div id="account-settings-error-div">
-                <?php
-                    if ($error != null) {
-                    echo 
-                    "<div class='alert alert-warning' role='alert'>
-                        $error
-                    </div>";
-                    }
-                ?>
-                </div>
                 
             </div>
+                
+                <br><br>
+            <div id="account-settings-error-div"> </div>
                     
         </div>
 
