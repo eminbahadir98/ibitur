@@ -380,9 +380,9 @@ if ($logged_in && $current_is_staff) {
 
                 <tr>
                     <th>Day</th>
-                    <th>Tour Day Date</th>
+                    <th>Date</th>
                     <th>Description</th>
-                    <th>Remove Tour Day</th>
+                    <th>Actions</th>
                 </tr>
 
             </table>
@@ -411,12 +411,12 @@ if ($logged_in && $current_is_staff) {
             <table class='table table-bordered' id ="accoms">
                 <tr>
                     <th>Accommodation Place</th>
-                    <th>Number of day that will be stayed</th>
+                    <th>No of Days</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Rating</th>
                     <th>Address</th>
-                    <th>Remove Accommodation</th>
+                    <th>Actions</th>
                 </tr>
 
             </table>
@@ -460,10 +460,12 @@ if ($logged_in && $current_is_staff) {
                 <tr>
                     <th>Source City</th>
                     <th>Destination City</th>
+                    <th>Vehicle Type</th>
+                    <th>Departure Date</th>
                     <th>Departure Time</th>
                     <th>Departure Address</th>
                     <th>Destination Address</th>
-                    <th>Remove Travel Route</th>
+                    <th>Actions</th>
                 </tr>
 
             </table>
@@ -551,7 +553,7 @@ if ($logged_in && $current_is_staff) {
                     <th>Event Date</th>
                     <th>Event City</th>
                     <th>Description</th>
-                    <th>Remove Trip Event</th>
+                    <th>Actions</th>
                 </tr>
             </table>
             <input type='hidden' id='event_row' name='event_row' value='0' />
