@@ -1,25 +1,23 @@
 <?php
-    include("util/visuals.php");
-    include("util/session.php");
+include("util/visuals.php");
+include("util/session.php");
 
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    $error = "";	
+$error = "";	
 ?>
 
 <html>
-
 <?php
-    if ($logged_in && $current_is_staff) {
-        echo get_header($current_fullname, true);
-    } else {
-        header("location: login.php");
-    }
+if ($logged_in && $current_is_staff) {
+    echo get_header($current_fullname, true);
+} else {
+    header("location: login.php");
+}
 ?>
-
 <head>
     <title>IBITUR - Tour Adding</title>
     <link rel="stylesheet" href="style/style.css"/>
@@ -56,7 +54,8 @@
             var tour_price = document.forms["add-tour"]["tour_price"].value;
             var tour_quota = document.forms["add-tour"]["tour_quota"].value;
 
-            var tour_desc = document.forms["add-tour"]["tour_desc"].value;
+            //var cancelling_date = document.forms["add-tour"]["cancelling_date"].value;
+
 
 
             if (title.length < 3) {
@@ -135,6 +134,7 @@
                     return false;
                 }*/
 
+
                     day_counter++;
 
                     var param_name = day_base + day_row + "[]";
@@ -169,7 +169,7 @@
             var start_accom_date = document.forms["add-tour"]["start_accom_date"].value;
             var end_accom_date   = document.forms["add-tour"]["end_accom_date"].value;
             var hotel            = document.forms["add-tour"]["hotel"].options[document.forms["add-tour"]["hotel"].selectedIndex].text;
-            var hotel_id            = document.forms["add-tour"]["hotel"].options[document.forms["add-tour"]["hotel"].selectedIndex].value;
+            var hotel_id         = document.forms["add-tour"]["hotel"].options[document.forms["add-tour"]["hotel"].selectedIndex].value;
             var rating = hotel.split(", ")[2];
             var address = hotel.split(", ").slice(3,hotel.split(", ").length);
             hotel = hotel.split(", ")[0] + ", " + hotel.split(", ")[1];
@@ -180,7 +180,7 @@
                 }
 
 
-                var numOfDay = daysBetween(start_accom_date, end_accom_date);
+                //var numOfDay = daysBetween(start_accom_date, end_accom_date);
                 accom_counter++;
                 var param_name = accom_base + accom_row + "[]";
 
@@ -213,8 +213,8 @@
         function createTravelRoute() {
             var source_city         = document.forms["add-tour"]["source_city"].options[document.forms["add-tour"]["source_city"].selectedIndex].text;
             var dest_city           = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].text;
-            var source_city_id = document.forms["add-tour"]["source_city"].options[document.forms["add-tour"]["source_city"].selectedIndex].value;
-            var dest_city_id = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].value;
+            var source_city_id      = document.forms["add-tour"]["source_city"].options[document.forms["add-tour"]["source_city"].selectedIndex].value;
+            var dest_city_id        = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].value;
             var departure_date      = document.forms["add-tour"]["departure_date"].value;
             var departure_time      = document.forms["add-tour"]["departure_time"].value;
             var vehicle_type        = document.forms["add-tour"]["vehicle_type"].options[document.forms["add-tour"]["vehicle_type"].selectedIndex].text;
@@ -317,7 +317,6 @@
     
     <form name="add-tour" action="add_tour_post.php" method="post" enctype="multipart/form-data" >
 
-        <!--<form name="register-form"  action="" method="post">-->
         
             <label>Title:</label>
             <input required class="form-control input-field" type="text" name="title"/> <br><br>
@@ -403,9 +402,7 @@
             <br><br>
             <br><br>
             <button class="submit-button btn" type="button" onclick="createTourDay('add-tour')">Add New Schedule Item</button>
-        <!--</form>-->
 
-        <!--<form name="accom-form" action="" method="post">-->
             <br><br>
             <hr>
 
@@ -452,8 +449,7 @@
 
             <button class="submit-button btn" type="button" onclick="createAccom()">Add New Accommodation</button>
 
-    <!--</form>-->
-<!--<form name="travel-routes-form" action="" method="post">-->
+
             <br><br>
             <hr>
 
@@ -543,9 +539,7 @@
 
             <button class="submit-button btn" type="button" onclick="createTravelRoute()">Add New Travel Route</button>
 
-    <!-- </form>-->
 
- <!-- <form name="trip-events-form" action="" method="post">-->
             <br><br>
             <hr>
 
@@ -596,7 +590,7 @@
 
             <button class="submit-button btn" type="button" onclick="createTripEvent()">Add New Travel Route</button>
 
-    <!--</form>-->
+
 
         <br><br><br>
         <hr>
