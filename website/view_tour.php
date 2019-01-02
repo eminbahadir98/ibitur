@@ -14,6 +14,12 @@
       $cancelled_tour_id = $_GET['id'];
       $cancel_query = "UPDATE Reservation SET cancel_date = NOW()
         WHERE customer_ID = $current_id AND tour_ID = $cancelled_tour_id";
+      $price_query = "SELECT price FROM TourPreview WHERE tour_ID = $cancelled_tour_id;";
+      $price_result = mysqli_query($db, $price_query);
+      $price_of_tour = $price_result ->fetch_assoc()["price"];
+      $gain = floor(floatval($price_of_tour) / 100 );
+      $point_query = "UPDATE CustomerAccount SET booking_points = booking_points - $gain WHERE ID = $current_id";
+      $point_result = mysqli_query($db, $point_query);
       $reservation_cancel_succeed = mysqli_query($db, $cancel_query);
       $reservation_cancel_performed = true;
     }
