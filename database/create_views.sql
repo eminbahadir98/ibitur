@@ -30,6 +30,7 @@ CREATE VIEW DependentCounts AS
 DROP VIEW IF EXISTS TourPreview;
 DROP VIEW IF EXISTS TourInterval;
 DROP VIEW IF EXISTS TourDates;
+DROP VIEW IF EXISTS TourSubDates6;
 DROP VIEW IF EXISTS TourSubDates5;
 DROP VIEW IF EXISTS TourSubDates4;
 DROP VIEW IF EXISTS TourSubDates3;
@@ -105,13 +106,18 @@ CREATE VIEW TourSubDates4 AS
 CREATE VIEW TourSubDates5 AS
     (SELECT tour_ID, trip_date AS the_date FROM Tour, TripEvent
     WHERE Tour.ID = TripEvent.tour_ID);
+    
+CREATE VIEW TourSubDates6 AS
+    (SELECT tour_ID, day_date AS the_date FROM Tour, TourDay
+    WHERE Tour.ID = TourDay.tour_ID);
 
 CREATE VIEW TourDates AS 
     (SELECT DISTINCT * FROM TourSubDates1)
     UNION (SELECT DISTINCT * FROM TourSubDates2)
     UNION (SELECT DISTINCT * FROM TourSubDates3)
     UNION (SELECT DISTINCT * FROM TourSubDates4)
-    UNION (SELECT DISTINCT * FROM TourSubDates5);
+    UNION (SELECT DISTINCT * FROM TourSubDates5)
+    UNION (SELECT DISTINCT * FROM TourSubDates6);
 
 CREATE VIEW TourInterval AS
     (SELECT tour_ID, MIN(the_date) AS start_date, MAX(the_date) AS end_date

@@ -12,17 +12,12 @@ if(isset($_POST['add-tour-submit'])) {
     $tour_quota = $_POST['tour_quota'];
     
     $image_path = "./images/" . "img" . (round(microtime(true) * 1000)) . ".png";
-    if (move_uploaded_file($_FILES["tour_image"]["tmp_name"], $image_path)) {
-        echo "The file ". basename( $_FILES["tour_image"]["name"]). " has been uploaded.";
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-    }
-
+    $upload_succeed= move_uploaded_file($_FILES["tour_image"]["tmp_name"], $image_path);
     $tour_query = "INSERT INTO TOUR(name, description, image_path, quota, price, creator_ID)
     VALUES ( '$title', '$tour_desc', '$image_path', '$tour_quota', '$tour_price', '$current_id');";
 
-    echo $tour_query;
-    echo "<br>";
+    // echo $tour_query;
+    // echo "<br>";
     $tour_result = mysqli_query($db, $tour_query);
 
     $tour_id = mysqli_insert_id($db);
@@ -48,8 +43,8 @@ if(isset($_POST['add-tour-submit'])) {
         $tour_day_query = "INSERT INTO TourDay(day_no, day_date, description)
         VALUES ('$day_no', '$day_date', '$day_desc');";
 
-        echo $tour_day_query;
-        echo "<br>";
+        // echo $tour_day_query;
+        // echo "<br>";
         $tour_day_result = mysqli_query($db, $tour_day_query);
 
 
@@ -60,7 +55,7 @@ if(isset($_POST['add-tour-submit'])) {
         }*/
     }
 
-    echo "<br>";
+    // echo "<br>";
 
     $row_cnt = $_POST['accom_row'];
 
@@ -75,8 +70,8 @@ if(isset($_POST['add-tour-submit'])) {
         $accom_query = "INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date) VALUES('$tour_id', '$hotel_id',
         '$accom_start_date', '$accom_end_date');";
 
-        echo $accom_query;
-        echo "<br>";
+        // echo $accom_query;
+        // echo "<br>";
         $accom_result = mysqli_query($db, $accom_query);
 
         // DEBUG
@@ -86,7 +81,7 @@ if(isset($_POST['add-tour-submit'])) {
         }*/
     }
 
-    echo "<br>";
+    // echo "<br>";
 
     $row_cnt = $_POST['route_row'];
 
@@ -107,8 +102,8 @@ if(isset($_POST['add-tour-submit'])) {
         '$departure_date', '$destination_address', '$departure_date');";
         
 
-        echo $route_query;
-        echo "<br>";
+        // echo $route_query;
+        // echo "<br>";
         $route_result = mysqli_query($db, $route_query);
         // DEBUG
         /*
@@ -117,7 +112,7 @@ if(isset($_POST['add-tour-submit'])) {
         }*/
     }
 
-    echo "<br>";
+    // echo "<br>";
 
     $row_cnt = $_POST['event_row'];
 
@@ -133,8 +128,8 @@ if(isset($_POST['add-tour-submit'])) {
         $event_query = "INSERT INTO TripEvent(tour_ID, city_ID, name, description, trip_date) VALUES('$tour_id', '$event_city',
         '$event_name', '$event_desc', '$event_date');";
 
-        echo $event_query;
-        echo "<br>";
+        // echo $event_query;
+        // echo "<br>";
         $event_result = mysqli_query($db, $event_query);
         // DEBUG;
         /*
@@ -169,8 +164,8 @@ if(isset($_POST['add-tour-submit'])) {
             echo get_header(null, false);
         }
 
-        echo "<h2>Tour Added Successfuly.</h2>";
-        echo "<hr>";
+        echo "<h1 class='home-title'>Tour added successfuly.</h1>";
+        // echo "<hr>";
         echo get_footer();
     ?>
 
