@@ -410,8 +410,9 @@ if ($logged_in && $current_is_staff) {
             
             <table class='table table-bordered' id ="accoms">
                 <tr>
+                    <th>Hotel Id</th>
                     <th>Accommodation Place</th>
-                    <th>No of Days</th>
+                    <!--<th>No of Days</th>-->
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Rating</th>
