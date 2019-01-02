@@ -15,7 +15,7 @@ INSERT INTO City(name, country_ID) VALUES("Stockholm", (SELECT ID FROM Country W
 INSERT INTO City(name, country_ID) VALUES("Tokyo", (SELECT ID FROM Country WHERE name="Japan"));
 
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
-    VALUES("bahadir", "bahadir@example.com", "123", "Emin", "Bahadir", "Tuluce");
+    VALUES("bahadir", "bahadir@example.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", "Emin", "Bahadir", "Tuluce");
 INSERT INTO CustomerAccount(ID, national_ID, nationality, gender, date_of_birth)
     VALUES(LAST_INSERT_ID(), "12345678912", (SELECT ID FROM Country WHERE name="Turkey"), "Male", "1998-02-18");
 
@@ -23,12 +23,12 @@ INSERT INTO CustomerTelephones(customer_ID, telephone_no)
     VALUES ((SELECT ID FROM Account WHERE username="bahadir"), '0530999999');
 
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
-    VALUES("sami", "sami@example.com", "123", "Mahmud", "Sami", "Aydin");
+    VALUES("sami", "sami@example.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", "Mahmud", "Sami", "Aydin");
 INSERT INTO CustomerAccount(ID, national_ID, nationality, gender, date_of_birth)
     VALUES(LAST_INSERT_ID(), "141434141", (SELECT ID FROM Country WHERE name="Turkey"), "Male", "1997-01-01");
     
 INSERT INTO Account(username, email, passwd, first_name, middle_name, last_name)
-    VALUES("abdullah", "abdullah@example.com", "123", "Abdullah", NULL, "Talayhan");
+    VALUES("abdullah", "abdullah@example.com", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", "Abdullah", NULL, "Talayhan");
 INSERT INTO StaffAccount(ID) VALUES(LAST_INSERT_ID());
 
 INSERT INTO Tour(name, description, image_path, quota, price, creator_ID)
