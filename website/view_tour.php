@@ -55,7 +55,7 @@
         }
         
         $reservation_query = "INSERT INTO Reservation(customer_ID, tour_ID, issue_date,
-            payment_status, cancel_date) VALUES($current_id, $tour_id, NOW(), 'UNPAID', NULL);";
+            payment_status, cancel_date) VALUES($current_id, $tour_id, NOW(), 'unpaid', NULL);";
   
         $reservation_succeed = mysqli_query($db, $reservation_query);
         
@@ -349,7 +349,7 @@
                   ";
 
                   $payment_action = "<button class='btn' disabled>Paid</button>";
-                  if ($row["payment_status"] != "PAID") {
+                  if ($row["payment_status"] != "paid") {
                     $rez_id = $row["ID"];
                     $payment_action = "
                       <div class='tour-action-button'>
