@@ -186,21 +186,24 @@
 
           $tour_days = "";
           $days_query = "SELECT day_no, day_date, D.description AS description
-            FROM Tour T, TourDay D WHERE T.ID = $tour_id AND T.ID = D.tour_ID ORDER BY day_date";
+            FROM Tour T, TourDay D WHERE T.ID = $tour_id AND T.ID = D.tour_ID ORDER BY day_no";
           $days_result = mysqli_query($db, $days_query);
           while ($row = $days_result->fetch_assoc()) {
             $day_no = $row["day_no"];
             $day_date = $row["day_date"];
             $description = $row["description"];
+            $day_date = format_date($day_date);
             $tour_days .= "
-              <div>
-                Day $day_no ($day_date)<br>
-                $description
-              </div>
+              <div class='card'>
+                <div class='card-body'>
+                  <b>Day $day_no</b> ($day_date)<br>
+                  $description
+                </div>
+              </div><br>
             ";
           }
           if ($tour_days == "") {
-            $tour_days = "No tour day entry...";
+            $tour_days = "No tour day entry...<br><br>";
           }
 
           $tour_accommodations = "";
@@ -213,15 +216,29 @@
             $enter_date = $row["enter_date"];
             $exit_date = $row["exit_date"];
             $star_rating = $row["star_rating"];
+            
+            $star_display = "";
+            for ($i = 0; $i < $star_rating; $i++) {
+              $star_display .= " &#x2605 ";
+            }
+            for ($i = 0; $i < 5 - $star_rating; $i++) {
+              $star_display .= " &#x2606 ";
+            }
+            $enter_display = format_datetime_all($enter_date);
+            $exit_display = format_datetime_all($exit_date);
             $tour_accommodations .= "
-              <div>
-                <b>$name</b> (from $enter_date to $exit_date)</b><br>
-                Star Rating: $star_rating
-              </div>
+              <div class='card'>
+                <div class='card-body'>
+                  <b>$name</b> <br>
+                  Hotel Rating: $star_display<br>
+                  <b>From:</b> $enter_display<br>
+                  <b>Until:</b> $exit_display<br>
+                </div>
+              </div><br>
             ";
           }
           if ($tour_accommodations == "") {
-            $tour_accommodations = "No accommodation entry...";
+            $tour_accommodations = "No accommodation entry...<br><br>";
           }
           
           $tour_travel_routes = "";
@@ -236,16 +253,21 @@
             $arriv_address = $row["arriv_address"];
             $dept_time = $row["dept_time"];
             $dept_address = $row["dept_address"];
+
+            $arriv_display = format_datetime_all($arriv_time);
+            $dept_display = format_datetime_all($dept_time);
             $tour_travel_routes .= "
-              <div>
-                A <b>$vehicle_type</b> of <b>$company_name</b><br>
-                From $dept_address ($dept_time) <br>
-                To $arriv_address ($arriv_time). <br>
-              </div>
+              <div class='card'>
+                <div class='card-body'>
+                  A <b>$vehicle_type</b> of <b>$company_name</b><br>
+                  <b>Departure:</b> $dept_address, $dept_display <br>
+                  <b>Arrival:</b> $arriv_address, $arriv_display <br>
+                </div>
+              </div><br>
             ";
           }
           if ($tour_travel_routes == "") {
-            $tour_travel_routes = "No trip event entry...";
+            $tour_travel_routes = "No travel route entry...<br><br>";
           }
 
           $tour_trip_events = "";
@@ -258,15 +280,19 @@
             $description = $row["description"];
             $city_name = $row["city_name"];
             $trip_date = $row["trip_date"];
+            $trip_date = format_datetime_all($trip_date);
             $tour_trip_events .= "
-              <div>
-                <b>$name</b> in <b>$city_name ($trip_date)</b><br>
-                $description
-              </div>
+              <div class='card'>
+                <div class='card-body'>
+                  <b>$name</b> in <b>$city_name</b><br>
+                  <b>Date:</b> $trip_date<br>
+                  $description
+                </div>
+              </div><br>
             ";
           }
           if ($tour_trip_events == "") {
-            $tour_trip_events = "No trip event entry...";
+            $tour_trip_events = "No trip event entry...<br><br>";
           }
 
           $has_reservation_text = "";

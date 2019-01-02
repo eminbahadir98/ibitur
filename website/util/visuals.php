@@ -49,6 +49,19 @@
     return $sd_arr[2] . "/" . $sd_arr[1] . "/" . $sd_arr[0];
   }
 
+  function format_datetime_all($datetime) {
+    $comp_arr = explode(" ", $datetime);
+    $date_arr = explode("-", ($comp_arr[0]));
+    $time_arr = explode(":", ($comp_arr[1]));
+    return $date_arr[2] . "/" . $date_arr[1] . "/" . $date_arr[0]
+          . " (" . $time_arr[0] . ":" . $time_arr[1] . ")";
+  }
+
+  function format_date($date) {
+    $sd_arr = explode("-", $date);
+    return $sd_arr[2] . "/" . $sd_arr[1] . "/" . $sd_arr[0];
+  }
+
   function get_remaining_quota_text($remaining_quota) {
     if ($remaining_quota < 1) {
       return "The quota is full.";

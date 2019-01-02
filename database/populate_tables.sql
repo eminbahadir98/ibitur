@@ -79,6 +79,20 @@ INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date)
     VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
     (SELECT ID FROM Hotel WHERE name="Vikingen Hotel"),
     "2019-01-20", "2019-01-27");
+    
+INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date)
+    VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
+    (SELECT ID FROM Hotel WHERE name="Sunflower Hotel"),
+    "2019-01-28", "2019-01-30");
+    
+INSERT INTO TripEvent(tour_ID, city_ID, name, description, trip_date)
+    VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
+    (SELECT ID FROM City WHERE name="Antalya"), "Fast Trip",
+    "This is a nice trip event. You will tripping during this event.", "2019-01-21");
+    
+INSERT INTO TourDay(tour_ID, day_no, day_date, description)
+    VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
+    1, "2019-01-21", "This is your first tour day. You will have fun");
 
 INSERT INTO Tag(name) VALUES("Vegan");
 INSERT INTO Tag(name) VALUES("Historic");
