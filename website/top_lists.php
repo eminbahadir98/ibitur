@@ -14,8 +14,8 @@
     WHERE (SELECT CURRENT_DATE + INTERVAL - 1 MONTH) <= start_date AND start_date <= (NOW()) 
   );";
   $city_query_4 = "CREATE VIEW CityPopularity AS (
-    SELECT city_name, SUM(resv_no) AS popularity
-    FROM TempTourAssociations NATURAL JOIN ReservationCounts
+    SELECT city_name, SUM(used_quota) AS popularity
+    FROM TempTourAssociations NATURAL JOIN TourUsedQuotas
     GROUP BY city_name    
     ORDER BY popularity, city_name DESC
   );";
