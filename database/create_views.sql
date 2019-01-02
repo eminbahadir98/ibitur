@@ -72,6 +72,7 @@ CREATE VIEW NonzeroUsedQuotas AS (
     SELECT Reservation.tour_ID AS tour_ID, SUM(res_count) AS used_quota
     FROM ReservationCounts, Reservation
     WHERE ReservationCounts.reservation_ID = Reservation.ID
+    GROUP BY tour_ID
 );
 
 CREATE VIEW AllzeroUsedQuotas AS (

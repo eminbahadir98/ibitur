@@ -6,6 +6,7 @@
   $reservation_cancel_performed = false;
   $reservation_performed = false;
   $reservation_succeed = false;
+  $reservation_quota_error = false;
 
   if($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -20,46 +21,61 @@
     else if(isset($_POST['reserve-submit'])) {
       $tour_id = $_GET['id'];
       
-      $re_reservation_check_query = "SELECT ID FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id;";
-      $re_reservation_check_result = mysqli_query($db, $re_reservation_check_query);
-      $re_reservation_needed = mysqli_num_rows($re_reservation_check_result) > 0;
-      
-      if ($re_reservation_needed) {
-        $old_reservation_id = $re_reservation_check_result->fetch_assoc()["ID"];
-
-        $remove_old_dependents_query = "DELETE FROM IncludedDependents WHERE reservation_ID = $old_reservation_id;";
-        $res1 = mysqli_query($db, $remove_old_dependents_query);
-
-        $remove_old_reservation_query = "DELETE FROM Reservation WHERE ID = $old_reservation_id";
-        $res2 = mysqli_query($db, $remove_old_reservation_query);
-      }
-      
-      $reservation_query = "INSERT INTO Reservation(customer_ID, tour_ID, issue_date,
-          payment_status, cancel_date) VALUES($current_id, $tour_id, NOW(), 'UNPAID', NULL);";
-
-      $reservation_succeed = mysqli_query($db, $reservation_query);
-      
-      if($reservation_succeed) {
-        $reservation_id_query = "select ID from reservation where customer_ID = $current_id and tour_ID=$tour_id;";
-        $reservation_id_result = mysqli_query($db, $reservation_id_query);
-        $reservation_id_data = $reservation_id_result->fetch_assoc();
-        
-        if($reservation_id_result->num_rows == 1) {
-          $rez_id = $reservation_id_data['ID'];
-        }
-        else {
-          $rez_id = -1;
-        }
-      }
-      
-      if($rez_id != -1) {
-        $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
-        foreach($checkboxes as $value) {
-          $ins_dep_query = "insert into IncludedDependents(reservation_ID, dependent_ID) values($rez_id, $value);";
-          $ins_dep_result = mysqli_query($db, $ins_dep_query);
-        }
-      }
       $reservation_performed = true;
+
+      $traveler_count = 1;
+      $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
+      foreach($checkboxes as $value) {
+        $traveler_count++;
+      }
+      
+      $quota_check_query = "SELECT remaining_quota FROM TourPreview WHERE tour_ID = $tour_id;";
+      $quota_check_result = mysqli_query($db, $quota_check_query);
+      $reservation_quota_error = ($quota_check_result->fetch_assoc()["remaining_quota"]) < $traveler_count;
+
+      if (!$reservation_quota_error) {
+        $re_reservation_check_query = "SELECT ID FROM Reservation WHERE customer_ID = $current_id AND tour_ID = $tour_id;";
+        $re_reservation_check_result = mysqli_query($db, $re_reservation_check_query);
+        $re_reservation_needed = mysqli_num_rows($re_reservation_check_result) > 0;
+        
+        if ($re_reservation_needed) {
+          $old_reservation_id = $re_reservation_check_result->fetch_assoc()["ID"];
+  
+          $remove_old_dependents_query = "DELETE FROM IncludedDependents WHERE reservation_ID = $old_reservation_id;";
+          $res1 = mysqli_query($db, $remove_old_dependents_query);
+  
+          $remove_old_reservation_query = "DELETE FROM Reservation WHERE ID = $old_reservation_id";
+          $res2 = mysqli_query($db, $remove_old_reservation_query);
+        }
+        
+        $reservation_query = "INSERT INTO Reservation(customer_ID, tour_ID, issue_date,
+            payment_status, cancel_date) VALUES($current_id, $tour_id, NOW(), 'UNPAID', NULL);";
+  
+        $reservation_succeed = mysqli_query($db, $reservation_query);
+        
+        if($reservation_succeed) {
+          $reservation_id_query = "select ID from reservation where customer_ID = $current_id and tour_ID=$tour_id;";
+          $reservation_id_result = mysqli_query($db, $reservation_id_query);
+          $reservation_id_data = $reservation_id_result->fetch_assoc();
+          
+          if($reservation_id_result->num_rows == 1) {
+            $rez_id = $reservation_id_data['ID'];
+          }
+          else {
+            $rez_id = -1;
+          }
+        }
+        
+        if($rez_id != -1) {
+          $checkboxes = isset($_POST['checkbox']) ? $_POST['checkbox'] : array();
+          foreach($checkboxes as $value) {
+            $ins_dep_query = "insert into IncludedDependents(reservation_ID, dependent_ID) values($rez_id, $value);";
+            $ins_dep_result = mysqli_query($db, $ins_dep_query);
+          }
+        }
+      }
+      
+
     }
     
   }
@@ -102,6 +118,10 @@
         $reservation_message = $reservation_succeed ?
           "You have successfully made reservation to this tour." :
           "Reservation failed. Please try again later.";
+        if ($reservation_quota_error) {
+          $reservation_message = "Reservation failed. 
+            There is not enough quota for you and your selected dependents.";
+        }
         $reservation_alert =
           "<div class='alert alert-success' role='alert'>
             $reservation_message

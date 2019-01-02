@@ -128,11 +128,12 @@
 
                 $get_dependent_result = mysqli_query($db, $get_dependent_query);
                 
+                echo "<form name='done-reservation' action='view_tour.php?id=$tour_id' method='post' >";
+                
                 if($get_dependent_result->num_rows == 0) {
                     echo "<p>This customer does not have any dependents yet.</p>";
                 }
                 else {
-                    echo "<form name='done-reservation' action='view_tour.php?id=$tour_id' method='post' >";
                     
                     echo "<table class='table table-bordered'>
                     <tr>
@@ -156,14 +157,15 @@
 
                     echo "</table>";
 
-                    echo "<br><br><hr>Before proceeding, make sure that the information above is complete.
+                }
+
+                echo "<br><br><hr>Before proceeding, make sure that the information above is complete.
                           <br>You can correct it in your <a href='my_account.php'>account page</a>.
                           <br><br>";
                     
-                    echo "<input class='btn btn-primary right' type='submit' name='reserve-submit' value='Reserve Tour'/>";
+                echo "<input class='btn btn-primary right' type='submit' name='reserve-submit' value='Reserve Tour'/>";
 
-                    echo "</form>";
-                }
+                echo "</form>";
 
 
             ?>
