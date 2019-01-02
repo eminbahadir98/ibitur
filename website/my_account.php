@@ -212,6 +212,7 @@
         showError("The entered passwords do not match.","account-settings-error-div");
         return false;
         }
+          showError("Password is changed successfully.", "account-settings-error-div");
         return true;
       }
 
@@ -221,6 +222,7 @@
             showError("E-mail is not valid.", "account-settings-error-div");
             return false;
           }
+          showError("E-mail is changed successfully.", "account-settings-error-div");
         return true;
       }
       
