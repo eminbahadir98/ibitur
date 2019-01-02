@@ -72,6 +72,8 @@
     <title>IBITUR - Top Lists</title>
     <link rel="stylesheet" href="style/style.css"/>
     <link rel="stylesheet" href="lib/bootstrap.min.css"/>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="util/chart.js"></script>
   </head>
 
   <body class="content">
@@ -92,29 +94,36 @@
       <br><br>
       <h3> Most visited cities of the month </h3>
       <hr>
-      <div class='top-list'>
+
+      <div id='top-cities' class='top-list'>
         <?php
           for($i = 0; $i < count($top_cities); $i++) {
             $rank = $i + 1;
             $city = $top_cities[$i];
             $visit = $top_city_visists[$i];
-            echo "<b>$rank.</b> $city [~$visit visits]<br>";
+            echo "<b>$rank.</b> <span id='top-city-$rank' popularity='$visit'>
+               $city </span> [~$visit visits] <br>";
           }
         ?>
+        <br><br>
+        <div id="city_chart_div"></div>
       </div>
 
       <br><br><br><br>
       <h3> Top revenue-making countries of the year </h3>
       <hr>
-      <div class='top-list'>
+      <div id='top-countries' class='top-list'>
         <?php
           for($i = 0; $i < count($top_countries); $i++) {
             $rank = $i + 1;
             $country = $top_countries[$i];
             $revenue = $top_country_revenues[$i];
-            echo "<b>$rank.</b> $country [~$revenue TL]<br>";
+            echo "<b>$rank.</b> <span id='top-country-$rank' revenue='$revenue'>
+               $country </span> [~$revenue TL] <br>";
           }
         ?>
+        <br><br>
+        <div id="country_chart_div"></div>
       </div>
 
     </div>
