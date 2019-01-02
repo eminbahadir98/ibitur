@@ -13,6 +13,14 @@
     $payment_result = mysqli_query($db, $payment_query);
     
     if($payment_result) {
+      if(isset($_POST['price']) )
+      {
+        echo "price:".$_POST['price']."<-- in here<br>";
+        $gain = floor(floatval($_POST['price']) / 100 );
+        $point_query = "UPDATE CustomerAccount SET booking_points = booking_points + $gain WHERE ID = $current_id";
+        $point_result = mysqli_query($db, $point_query);
+	echo $point_query;
+      }
       echo "<script>window.location.href = 'view_tour.php?id=$tour_id&paid=true';</script>";
     }
     else {
@@ -72,6 +80,10 @@
     $(document).ready(function() {
       var init_price = parseFloat($("#final_price").text());
       $("#fin_price").val(init_price);
+<<<<<<< HEAD
+=======
+
+>>>>>>> c7fd72c4f681a7e21e8c0ef2fc859f8d52bfeea8
       // checks and applies bonus points discount.
       $(".bonus_box").change(function() {
           var checked = $(this).is(':checked');
