@@ -15,6 +15,7 @@
     $gender_input = mysqli_real_escape_string($db, $_POST['gender']);
     $nationality_input = mysqli_real_escape_string($db, $_POST['nationality']);
     $national_id_input = mysqli_real_escape_string($db, $_POST['national_id']);
+    $phone_no = mysqli_real_escape_string($db, $_POST['phone_no']);
 
     $check_query = "SELECT username FROM Account WHERE username='$username_input'";
     $check_result = mysqli_query($db, $check_query);
@@ -33,13 +34,16 @@
         nationality, gender, date_of_birth)
         VALUES(LAST_INSERT_ID(), '$national_id_input',
         $nationality_input, '$gender_input', '$birthday_input')";
+      $register_subquery3 = "INSERT INTO CustomerTelephones(customer_ID, telephone_no)
+        VALUES( (SELECT ID FROM Account WHERE username='$username_input'),$phone_no ) ";
       echo "| $register_subquery2 |";
       $register_subquery1_succeed = mysqli_query($db, $register_subquery1);
       if ($register_subquery1_succeed) {
         $register_subquery2_succeed = mysqli_query($db, $register_subquery2);
+        $register_subquery3_succeed = mysqli_query($db, $register_subquery3);
       }
       $register_succeed = true;
-      if (!$register_subquery1_succeed || !$register_subquery2_succeed) {
+      if (!$register_subquery1_succeed || !$register_subquery2_succeed || !$register_subquery3_succeed ) {
         $register_succeed = false;
       }
     }
@@ -95,6 +99,7 @@
         var gender = document.forms["register-form"]["gender"].value;
         var nationality = document.forms["register-form"]["nationality"].value;
         var national_id = document.forms["register-form"]["national_id"].value;
+        var phone_no = document.forms["register-form"]["phone_no"].value;
 
         if (!isValidEmail(email)) {
           showError("The entered mail is not valid.");
@@ -183,6 +188,8 @@
 
         <label>National ID:</label>
         <input required class="form-control input-field" type="number" name="national_id"/> <br><br>
+        <label>Phone Number:</label>
+        <input required class="form-control input-field" type="number" name="phone_no"/> <br><br>
         
         <hr>
         <input class="right btn" type="submit" value="Register"/>
