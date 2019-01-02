@@ -4,18 +4,20 @@
 
   $top_cities = array();
   $top_city_visists = array();
+  $top_countries = array();
+  $top_country_revenues = array();
 
   $city_query_1 = "DROP VIEW IF EXISTS CityPopularity;";
   $city_query_2 = "DROP VIEW IF EXISTS TempTourAssociations;";
   $city_query_3 = "CREATE VIEW TempTourAssociations AS (
     SELECT tour_ID, city_name FROM TourAssociations NATURAL JOIN TourPreview
-    WHERE TRUE 
+    WHERE TRUE -- (start-of-the-month) <= start_date AND start_date <= (end-of-the-month) 
   );";
   $city_query_4 = "CREATE VIEW CityPopularity AS (
     SELECT city_name, SUM(resv_no) AS popularity
     FROM TempTourAssociations NATURAL JOIN ReservationCounts
     GROUP BY city_name    
-    ORDER BY popularity DESC
+    ORDER BY popularity, city_name DESC
   );";
   $city_query_F = "SELECT * FROM CityPopularity";
 
@@ -30,6 +32,36 @@
     while ($i++ < 10 && $row = $city_result_F->fetch_assoc()) {
       array_push($top_cities, $row["city_name"]);
       array_push($top_city_visists, $row["popularity"]);
+    }
+  }
+
+
+
+  $country_query_1 = "DROP VIEW IF EXISTS CountryRevenues;";
+  $country_query_2 = "DROP VIEW IF EXISTS TempTourAssociations;";
+  $country_query_3 = "CREATE VIEW TempTourAssociations AS (
+    SELECT tour_ID, country_name FROM TourAssociations NATURAL JOIN TourPreview
+    WHERE TRUE -- (start-of-the-year) <= start_date AND start_date <= (end-of-the-year)
+  );";
+  $country_query_4 = "CREATE VIEW CountryRevenues AS (
+    SELECT country_name, SUM(price) AS revenue
+    FROM TempTourAssociations NATURAL JOIN TourPreview
+    GROUP BY country_name
+    ORDER BY revenue, country_name DESC
+  );";
+  $country_query_F = "SELECT * FROM CountryRevenues";
+
+  $country_result_1 = mysqli_query($db, $country_query_1);
+  $country_result_2 = mysqli_query($db, $country_query_2);
+  $country_result_3 = mysqli_query($db, $country_query_3);
+  $country_result_4 = mysqli_query($db, $country_query_4);
+  $country_result_F = mysqli_query($db, $country_query_F);
+  
+  if (mysqli_num_rows($country_result_F) > 0) {
+    $i = 0;
+    while ($i++ < 10 && $row = $country_result_F->fetch_assoc()) {
+      array_push($top_countries, $row["country_name"]);
+      array_push($top_country_revenues, $row["revenue"]);
     }
   }
 
@@ -75,8 +107,14 @@
       <h3> Top revenue-making countries of the year </h3>
       <hr>
       <div class='top-list'>
-        <b>1.</b> Turkey [~345000 TL]<br>
-        <b>2.</b> Japan [~320000 TL]<br>
+        <?php
+          for($i = 0; $i < count($top_countries); $i++) {
+            $rank = $i + 1;
+            $country = $top_countries[$i];
+            $revenue = $top_country_revenues[$i];
+            echo "<b>$rank.</b> $country [~$revenue TL]<br>";
+          }
+        ?>
       </div>
 
     </div>

@@ -159,3 +159,21 @@ CREATE VIEW CityPopularity AS (
     GROUP BY city_name    
     ORDER BY popularity DESC
 );
+
+
+-- Country Revenues
+
+DROP VIEW IF EXISTS CountryRevenues;
+DROP VIEW IF EXISTS TempTourAssociations;
+
+CREATE VIEW TempTourAssociations AS (
+    SELECT tour_ID, country_name FROM TourAssociations NATURAL JOIN TourPreview
+    WHERE TRUE -- (start-of-the-year) <= start_date AND start_date <= (end-of-the-year)
+);
+
+CREATE VIEW CountryRevenues AS (
+    SELECT country_name, SUM(price) AS revenue
+    FROM TempTourAssociations NATURAL JOIN TourPreview
+    GROUP BY country_name
+    ORDER BY revenue DESC
+);
