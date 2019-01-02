@@ -1,23 +1,25 @@
 <?php
-include("util/visuals.php");
-include("util/session.php");
+    include("util/visuals.php");
+    include("util/session.php");
 
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-$error = "";	
+    $error = "";	
 ?>
 
 <html>
+
 <?php
-if ($logged_in && $current_is_staff) {
-    echo get_header($current_fullname, true);
-} else {
-    header("location: login.php");
-}
+    if ($logged_in && $current_is_staff) {
+        echo get_header($current_fullname, true);
+    } else {
+        header("location: login.php");
+    }
 ?>
+
 <head>
     <title>IBITUR - Tour Adding</title>
     <link rel="stylesheet" href="style/style.css"/>
@@ -30,18 +32,6 @@ if ($logged_in && $current_is_staff) {
         var route_counter = 300;
         var event_counter = 400;
 
-        function is_url(str)
-        {
-            regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-            if (regexp.test(str))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
         function is_valid_days(start, end) {
 
             var d2 = Date.parse(start);
@@ -66,10 +56,6 @@ if ($logged_in && $current_is_staff) {
             var tour_price = document.forms["add-tour"]["tour_price"].value;
             var tour_quota = document.forms["add-tour"]["tour_quota"].value;
 
-            var cancelling_date = document.forms["add-tour"]["cancelling_date"].value;
-            var start_date = document.forms["add-tour"]["start_date"].value;
-            var end_date = document.forms["add-tour"]["end_date"].value;
-
             var tour_desc = document.forms["add-tour"]["tour_desc"].value;
 
 
@@ -89,11 +75,6 @@ if ($logged_in && $current_is_staff) {
                 showError("Quota must be positive");
                 return false;
             }
-
-            /*if(!is_valid_days(start_date,end_date)){
-                showError("For Tour: End date cannot be before the start date");
-                return false;
-            }*/
 
             if (tour_desc.length < 20) {
                 showError("Tour description contain minimum of 20 characters.");
@@ -144,8 +125,6 @@ if ($logged_in && $current_is_staff) {
 
         function createTourDay() {
 
-            var start_date = document.forms["add-tour"]["start_date"].value;
-            var end_date = document.forms["add-tour"]["end_date"].value;
             var tour_day      = document.forms["add-tour"]["tour_day"].value;
             var tour_day_desc = document.forms["add-tour"]["tour_day_desc"].value;
             //var included_loc1 = document.forms["add-tour"]["included_loc1"].options[document.forms["add-tour"]["included_loc1"].selectedIndex].text;
@@ -156,7 +135,6 @@ if ($logged_in && $current_is_staff) {
                     return false;
                 }*/
 
-                if (checkBaseInfo("add-tour")) {
                     day_counter++;
 
                     var param_name = day_base + day_row + "[]";
@@ -172,7 +150,6 @@ if ($logged_in && $current_is_staff) {
                     document.getElementById("day_row").value = day_row;
                     day_row++;
 
-                }
             }
             else
             {
@@ -354,15 +331,6 @@ if ($logged_in && $current_is_staff) {
             <label>Quota:</label>
             <input required class="form-control input-field" type="text" name="tour_quota"/> <br><br>
 
-            <label>Cancelling Date:</label>
-            <input required class="form-control input-field" type="date" name="cancelling_date" min=<?php echo date("Y-m-j")?>> <br><br>
-
-            <label>Start Date:</label>
-            <input  class="form-control input-field" type="date" name="start_date" min=<?php echo date("Y-m-j")?>> <br><br>
-
-            <label>End Date:</label>
-            <input  class="form-control input-field" type="date" name="end_date" min=<?php echo date("Y-m-j")?>> <br><br>
-
             <label>Tour Tags:</label>
             <?php
 
@@ -425,7 +393,7 @@ if ($logged_in && $current_is_staff) {
             <br><br>
 
             <label>Date:</label>
-            <input required class="form-control input-field" type="date" id="tour_day" name="tour_day" min=<?php echo date("Y-m-j")?>> <br><br>
+            <input class="form-control input-field" type="date" id="tour_day" name="tour_day" min=<?php echo date("Y-m-j")?>> <br><br>
 
             
 
