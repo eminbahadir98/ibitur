@@ -80,10 +80,6 @@
     $(document).ready(function() {
       var init_price = parseFloat($("#final_price").text());
       $("#fin_price").val(init_price);
-<<<<<<< HEAD
-=======
-
->>>>>>> c7fd72c4f681a7e21e8c0ef2fc859f8d52bfeea8
       // checks and applies bonus points discount.
       $(".bonus_box").change(function() {
           var checked = $(this).is(':checked');
