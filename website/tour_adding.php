@@ -217,11 +217,14 @@ if ($logged_in && $current_is_staff) {
             var dest_city_id        = document.forms["add-tour"]["dest_city"].options[document.forms["add-tour"]["dest_city"].selectedIndex].value;
             var departure_date      = document.forms["add-tour"]["departure_date"].value;
             var departure_time      = document.forms["add-tour"]["departure_time"].value;
+            var arrival_date      = document.forms["add-tour"]["arrival_date"].value;
+            var arrival_time      = document.forms["add-tour"]["arrival_time"].value;
             var vehicle_type        = document.forms["add-tour"]["vehicle_type"].options[document.forms["add-tour"]["vehicle_type"].selectedIndex].text;
             var travel_company      = document.forms["add-tour"]["travel_company"].value;
             var departure_address   = document.forms["add-tour"]["departure_address"].value;
             var destination_address = document.forms["add-tour"]["destination_address"].value;
 
+            
             if(departure_date && departure_time && departure_address && destination_address && travel_company){
                 route_counter++;
 
@@ -233,7 +236,7 @@ if ($logged_in && $current_is_staff) {
                 <td>"+ getHidden(param_name, vehicle_type) + vehicle_type +"</td>\
                 <td>" + getHidden(param_name, travel_company)+ travel_company +"</td>\
                 <td>" + getHidden(param_name, departure_date) + formattedDate(departure_date) + "</td>\
-                <td>" + getHidden(param_name, departure_time)+ departure_time + "</td>\
+                <td>" + getHidden(param_name, departure_time) + getHidden(param_name,arrival_date) + getHidden(param_name, arrival_time) + departure_time + "</td>\
                 <td>" + getHidden(param_name, departure_address) + departure_address+ "</td>\
                 <td>" + getHidden(param_name, destination_address) + destination_address + "</td>\
                 <td>" + "<button class='submit-button btn' type='button' onclick='removeField(" + route_counter + ")'>Remove</button></td>\
@@ -462,6 +465,7 @@ if ($logged_in && $current_is_staff) {
                     <th>Source City</th>
                     <th>Destination City</th>
                     <th>Vehicle Type</th>
+                    <th>Travle Company</th>
                     <th>Departure Date</th>
                     <th>Departure Time</th>
                     <th>Departure Address</th>
@@ -512,7 +516,15 @@ if ($logged_in && $current_is_staff) {
             <br><br>
 
             <label>Departure Time:</label>
-            <input  class="form-control input-field" type="text" id="departure_time" name="departure_time" > <br><br>
+            <input  class="form-control input-field" type="time" id="departure_time" name="departure_time" > <br><br>
+            <br><br>
+
+            <label>Arrival Date:</label>
+            <input  class="form-control input-field" type="date" id="arrival_date" name="arrival_date" min=<?php echo date("Y-m-j")?>> <br><br>
+            <br><br>
+
+            <label>Arrival Time:</label>
+            <input  class="form-control input-field" type="time" id="arrival_time" name="arrival_time" > <br><br>
             <br><br>
 
             <label>Vehicle Type:</label>

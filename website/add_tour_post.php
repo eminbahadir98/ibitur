@@ -95,11 +95,19 @@ if(isset($_POST['add-tour-submit'])) {
         $vehicle_type = $data[2];
         $travel_company = $data[3];
         $departure_date =$data[4];
-        $departure_address=$data[6];
-        $destination_address=$data[7];
+        $departure_time = $data[5];
+        $final_departure_dt = $departure_date . ' ' . $departure_time;
+        $final_departure_dt = date("Y-m-d H:i:s",strtotime($final_departure_dt));
+        $arrival_date = $data[6];
+        $arrival_time = $data[7];
+        $final_arrival_dt = $arrival_date . ' ' . $arrival_time;
+        $final_arrival_dt = date("Y-m-d H:i:s",strtotime($final_arrival_dt));
+
+        $departure_address=$data[8];
+        $destination_address=$data[9];
 
         $route_query = "INSERT INTO TravelRoute(vehicle_type, company_name, tour_ID, from_city_ID, to_city_ID, dept_address, dept_time, arriv_address, arriv_time) VALUES ('$vehicle_type', '$travel_company', '$tour_id', '$source_city', '$dest_city', '$departure_address',
-        '$departure_date', '$destination_address', '$departure_date');";
+        '$final_departure_dt', '$destination_address', '$final_arrival_dt');";
         
 
         // echo $route_query;
