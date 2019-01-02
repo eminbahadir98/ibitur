@@ -73,7 +73,7 @@ INSERT INTO Tour(name, description, image_path, quota, price, creator_ID)
     (SELECT ID FROM Account WHERE username="abdullah"));
     
 INSERT INTO Hotel(city_ID, name, address, star_rating)
-    VALUES((SELECT ID FROM City WHERE name="Sweden"), "Vikingen Hotel", "Another street, another road...", 5);
+    VALUES((SELECT ID FROM City WHERE name="Stockholm"), "Vikingen Hotel", "Another street, another road...", 5);
 
 INSERT INTO Accommodation(tour_ID, place_ID, enter_date, exit_date)
     VALUES((SELECT ID FROM Tour WHERE name="Europe Tour"),
