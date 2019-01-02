@@ -8,11 +8,17 @@ if(isset($_POST['add-tour-submit'])) {
 
     $title = $_POST['title'];
     $tour_desc = $_POST['tour_desc'];
-    $image_path = $_POST['image_path'];
     $tour_price = $_POST['tour_price'];
     $tour_quota = $_POST['tour_quota'];
     $cancelling_date = $_POST['cancelling_date'];
     
+    $image_path = "./images/" . "img" . (round(microtime(true) * 1000)) . ".png";
+    if (move_uploaded_file($_FILES["tour_image"]["tmp_name"], $image_path)) {
+        echo "The file ". basename( $_FILES["tour_image"]["name"]). " has been uploaded.";
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+    }
+
     $tour_query = "INSERT INTO TOUR(name, description, image_path, quota, price, creator_ID, cancelling_deadline)
     VALUES ( '$title', '$tour_desc', '$image_path', '$tour_quota', '$tour_price', '$current_id','$cancelling_date');";
 
