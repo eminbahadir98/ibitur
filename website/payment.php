@@ -11,7 +11,7 @@
     $tour_id = $_POST['tour_id'];
     $payment_query = "update Reservation set payment_status = 'PAID' where ID = '$rez_id';";
     $payment_result = mysqli_query($db, $payment_query);
-
+    
     if($payment_result) {
       echo "<script>window.location.href = 'view_tour.php?id=$tour_id&paid=true';</script>";
     }
@@ -71,7 +71,7 @@
   <script>
     $(document).ready(function() {
       var init_price = parseFloat($("#final_price").text());
-
+      $("#fin_price").val(init_price);
       // checks and applies bonus points discount.
       $(".bonus_box").change(function() {
           var checked = $(this).is(':checked');
@@ -91,7 +91,7 @@
           }
           
           $("#final_price").text(final_price);
-          $("fin_price").val(final_price);
+          $("#fin_price").val(final_price);
       });
 
       // checks and applies promotion card discount.
@@ -111,7 +111,7 @@
           $(".bonus_box").prop("disabled", checked);
 
           $("#final_price").text(final_price);
-          $("fin_price").val(final_price);
+          $("#fin_price").val(final_price);
       });
     });
     
