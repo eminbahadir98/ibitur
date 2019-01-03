@@ -18,7 +18,7 @@ function drawCityChart() {
   var data = google.visualization.arrayToDataTable(cityArray);
   var options = {
     title: 'Most visited cities of the month',
-    chartArea: {width: '50%'},
+    chartArea: {width: '50%', height: '150%'},
     hAxis: {
       minValue: 0
     }
@@ -39,7 +39,7 @@ function drawCountryChart() {
   var data = google.visualization.arrayToDataTable(countryArray);
   var options = {
     title: 'Top revenue-making countries of the year',
-    chartArea: {width: '50%'},
+    chartArea: {width: '50%', height: '150%'},
     hAxis: {
       minValue: 0
     }
