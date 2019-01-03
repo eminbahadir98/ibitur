@@ -7,8 +7,8 @@
         $cust_id = $_GET['id'];
     }
 
-    $customer_query = "SELECT first_name, middle_name, last_name, email
-    FROM Account WHERE Account.ID = $cust_id;";
+    $customer_query = "SELECT first_name, middle_name, last_name, email,telephone_no
+    FROM Account, customertelephones  WHERE Account.ID = $cust_id AND customer_ID = $cust_id;";
 
     $customer_result = mysqli_query($db, $customer_query);
     $customer_data = $customer_result->fetch_assoc();
@@ -17,7 +17,7 @@
     $middle_name = $customer_data['middle_name'];
     $last_name =$customer_data['last_name'];
     $email = $customer_data['email']; 
-
+    $phone_no = $customer_data['telephone_no'];
 
 ?>
 
@@ -54,8 +54,8 @@
             <label><b>Last Name:</b> <?php echo $last_name?> </label><br>
             <label><b>Email:</b> <?php echo $email?></label>
             <a href=<?php echo "mailto:$email"?>>[Send email]</a><br>
-            <label><b>Phone Number:</b> 536</label>
-            <a href=<?php echo "tel:536"?>>[Make call]</a><br>
+            <label><b>Phone Number:</b> <?php echo $phone_no?></label>
+            <a href=<?php echo "tel:$phone_no"?>>[Make call]</a><br>
         </div>
 
         <br><br>
