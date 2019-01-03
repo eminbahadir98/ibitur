@@ -96,12 +96,17 @@
 
   function get_tour_card_footer_skeleton($remove_buttons, $reserved, $expired, $is_staff, $id, $price, $remaining_quota) {
     
+    $remaining_quota_text = get_remaining_quota_text($remaining_quota);
+
     $reservation_button = $reserved ?
       "<button class='btn' disabled>Reserved</button>" :
       "<a href='reserve_tour.php?id=$id' class='btn btn-primary'>Make Reservation</a>";
     
     $reservation_button = !$expired ? $reservation_button :
       "<button class='btn' disabled>Expired</button>";
+
+    $reservation_button = ($remaining_quota != 0) ? $reservation_button :
+      "<button class='btn' disabled>Full Quota</button>";
 
     $reservation_button = !$is_staff ? $reservation_button :
       "<a href='manage_tour.php?id=$id' class='btn btn-primary'>Manage Tour</a>";
@@ -111,7 +116,7 @@
           <a href='view_tour.php?id=$id' class='btn btn-secondary'>View Details</a>
           $reservation_button
         </div>";
-    $remaining_quota_text = get_remaining_quota_text($remaining_quota);
+    
 
     if ($expired) {
       $remaining_quota_text = "";
