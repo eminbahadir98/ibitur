@@ -21,10 +21,10 @@
         $point_result = mysqli_query($db, $point_query);
 	echo $point_query;
       }
-      if(isset($_POST['points']) )
+      if(isset($_POST['used_points']) )
       {
-        echo "points:".$_POST['points']."<-- in here<br>";
-        $pain = $_POST['points'];
+        echo "points:".$_POST['used_points']."<-- in here<br>";
+        $pain = $_POST['used_points'];
         $point_query = "UPDATE CustomerAccount SET booking_points = booking_points - $pain WHERE ID = $current_id";
         $point_result = mysqli_query($db, $point_query);
 	echo $point_query;
