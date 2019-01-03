@@ -98,6 +98,9 @@
           if(checked) {
               $(this).prop('checked',true);
               
+              if(init_price >= discount) {
+                dicount = init_price;
+              }
               final_price = init_price - discount;
               init_price = init_price - discount;
           }
@@ -105,10 +108,8 @@
               init_price = init_price + discount;
               final_price = init_price;
           }
-          if(final_price < 0) {
-                final_price = 0;
-          }
           
+          $("#used_points").val(discount);
           $("#final_price").text(final_price);
           $("#fin_price").val(final_price);
       });
@@ -205,6 +206,7 @@
     </div>
 
     <form action='' method ='post'>
+    <input type='hidden'  name='used_points' value='0'/>
     <input type='hidden'  name='points' value='<?php echo $booking_pts;?>'/>
     <input type='hidden' id='fin_price' name='price' value=''/>
     <input type='hidden' name='tour_id' value=<?php echo "'$tour_id'";?> />
