@@ -603,7 +603,7 @@ if ($logged_in && $current_is_staff) {
             echo '</select><br><br>';
             ?>
 
-            <button class="submit-button btn" type="button" onclick="createTripEvent()">Add New Travel Route</button>
+            <button class="submit-button btn" type="button" onclick="createTripEvent()">Add New Trip Event</button>
 
 
 

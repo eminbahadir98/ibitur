@@ -69,7 +69,7 @@
           $reservation_rows = "";
           while ($row = $reservations_result->fetch_assoc()) {
             $customer_fullname = $row["first_name"] . " " . $row["middle_name"] . " " . $row["last_name"];
-            $has_paid = ($row["payment_status"] == "PAID");
+            $has_paid = ($row["payment_status"] == "paid");
             $reservation_rows .= createReservationRow($row["customer_ID"], $customer_fullname,
               $row["dependent_count"] + 1, $has_paid);
           }

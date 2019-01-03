@@ -9,7 +9,7 @@
   if(isset($_POST['payment-submit'])) {
     $rez_id = $_POST['rez_id'];
     $tour_id = $_POST['tour_id'];
-    $payment_query = "update Reservation set payment_status = 'PAID' where ID = '$rez_id';";
+    $payment_query = "update Reservation set payment_status = 'paid' where ID = '$rez_id';";
     $payment_result = mysqli_query($db, $payment_query);
     
     if($payment_result) {

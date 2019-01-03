@@ -12,7 +12,7 @@ CREATE TABLE Account (
 );
 
 CREATE TABLE StaffAccount (
-    ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+    ID INTEGER PRIMARY KEY,
     FOREIGN KEY (ID) REFERENCES Account(ID)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE Country (
 );
 
 CREATE TABLE CustomerAccount (
-    ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+    ID INTEGER PRIMARY KEY,
     national_ID VARCHAR(15),
     nationality INTEGER,
     gender VARCHAR(6),
