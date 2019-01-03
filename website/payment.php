@@ -12,6 +12,16 @@
     $payment_query = "update Reservation set payment_status = 'paid' where ID = '$rez_id';";
     $payment_result = mysqli_query($db, $payment_query);
     
+    if(isset($_POST['used_code'])) {
+      $used_code = $_POST['used_code'];
+      if($used_code != "") {
+        $delete_query1 = "delete from CustomerPromotionCards where promo_code='$used_code';";
+        mysqli_query($db, $delete_query1);
+        $delete_query2 = "delete from PromotionCard where promo_code='$used_code';";
+        mysqli_query($db, $delete_query2);
+      }
+    }
+
     if($payment_result) {
       if(isset($_POST['price']) )
       {
@@ -98,7 +108,7 @@
           if(checked) {
               $(this).prop('checked',true);
               
-              if(init_price >= discount) {
+              if(discount >= init_price) {
                 dicount = init_price;
               }
               final_price = init_price - discount;
@@ -107,6 +117,7 @@
           else {
               init_price = init_price + discount;
               final_price = init_price;
+              discount = 0;
           }
           
           $("#used_points").val(discount);
@@ -122,10 +133,13 @@
           var final_price;
           if(checked) {
               $(this).prop('checked',true);
+              console.log($(this).attr('id'));
+              $("#used_code").val($(this).attr('id'));
               discount = parseFloat($(this).val());
               final_price = init_price - init_price*discount/100.0;
           }
           else {
+            $("#used_code").val("");
               final_price = init_price;
           }
           $(".bonus_box").prop("disabled", checked);
@@ -206,7 +220,8 @@
     </div>
 
     <form action='' method ='post'>
-    <input type='hidden'  name='used_points' value='0'/>
+    <input type='hidden' id='used_code' name='used_code' value=''/>
+    <input type='hidden'  id='used_points' name='used_points' value='0'/>
     <input type='hidden'  name='points' value='<?php echo $booking_pts;?>'/>
     <input type='hidden' id='fin_price' name='price' value=''/>
     <input type='hidden' name='tour_id' value=<?php echo "'$tour_id'";?> />
